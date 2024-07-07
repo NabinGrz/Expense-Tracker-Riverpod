@@ -1,0 +1,291 @@
+import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
+import 'package:expense_tracker_flutter/extension/string_extension.dart';
+import 'package:expense_tracker_flutter/helper/expense_query_helper.dart';
+import 'package:expense_tracker_flutter/models/expense_entity.dart';
+import 'package:expense_tracker_flutter/shared/provider/create_update_expense_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../models/expense_model.dart';
+
+class CreateUpdateDialog extends ConsumerStatefulWidget {
+  final bool isUpdate;
+  final Expense? expenseData;
+  final String? docId;
+  const CreateUpdateDialog({
+    super.key,
+    this.isUpdate = false,
+    this.expenseData,
+    this.docId,
+  });
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CreateUpdateDialogState();
+}
+
+class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
+  final expenseNameController = TextEditingController();
+  final expenseAmountController = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.isUpdate) {
+      expenseNameController.text = widget.expenseData!.name;
+      expenseAmountController.text = widget.expenseData!.amount.toString();
+    }
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        if (widget.isUpdate) {
+          ref
+              .read(expenseProvider.notifier)
+              .onSelectCategory(widget.expenseData!.category);
+          ref
+              .read(expenseProvider.notifier)
+              .updateIsCash(widget.expenseData!.isCash);
+        }
+      },
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    expenseAmountController.dispose();
+    expenseNameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StatefulBuilder(builder: (context, setState) {
+      final controller = ref.read(expenseProvider.notifier);
+      final watch = ref.watch(expenseProvider);
+
+      return AlertDialog(
+        content: Container(
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Expense Name",
+                  style: TextStyle(fontSize: 12),
+                ),
+                8.hGap,
+                TextFormField(
+                  controller: expenseNameController,
+                  keyboardType: TextInputType.name,
+                  onChanged: (value) {
+                    controller.nameError.add(null);
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 12),
+                    hintText: "Enter expense name...",
+                    hintStyle: const TextStyle(
+                      color: Color(0xff888888),
+                      fontSize: 12,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                StreamBuilder<String?>(
+                    stream: controller.nameError,
+                    builder: (context, snapshot) {
+                      return !snapshot.hasData
+                          ? const SizedBox.shrink()
+                          : Text(
+                              "${snapshot.data}",
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Color(0xffF95B51),
+                              ),
+                            );
+                    }),
+                24.hGap,
+                const Text(
+                  "Amount",
+                  style: TextStyle(fontSize: 12),
+                ),
+                8.hGap,
+                TextFormField(
+                  controller: expenseAmountController,
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    controller.amountError.add(null);
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 12),
+                    hintText: "Enter expense amount...",
+                    hintStyle: const TextStyle(
+                      color: Color(0xff888888),
+                      fontSize: 12,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                StreamBuilder<String?>(
+                    stream: controller.amountError,
+                    builder: (context, snapshot) {
+                      return !snapshot.hasData
+                          ? const SizedBox.shrink()
+                          : Text(
+                              "${snapshot.data}",
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Color(0xffF95B51),
+                              ),
+                            );
+                    }),
+                24.hGap,
+                const Text(
+                  "Category",
+                  style: TextStyle(fontSize: 12),
+                ),
+                8.hGap,
+                StreamBuilder(
+                  stream: ExpenseQueryHelper.getExpenseCategory(),
+                  builder: (context, snapshot) {
+                    final categories = snapshot.data?.docs.first
+                        .data()['expense_type'] as List?;
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                      ),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: const Color(0xff888888),
+                          )),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField(
+                          hint: watch.expenseEntity?.category == null
+                              ? const Text(
+                                  "Select Category",
+                                  style: TextStyle(
+                                    color: Color(0xff888888),
+                                    fontSize: 12,
+                                  ),
+                                )
+                              : null,
+                          value: watch.expenseEntity?.category,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                          icon:
+                              SvgPicture.asset("assets/images/down_arrow.svg"),
+                          items: categories?.map(
+                            (e) {
+                              return DropdownMenuItem(
+                                value: e,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: Image.asset(
+                                        e.toString().getIconPathByCategory,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    4.wGap,
+                                    Text(e),
+                                  ],
+                                ),
+                              );
+                            },
+                          ).toList(),
+                          onChanged: (val) {
+                            controller.categoryError.add(null);
+                            controller.onSelectCategory(val.toString());
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                StreamBuilder<String?>(
+                    stream: controller.categoryError,
+                    builder: (context, snapshot) {
+                      return !snapshot.hasData
+                          ? const SizedBox.shrink()
+                          : Text(
+                              "${snapshot.data}",
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Color(0xffF95B51),
+                              ),
+                            );
+                    }),
+                8.hGap,
+                Consumer(builder: (context, ref, _) {
+                  return Row(
+                    children: [
+                      const Text(
+                        "Is Cash",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      Checkbox.adaptive(
+                          value: watch.expenseEntity?.isCash ?? false,
+                          onChanged: (val) {
+                            setState(
+                              () {
+                                controller.updateIsCash(val!);
+                              },
+                            );
+                          }),
+                    ],
+                  );
+                }),
+                35.hGap,
+                Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize:
+                          Size(MediaQuery.sizeOf(context).width * 0.5, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(50), // button's shape
+                      ),
+                    ),
+                    onPressed: () {
+                      controller.validateExpenseAndCreate(
+                        ExpenseEntity(
+                            name: expenseNameController.text,
+                            amount:
+                                int.tryParse(expenseAmountController.text) ?? 0,
+                            category: watch.expenseEntity?.category ?? "",
+                            isCash: false),
+                        widget.isUpdate,
+                        widget.docId,
+                      );
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      widget.isUpdate ? "Update" : "Create",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+}
