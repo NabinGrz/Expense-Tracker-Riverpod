@@ -78,6 +78,7 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                 ),
                 8.hGap,
                 TextFormField(
+                  autofocus: true,
                   controller: expenseNameController,
                   keyboardType: TextInputType.name,
                   onChanged: (value) {
