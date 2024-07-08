@@ -1,14 +1,22 @@
+import 'package:expense_tracker_flutter/extension/date_extension.dart';
+import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/home/widgets/balance_update_dialog.dart';
 import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../constants/app_color.dart';
+import '../../../models/expense_model.dart';
 
 class BalanceCard extends ConsumerStatefulWidget {
-  const BalanceCard({super.key});
+  final BehaviorSubject<List<Expense>> sortedExpenseSubject;
+  const BalanceCard({
+    super.key,
+    required this.sortedExpenseSubject,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _BalanceCardState();
@@ -160,14 +168,26 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
             ],
           ),
           8.hGap,
-          const Text(
-            "Rs ${5656}",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.white,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
+          StreamBuilder(
+              stream: widget.sortedExpenseSubject,
+              builder: (context, snapshot) {
+                List<Expense>? expenses = snapshot.data?.where(
+                  (element) {
+                    final expenseDate = DateTime.parse(element.createAt);
+                    return expenseDate.isSameDateAs(DateTime.now());
+                  },
+                ).toList();
+                return Text(
+                  "Rs ${expenses?.map(
+                        (e) => e.amount,
+                      ).sum()}",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
+                );
+              }),
         ],
       ),
     );

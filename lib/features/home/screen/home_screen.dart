@@ -117,7 +117,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               children: [
                 SvgPicture.asset("assets/images/header.svg"),
                 SvgPicture.asset("assets/images/header_background.svg"),
-                const BalanceCard()
+                BalanceCard(
+                  sortedExpenseSubject: sortedExpenseSubject,
+                )
               ],
             ),
             22.hGap,

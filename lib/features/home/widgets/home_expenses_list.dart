@@ -92,50 +92,53 @@ class HomeExpenseList extends StatelessWidget {
             (a, b) => a.value.compareTo(b.value),
           );
 
-        return ref.watch(tabProvider) == SelectedTab.expense
-            ? ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                itemCount: expenses?.length ?? 0,
-                separatorBuilder: (context, index) => 12.hGap,
-                itemBuilder: (context, index) {
-                  final expenseData = expenses?[index];
-                  return ExpenseTile(expenseData: expenseData);
-                },
-              )
-            : SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.4,
-                child: Wrap(
-                  children: List.generate(
-                    sortedCategories?.length ?? 0,
-                    (index) {
-                      final category = sortedCategories?[index];
-                      return Container(
-                        padding: const EdgeInsets.all(6),
-                        margin: const EdgeInsets.only(right: 10, bottom: 10),
-                        decoration: BoxDecoration(
-                          color: AppColor.primary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Image.asset(
-                              "${category?.key.getIconPathByCategory}",
-                              height: 50,
-                              width: 50,
-                            ),
-                            4.hGap,
-                            Text("Rs ${category?.value.toDouble()}"),
-                            Text("${category?.key}"),
-                          ],
-                        ),
-                      );
+        return (expenses == null || expenses.isEmpty)
+            ? const Center(child: Text("No Expenses Yet"))
+            : ref.watch(tabProvider) == SelectedTab.expense
+                ? ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    itemCount: expenses.length ?? 0,
+                    separatorBuilder: (context, index) => 12.hGap,
+                    itemBuilder: (context, index) {
+                      final expenseData = expenses?[index];
+                      return ExpenseTile(expenseData: expenseData);
                     },
-                  ),
-                ),
-              );
+                  )
+                : SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.4,
+                    child: Wrap(
+                      children: List.generate(
+                        sortedCategories?.length ?? 0,
+                        (index) {
+                          final category = sortedCategories?[index];
+                          return Container(
+                            padding: const EdgeInsets.all(6),
+                            margin:
+                                const EdgeInsets.only(right: 10, bottom: 10),
+                            decoration: BoxDecoration(
+                              color: AppColor.primary.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Image.asset(
+                                  "${category?.key.getIconPathByCategory}",
+                                  height: 50,
+                                  width: 50,
+                                ),
+                                4.hGap,
+                                Text("Rs ${category?.value.toDouble()}"),
+                                Text("${category?.key}"),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
       },
     );
   }
