@@ -49,8 +49,8 @@ class ExpenseNotifier extends ChangeNotifier {
     }
   }
 
-  void validateExpenseAndCreate(
-      ExpenseEntity expenseData, bool isUpdate, String? docId) {
+  void validateExpenseAndCreate(ExpenseEntity expenseData, bool isUpdate,
+      String? docId, BuildContext context) {
     bool validName = expenseData.name.isNotNullAndEmpty;
     bool validAmount = (expenseData.amount != 0 && expenseData.amount != null);
     bool validCategory = expenseData.category.isNotNullAndEmpty;
@@ -59,6 +59,7 @@ class ExpenseNotifier extends ChangeNotifier {
         validCategory &&
         expenseData.isCash != null) {
       addUpdateExpense(expenseData, isUpdate, docId: docId);
+      Navigator.pop(context);
     } else {
       if (!validName) {
         nameError.add("Required");

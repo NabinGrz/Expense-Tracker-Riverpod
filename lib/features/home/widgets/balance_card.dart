@@ -1,14 +1,20 @@
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
+import 'package:expense_tracker_flutter/features/home/widgets/balance_update_dialog.dart';
+import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants/app_color.dart';
 
-class BalanceCard extends StatelessWidget {
-  const BalanceCard({
-    super.key,
-  });
+class BalanceCard extends ConsumerStatefulWidget {
+  const BalanceCard({super.key});
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _BalanceCardState();
+}
+
+class _BalanceCardState extends ConsumerState<BalanceCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,15 +44,100 @@ class BalanceCard extends StatelessWidget {
             ),
           ),
           10.hGap,
-          const Text(
-            "Rs 2023",
-            style: TextStyle(
-              fontSize: 30,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          34.hGap,
+          StreamBuilder(
+              stream: FirebaseQueryHelper.getSingleDocumentAsStream(
+                  collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f"),
+              builder: (context, snapshot) {
+                final balance = snapshot.data?.data();
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Cash",
+                          style: TextStyle(
+                            color: Color(0xffD0E5E4),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Rs ${balance?['cash']}",
+                              style: const TextStyle(
+                                fontSize: 22,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return BalanceUpdateDialog(
+                                        isCash: true,
+                                        docId: "G0sKt8y5dvwNsTv63m2f",
+                                        cashAmount: balance?['cash'],
+                                        bankAmount: balance?['bank'],
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ))
+                          ],
+                        )
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Bank",
+                          style: TextStyle(
+                            color: Color(0xffD0E5E4),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Rs ${balance?['bank']}",
+                              style: const TextStyle(
+                                fontSize: 22,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return BalanceUpdateDialog(
+                                        isCash: false,
+                                        docId: "G0sKt8y5dvwNsTv63m2f",
+                                        cashAmount: balance?['cash'],
+                                        bankAmount: balance?['bank'],
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ))
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                );
+              }),
+          25.hGap,
           Row(
             children: [
               Container(

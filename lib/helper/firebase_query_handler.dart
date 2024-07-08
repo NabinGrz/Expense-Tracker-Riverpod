@@ -36,14 +36,6 @@ class FirebaseQueryHelper {
       getSingleDocumentAsStream(
           {required String collectionPath, required String docID}) {
     try {
-      final r = firebaseFireStore.collection(collectionPath).doc(docID).get();
-      r.then(
-        (value) {
-          final l = value.data();
-          l;
-          print(l);
-        },
-      );
       var data =
           firebaseFireStore.collection(collectionPath).doc(docID).snapshots();
       return data;

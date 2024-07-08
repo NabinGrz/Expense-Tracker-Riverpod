@@ -261,16 +261,16 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                     ),
                     onPressed: () {
                       controller.validateExpenseAndCreate(
-                        ExpenseEntity(
-                            name: expenseNameController.text,
-                            amount:
-                                int.tryParse(expenseAmountController.text) ?? 0,
-                            category: watch.expenseEntity?.category ?? "",
-                            isCash: false),
-                        widget.isUpdate,
-                        widget.docId,
-                      );
-                      Navigator.pop(context);
+                          ExpenseEntity(
+                              name: expenseNameController.text,
+                              amount:
+                                  int.tryParse(expenseAmountController.text) ??
+                                      0,
+                              category: watch.expenseEntity?.category ?? "",
+                              isCash: false),
+                          widget.isUpdate,
+                          widget.docId,
+                          context);
                     },
                     child: Text(
                       widget.isUpdate ? "Update" : "Create",
