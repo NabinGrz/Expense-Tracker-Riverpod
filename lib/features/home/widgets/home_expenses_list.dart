@@ -55,13 +55,13 @@ class HomeExpenseList extends StatelessWidget {
             ).toList();
             updateTotalAmount(expenses);
             break;
-          case DateFilter.weekly:
-            final weeklyDate = DateTime.now().subtract(const Duration(days: 6));
+          case DateFilter.yesterday:
+            final yesterdayDate =
+                DateTime.now().subtract(const Duration(days: 1));
             expenses = snapshot.data?.where(
               (element) {
                 final expenseDate = DateTime.parse(element.createAt);
-                return expenseDate.isSameDateAs(weeklyDate) ||
-                    expenseDate.isAfter(weeklyDate);
+                return expenseDate.isSameDateAs(yesterdayDate);
               },
             ).toList();
             updateTotalAmount(expenses);

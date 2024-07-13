@@ -13,16 +13,17 @@ class DateFilterRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 22),
-      decoration: BoxDecoration(
-        color: const Color(0xffF4F6F6),
-        borderRadius: BorderRadius.circular(8),
+      // margin: const EdgeInsets.symmetric(horizontal: 22),
+      decoration: const BoxDecoration(
+        color: Color(0xffF4F6F6),
+        // borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           filterBox("Today", selectedDateFilter: DateFilter.today),
-          filterBox("Weekly", selectedDateFilter: DateFilter.weekly),
+          filterBox("Yesterday", selectedDateFilter: DateFilter.yesterday),
+          // filterBox("Weekly", selectedDateFilter: DateFilter.weekly),
           filterBox("2 Weeks", selectedDateFilter: DateFilter.twoweeks),
           filterBox("Monthly", selectedDateFilter: DateFilter.monthly),
         ],
@@ -49,7 +50,7 @@ class DateFilterRow extends ConsumerWidget {
               ? null
               : BoxDecoration(
                   color: AppColor.primary,
-                  borderRadius: BorderRadius.circular(8),
+                  // borderRadius: BorderRadius.circular(8),
                 ),
           child: Text(
             name,
