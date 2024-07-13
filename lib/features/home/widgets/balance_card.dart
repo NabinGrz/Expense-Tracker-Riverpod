@@ -64,9 +64,11 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                 final balance = snapshot.data?.data();
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const Text(
                           "Cash",
@@ -85,8 +87,9 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            IconButton(
-                                onPressed: () {
+                            4.wGap,
+                            InkWell(
+                                onTap: () {
                                   showDialog(
                                     context: context,
                                     builder: (context) {
@@ -99,7 +102,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                                     },
                                   );
                                 },
-                                icon: const Icon(
+                                child: const Icon(
                                   Icons.edit,
                                   color: Colors.white,
                                 ))
@@ -117,6 +120,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                           ),
                         ),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "Rs ${balance?['bank']}",
@@ -126,8 +130,9 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            IconButton(
-                                onPressed: () {
+                            4.wGap,
+                            InkWell(
+                                onTap: () {
                                   showDialog(
                                     context: context,
                                     builder: (context) {
@@ -140,7 +145,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                                     },
                                   );
                                 },
-                                icon: const Icon(
+                                child: const Icon(
                                   Icons.edit,
                                   color: Colors.white,
                                 ))
