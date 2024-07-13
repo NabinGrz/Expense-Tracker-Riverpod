@@ -130,9 +130,9 @@ class ExpenseTile extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          expenseData?.isCash == true
-              ? const Icon(Icons.money)
-              : const Icon(Icons.food_bank),
+          // expenseData?.isCash == true
+          //     ? const Icon(Icons.money)
+          //     : const Icon(Icons.food_bank),
           Text(
             "- Rs ${expenseData?.amount}",
             style: const TextStyle(
@@ -141,6 +141,18 @@ class ExpenseTile extends StatelessWidget {
               color: Color(0xffF95B51),
             ),
           ),
+          6.wGap,
+          expenseData?.isCash == true
+              ? Image.asset(
+                  "assets/images/dollar.png",
+                  height: 14,
+                  width: 14,
+                )
+              : Image.asset(
+                  "assets/images/bank.png",
+                  height: 14,
+                  width: 14,
+                ),
         ],
       ),
     );

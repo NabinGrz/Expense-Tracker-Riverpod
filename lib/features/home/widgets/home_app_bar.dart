@@ -1,4 +1,6 @@
+import 'package:expense_tracker_flutter/features/filter/widgets/filter_type_widget.dart';
 import 'package:expense_tracker_flutter/features/home/widgets/create_expense_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -22,7 +24,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           splashRadius: 20,
-          onPressed: () {},
+          onPressed: () {
+            showCupertinoModalPopup(
+              context: context,
+              builder: (context) => const FilterTypeBottomSheet(),
+            );
+          },
           icon: SvgPicture.asset("assets/images/filter.svg"),
         ),
         IconButton(

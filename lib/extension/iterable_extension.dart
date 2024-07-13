@@ -6,16 +6,6 @@ extension SumExtension on Iterable<int> {
   }
 }
 
-// extension ExpenseIterableExtension on Iterable<Expense> {
-//   Map<String, int> totalAmountByCategory() {
-//     final Map<String, int> totals = {};
-//     for (var expense in this) {
-//       totals[expense.category] =
-//           (totals[expense.category] ?? 0) + (expense.amount ?? 0);
-//     }
-//     return totals;
-//   }
-// }
 extension ExpenseIterableExtension on Iterable<Expense> {
   Map<String, Map<String, dynamic>> totalAmountByCategory() {
     final Map<String, Map<String, dynamic>> result = {};
@@ -29,6 +19,18 @@ extension ExpenseIterableExtension on Iterable<Expense> {
       result[expense.category]!['totalAmount'] =
           (result[expense.category]!['totalAmount'] as int) + expense.amount;
       result[expense.category]!['expenses']!.add(expense);
+    }
+    return result;
+  }
+
+  Map<String, List<Expense>> expensesByDate() {
+    final Map<String, List<Expense>> result = {};
+    for (var expense in this) {
+      final date =
+          expense.createAt.split(' ')[0]; // Extracting only the date part
+
+      result.putIfAbsent(date, () => []);
+      result[date]!.add(expense);
     }
     return result;
   }

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
@@ -13,7 +12,6 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../models/expense_model.dart';
 import '../../../shared/provider/tab_bar_provider.dart';
-import '../../../shared/widget/expense_bar_chart.dart';
 import '../../../shared/widget/expense_tile.dart';
 import '../provider/home_provider.dart';
 
@@ -103,7 +101,7 @@ class HomeExpenseList extends StatelessWidget {
 
         return (expenses == null || expenses.isEmpty)
             ? const Center(child: Text("No Expenses Yet"))
-            : ref.watch(tabProvider) == SelectedTab.expense
+            : ref.watch(hometabProvider) == SelectedTab.expense
                 ? ListView.separated(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,

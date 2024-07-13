@@ -50,7 +50,7 @@ class SortByWidget extends ConsumerWidget {
                     },
                   ).toList(),
                   onChanged: (val) {
-                    if (ref.watch(tabProvider) == SelectedTab.expense) {
+                    if (ref.watch(hometabProvider) == SelectedTab.expense) {
                       final sort = val!.enumVal;
                       ref.read(sortByProvider.notifier).selectSortBy(sort);
                     } else {}

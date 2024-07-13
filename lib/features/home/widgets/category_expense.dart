@@ -1,7 +1,5 @@
 import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
-import 'package:expense_tracker_flutter/shared/widget/expense_tile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/expense_model.dart';
@@ -51,14 +49,14 @@ class CategoryExpenses extends StatelessWidget {
                   tag: "$name",
                   child: Image.asset(
                     "$iconPath",
-                    height: 35,
-                    width: 35,
+                    height: 32,
+                    width: 32,
                     fit: BoxFit.contain,
                   ),
                 ),
                 8.wGap,
                 Text(
-                  "Category: $name",
+                  "$name",
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

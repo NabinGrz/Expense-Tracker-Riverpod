@@ -5,8 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../provider/tab_bar_provider.dart';
 
 class ExpenseAnalyticTabBar extends ConsumerWidget {
+  final bool? isFilter;
   const ExpenseAnalyticTabBar({
     super.key,
+    this.isFilter = false,
   });
 
   @override
@@ -30,11 +32,17 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
 
   Widget tabItem(String name, {required SelectedTab selectedTab}) {
     return Consumer(builder: (context, ref, _) {
-      final tab = ref.watch(tabProvider);
+      final tab = isFilter != true
+          ? ref.watch(hometabProvider)
+          : ref.watch(filterScreentabProvider);
       return InkWell(
         onTap: () {
-          ref.read(tabProvider.notifier).selectTab(selectedTab);
-          ref.read(sortByProvider.notifier).selectSortBy(SortBy.none);
+          if (isFilter != true) {
+            ref.read(hometabProvider.notifier).selectTab(selectedTab);
+            ref.read(sortByProvider.notifier).selectSortBy(SortBy.none);
+          } else {
+            ref.read(filterScreentabProvider.notifier).selectTab(selectedTab);
+          }
         },
         child: Container(
           margin: const EdgeInsets.all(4),

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/home/provider/home_provider.dart';
 import 'package:expense_tracker_flutter/shared/provider/sort_by_provider.dart';
@@ -61,8 +60,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             return expense;
           },
         ).toList();
-        final grouped = data.totalAmountByCategory();
-
         originalExpenseList = List.from(data);
         sortedExpenseSubject.add([]);
         sortedExpenseSubject.add(data);
@@ -166,7 +163,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   30.hGap,
                   const ExpenseAnalyticTabBar(),
                   20.hGap,
-                  if (ref.watch(tabProvider) == SelectedTab.expense) ...{
+                  if (ref.watch(hometabProvider) == SelectedTab.expense) ...{
                     const SortByWidget(),
                     20.hGap,
                   },

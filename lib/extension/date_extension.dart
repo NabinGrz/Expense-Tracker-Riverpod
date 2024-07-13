@@ -18,4 +18,6 @@ extension DateExtension on DateTime {
   }
 
   String toFormattedDateString() => DateFormat('EEEE, d MMMM').format(this);
+
+  String formatCustomDate(String format) => DateFormat(format).format(this);
 }
