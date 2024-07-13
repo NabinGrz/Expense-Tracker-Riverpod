@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 extension DateExtension on DateTime {
   bool isSameDateAs(DateTime date) =>
       date.year == year && date.month == month && date.day == day;
@@ -14,4 +16,6 @@ extension DateExtension on DateTime {
         (strippedDate.isAtSameMomentAs(strippedEndDate) ||
             strippedDate.isBefore(strippedEndDate));
   }
+
+  String toFormattedDateString() => DateFormat('EEEE, d MMMM').format(this);
 }

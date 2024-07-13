@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/extension/string_extension.dart';
 import 'package:expense_tracker_flutter/extension/date_extension.dart';
+import 'package:expense_tracker_flutter/features/home/widgets/category_expense.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
@@ -86,10 +90,15 @@ class HomeExpenseList extends StatelessWidget {
             break;
           default:
         }
+
         final expenseGroup = expenses?.totalAmountByCategory();
         final sortedCategories = expenseGroup?.entries.toList()
           ?..sort(
-            (a, b) => a.value.compareTo(b.value),
+            (a, b) {
+              final x = a.value['totalAmount'] as int;
+              final y = b.value['totalAmount'] as int;
+              return x.compareTo(y);
+            },
           );
 
         return (expenses == null || expenses.isEmpty)
@@ -113,26 +122,59 @@ class HomeExpenseList extends StatelessWidget {
                         sortedCategories?.length ?? 0,
                         (index) {
                           final category = sortedCategories?[index];
-                          return Container(
-                            padding: const EdgeInsets.all(6),
-                            margin:
-                                const EdgeInsets.only(right: 10, bottom: 10),
-                            decoration: BoxDecoration(
-                              color: AppColor.primary.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Image.asset(
-                                  "${category?.key.getIconPathByCategory}",
-                                  height: 50,
-                                  width: 50,
+                          final expenses =
+                              category?.value['expenses'] as List<Expense>;
+                          return GestureDetector(
+                            onTap: () {
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) => CategoryExpenses(
+                                  expenseData: expenses,
+                                  name: category?.key,
                                 ),
-                                4.hGap,
-                                Text("Rs ${category?.value.toDouble()}"),
-                                Text("${category?.key}"),
-                              ],
+                              );
+                            },
+                            child: Container(
+                              // width: 90,
+                              padding: const EdgeInsets.all(6),
+                              margin:
+                                  const EdgeInsets.only(right: 10, bottom: 10),
+                              decoration: BoxDecoration(
+                                  // color: AppColor.primary.withOpacity(0.1),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 20,
+                                        spreadRadius: -9,
+                                        color:
+                                            AppColor.primary.withOpacity(0.6),
+                                        offset: const Offset(1, 9))
+                                  ]),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Image.asset(
+                                    "${category?.key.getIconPathByCategory}",
+                                    height: 45,
+                                    width: 45,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  6.hGap,
+                                  Text(
+                                    "Rs: ${category?.value['totalAmount']}",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${category?.key}",
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },
