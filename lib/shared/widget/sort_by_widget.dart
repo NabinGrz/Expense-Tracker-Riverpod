@@ -20,7 +20,6 @@ class SortByWidget extends ConsumerWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
-        width: MediaQuery.sizeOf(context).width * 0.5,
         padding: const EdgeInsets.symmetric(
           horizontal: 14,
         ),

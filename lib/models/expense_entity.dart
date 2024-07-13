@@ -29,7 +29,7 @@ class ExpenseEntity {
       name: null,
       amount: null,
       category: null,
-      isCash: null,
+      isCash: true,
     );
   }
 

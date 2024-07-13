@@ -18,16 +18,76 @@ class ExpenseQueryHelper {
       FirebaseQueryHelper.getCollectionAsStream(
           collectionPath: "expense-categories");
 
-  static Future<void> createExpense(Expense expense) async {
+  static Future<void> createExpense(
+      Expense expense, String cashAmount, String bankAmount) async {
     await FirebaseQueryHelper.firebaseFireStore
         .collection("expenses")
         .add(expense.toMap());
+
+    final data = expense.isCash
+        ? {"cash": "${int.parse(cashAmount) - expense.amount}"}
+        : {"bank": "${int.parse(bankAmount) - expense.amount}"};
+
+    FirebaseQueryHelper.updateDocumentOfCollection(
+        data: data, collectionID: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
   }
 
-  static void updateExpense(Map<String, dynamic> newData, String id) async {
+  static void updateExpense(Map<String, dynamic> newData, String id,
+      String cashAmount, String bankAmount, int? previousExpenseAmount) async {
     final ref =
         FirebaseQueryHelper.firebaseFireStore.collection("expenses").doc(id);
     await ref.update(newData);
+
+    final amount = newData['amount'] as int;
+    final data = newData['isCash']
+        ? {
+            "cash":
+                "${(int.parse(cashAmount) + (previousExpenseAmount ?? 0) - amount)}"
+          }
+        : {
+            "bank":
+                "${(int.parse(bankAmount) + (previousExpenseAmount ?? 0) - amount)}"
+          };
+
+    FirebaseQueryHelper.updateDocumentOfCollection(
+        data: data, collectionID: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+  }
+
+  static void updateExpenseAmounWhenTypeChange({
+    required Map<String, dynamic> newData,
+    required String id,
+    required bool isCash,
+    required String oldAmount,
+    required String newAmount,
+    required String cashAmount,
+    required String bankAmount,
+  }) async {
+    final ref =
+        FirebaseQueryHelper.firebaseFireStore.collection("expenses").doc(id);
+    await ref.update(newData);
+
+    int oA = int.tryParse(oldAmount) ?? 0;
+    int nA = int.tryParse(newAmount) ?? 0;
+
+    int existingCashAmount = int.tryParse(cashAmount) ?? 0;
+    int existingBankAmount = int.tryParse(bankAmount) ?? 0;
+    if (oA != 0 && nA != 0) {
+      if (isCash) {
+        final data = {
+          "bank": "${existingBankAmount + oA}",
+          "cash": "${existingCashAmount - nA}",
+        };
+        FirebaseQueryHelper.updateDocumentOfCollection(
+            data: data, collectionID: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+      } else {
+        final data = {
+          "cash": "${existingCashAmount + oA}",
+          "bank": "${existingBankAmount - nA}",
+        };
+        FirebaseQueryHelper.updateDocumentOfCollection(
+            data: data, collectionID: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+      }
+    }
   }
 
   static void deleteExpense(String id) async {

@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../helper/firebase_query_handler.dart';
 import '../../../models/expense_model.dart';
 
 class CreateUpdateDialog extends ConsumerStatefulWidget {
   final bool isUpdate;
+  final bool? isCashPreviously;
   final Expense? expenseData;
   final String? docId;
   const CreateUpdateDialog({
@@ -18,6 +20,7 @@ class CreateUpdateDialog extends ConsumerStatefulWidget {
     this.isUpdate = false,
     this.expenseData,
     this.docId,
+    this.isCashPreviously,
   });
 
   @override
@@ -72,6 +75,7 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text("${widget.isCashPreviously}"),
                 const Text(
                   "Expense Name",
                   style: TextStyle(fontSize: 12),
@@ -251,36 +255,48 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                 35.hGap,
                 Align(
                   alignment: Alignment.center,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize:
-                          Size(MediaQuery.sizeOf(context).width * 0.5, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(50), // button's shape
-                      ),
-                    ),
-                    onPressed: () {
-                      controller.validateExpenseAndCreate(
-                          ExpenseEntity(
-                              name: expenseNameController.text,
-                              amount:
-                                  int.tryParse(expenseAmountController.text) ??
+                  child: StreamBuilder(
+                      stream: FirebaseQueryHelper.getSingleDocumentAsStream(
+                          collectionPath: "balance",
+                          docID: "G0sKt8y5dvwNsTv63m2f"),
+                      builder: (context, snapshot) {
+                        final balance = snapshot.data?.data();
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(
+                                MediaQuery.sizeOf(context).width * 0.5, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(50), // button's shape
+                            ),
+                          ),
+                          onPressed: () {
+                            controller.validateExpenseAndCreate(
+                              ExpenseEntity(
+                                  name: expenseNameController.text,
+                                  amount: int.tryParse(
+                                          expenseAmountController.text) ??
                                       0,
-                              category: watch.expenseEntity?.category ?? "",
-                              isCash: false),
-                          widget.isUpdate,
-                          widget.docId,
-                          context);
-                    },
-                    child: Text(
-                      widget.isUpdate ? "Update" : "Create",
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                                  category: watch.expenseEntity?.category ?? "",
+                                  isCash: watch.expenseEntity?.isCash),
+                              widget.isUpdate,
+                              widget.docId,
+                              context,
+                              cashAmount: balance?['cash'] ?? 0,
+                              bankAmount: balance?['bank'] ?? 0,
+                              previousExpenseAmount: widget.expenseData?.amount,
+                              isCashPreviously: widget.isCashPreviously,
+                            );
+                          },
+                          child: Text(
+                            widget.isUpdate ? "Update" : "Create",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                      }),
                 ),
               ],
             ),

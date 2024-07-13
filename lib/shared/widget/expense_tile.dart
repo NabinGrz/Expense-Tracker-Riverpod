@@ -42,6 +42,7 @@ class ExpenseTile extends StatelessWidget {
                           return CreateUpdateDialog(
                             isUpdate: true,
                             expenseData: expenseData,
+                            isCashPreviously: expenseData?.isCash,
                             docId: expenseData?.docId,
                           );
                         },
@@ -122,6 +123,9 @@ class ExpenseTile extends StatelessWidget {
             ],
           ),
           const Spacer(),
+          expenseData?.isCash == true
+              ? const Icon(Icons.money)
+              : const Icon(Icons.food_bank),
           Text(
             "- Rs ${expenseData?.amount}",
             style: const TextStyle(

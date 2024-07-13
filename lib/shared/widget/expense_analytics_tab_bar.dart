@@ -19,8 +19,10 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          tabItem("Expenses", selectedTab: SelectedTab.expense),
-          tabItem("Analytics", selectedTab: SelectedTab.analytic),
+          Expanded(
+              child: tabItem("Expenses", selectedTab: SelectedTab.expense)),
+          Expanded(
+              child: tabItem("Analytics", selectedTab: SelectedTab.analytic)),
         ],
       ),
     );
@@ -36,8 +38,9 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
         },
         child: Container(
           margin: const EdgeInsets.all(4),
+          alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(
-            horizontal: 50,
+            // horizontal: 50,
             vertical: 14,
           ),
           decoration: tab != selectedTab
