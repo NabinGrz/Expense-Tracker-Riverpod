@@ -119,6 +119,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
               },
             );
           return Scaffold(
+            backgroundColor: Colors.white,
             appBar: AppBar(
               backgroundColor: AppColor.primary,
               elevation: 0,

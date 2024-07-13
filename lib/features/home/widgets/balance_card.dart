@@ -4,7 +4,9 @@ import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/home/widgets/balance_update_dialog.dart';
 import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -30,16 +32,19 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-          color: AppColor.primary,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xff849D9B).withOpacity(0.78),
-              spreadRadius: -7,
-              offset: const Offset(0, 10),
-              blurRadius: 13.4,
-            )
-          ]),
+        color: AppColor.primary,
+        borderRadius: BorderRadius.circular(20),
+        image: const DecorationImage(
+            image: sp.Svg("assets/images/header_background.svg")),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xff849D9B).withOpacity(0.78),
+            spreadRadius: -7,
+            offset: const Offset(0, 10),
+            blurRadius: 13.4,
+          )
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -70,6 +75,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                           ),
                         ),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "Rs ${balance?['cash']}",

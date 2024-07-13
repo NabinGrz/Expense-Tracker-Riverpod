@@ -104,6 +104,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     listenToSorting();
     return Scaffold(
       extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
       extendBody: true,
       appBar: const HomeAppBar(),
       body: SingleChildScrollView(
@@ -113,7 +114,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             Stack(
               children: [
                 SvgPicture.asset("assets/images/header.svg"),
-                SvgPicture.asset("assets/images/header_background.svg"),
                 BalanceCard(
                   sortedExpenseSubject: sortedExpenseSubject,
                 )

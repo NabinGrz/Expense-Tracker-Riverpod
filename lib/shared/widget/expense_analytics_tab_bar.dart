@@ -1,3 +1,4 @@
+import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/shared/provider/sort_by_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,7 +16,7 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xffF4F6F6),
+        color: AppColor.primary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(50),
       ),
       child: Row(

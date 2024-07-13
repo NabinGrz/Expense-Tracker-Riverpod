@@ -13,8 +13,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColor.primary,
-      elevation: 2,
+      backgroundColor: const Color(0x000000ff),
+      elevation: 0,
       title: const Text(
         "Kharcha",
         style: TextStyle(

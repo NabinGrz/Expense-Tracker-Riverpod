@@ -97,7 +97,14 @@ class HomeExpenseList extends StatelessWidget {
           );
 
         return (expenses == null || expenses.isEmpty)
-            ? const Center(child: Text("No Expenses Yet"))
+            ? const Center(
+                child: Text(
+                "No expenses yet",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 24,
+                ),
+              ))
             : ref.watch(hometabProvider) == SelectedTab.expense
                 ? ListView.separated(
                     physics: const NeverScrollableScrollPhysics(),
