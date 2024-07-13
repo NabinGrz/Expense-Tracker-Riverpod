@@ -75,7 +75,6 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("${widget.isCashPreviously}"),
                 const Text(
                   "Expense Name",
                   style: TextStyle(fontSize: 12),

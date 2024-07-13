@@ -1,3 +1,4 @@
+import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/features/filter/widgets/filter_type_widget.dart';
 import 'package:expense_tracker_flutter/features/home/widgets/create_expense_dialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,8 +13,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
+      backgroundColor: AppColor.primary,
+      elevation: 2,
       title: const Text(
         "Kharcha",
         style: TextStyle(

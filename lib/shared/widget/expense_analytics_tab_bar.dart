@@ -39,7 +39,7 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
         onTap: () {
           if (isFilter != true) {
             ref.read(hometabProvider.notifier).selectTab(selectedTab);
-            ref.read(sortByProvider.notifier).selectSortBy(SortBy.none);
+            ref.read(homeSortByProvider.notifier).selectSortBy(SortBy.none);
           } else {
             ref.read(filterScreentabProvider.notifier).selectTab(selectedTab);
           }

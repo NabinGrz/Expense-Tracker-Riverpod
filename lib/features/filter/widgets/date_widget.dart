@@ -1,4 +1,3 @@
-
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,7 +55,7 @@ class DateWidget extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 12,
                         color: Color(0xff666666),
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                   ],

@@ -13,8 +13,8 @@ class HomeDateFilterNotifier extends StateNotifier<SelectedTab> {
 }
 
 final filterScreentabProvider =
-    StateNotifierProvider<HomeDateFilterNotifier, SelectedTab>(
-        (ref) => HomeDateFilterNotifier());
+    StateNotifierProvider<FilterScreenDateFilterNotifier, SelectedTab>(
+        (ref) => FilterScreenDateFilterNotifier());
 
 class FilterScreenDateFilterNotifier extends StateNotifier<SelectedTab> {
   FilterScreenDateFilterNotifier() : super(SelectedTab.expense);

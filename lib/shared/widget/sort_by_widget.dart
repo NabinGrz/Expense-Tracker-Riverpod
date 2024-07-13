@@ -7,16 +7,17 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SortByWidget extends ConsumerWidget {
-  const SortByWidget({
-    super.key,
-  });
+  final bool? isFilter;
+  const SortByWidget({super.key, this.isFilter = false});
 
   @override
   Widget build(
     BuildContext context,
     WidgetRef ref,
   ) {
-    final selectedSort = ref.watch(sortByProvider).value;
+    final selectedSort = isFilter != true
+        ? ref.watch(homeSortByProvider).value
+        : ref.watch(filterScreenSortByProvider).value;
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
@@ -50,10 +51,20 @@ class SortByWidget extends ConsumerWidget {
                     },
                   ).toList(),
                   onChanged: (val) {
-                    if (ref.watch(hometabProvider) == SelectedTab.expense) {
-                      final sort = val!.enumVal;
-                      ref.read(sortByProvider.notifier).selectSortBy(sort);
-                    } else {}
+                    final sort = val!.enumVal;
+                    if (isFilter != true) {
+                      if (ref.watch(hometabProvider) == SelectedTab.expense) {
+                        ref
+                            .read(homeSortByProvider.notifier)
+                            .selectSortBy(sort);
+                      }
+                    } else {
+                      if (ref.watch(hometabProvider) == SelectedTab.expense) {
+                        ref
+                            .read(filterScreenSortByProvider.notifier)
+                            .selectSortBy(sort);
+                      }
+                    }
                   },
                 ),
               ),

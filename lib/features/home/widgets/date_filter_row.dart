@@ -37,7 +37,7 @@ class DateFilterRow extends ConsumerWidget {
       return InkWell(
         onTap: () {
           ref.read(dateFilterProvider.notifier).selectDate(selectedDateFilter);
-          ref.read(sortByProvider.notifier).selectSortBy(SortBy.none);
+          ref.read(homeSortByProvider.notifier).selectSortBy(SortBy.none);
         },
         child: Container(
           padding: dateFilter != selectedDateFilter

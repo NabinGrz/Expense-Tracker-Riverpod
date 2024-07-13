@@ -17,4 +17,14 @@ class AppString {
   static const String categoryFruits = "fruits";
   static const String categoryCosmetic = "cosmetic";
   static const String categoryPetrol = "petrol";
+  static const String categoryMedicine = "medicine";
+  static const String categoryGas = "gas";
+  static const String categoryRice = "rice";
+  static const String categorySugar = "sugar";
+  static const String categoryPersonal = "personal";
+  static const String categorySnacks = "snacks";
+  static const String categoryShampoo = "shampoo";
+  static const String categoryIcecream = "icecream";
+  static const String categoryOffice = "office expense";
+  static const String categoryJhyapliKhaja = "jhyapli khaja";
 }

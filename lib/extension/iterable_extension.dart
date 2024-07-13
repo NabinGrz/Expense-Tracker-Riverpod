@@ -6,6 +6,10 @@ extension SumExtension on Iterable<int> {
   }
 }
 
+extension IterableExtension on List? {
+  bool get isNotNullAndNotEmpty => this != null && this!.isNotEmpty;
+}
+
 extension ExpenseIterableExtension on Iterable<Expense> {
   Map<String, Map<String, dynamic>> totalAmountByCategory() {
     final Map<String, Map<String, dynamic>> result = {};

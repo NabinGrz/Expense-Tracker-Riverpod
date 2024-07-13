@@ -14,7 +14,7 @@ extension ImagePathExtension on String {
       case AppString.categoryRent:
         return "assets/images/rent.png";
       case AppString.categoryBike:
-        return "assets/images/bike.png";
+        return "assets/images/bike.webp";
       case AppString.categoryTransport:
         return "assets/images/transport.png";
       case AppString.categoryUtils:
@@ -38,7 +38,27 @@ extension ImagePathExtension on String {
       case AppString.categoryCosmetic:
         return "assets/images/cosmetic.png";
       case AppString.categoryPetrol:
-        return "assets/images/bike.png";
+        return "assets/images/petrol.webp";
+      case AppString.categoryMedicine:
+        return "assets/images/medicine.webp";
+      case AppString.categoryGas:
+        return "assets/images/gas.webp";
+      case AppString.categoryRice:
+        return "assets/images/rice.webp";
+      case AppString.categorySugar:
+        return "assets/images/sugar.png";
+      case AppString.categoryPersonal:
+        return "assets/images/personal.webp";
+      case AppString.categorySnacks:
+        return "assets/images/snacks.webp";
+      case AppString.categoryShampoo:
+        return "assets/images/shampoo.webp";
+      case AppString.categoryIcecream:
+        return "assets/images/icecream.png";
+      case AppString.categoryOffice:
+        return "assets/images/office.webp";
+      case AppString.categoryJhyapliKhaja:
+        return "assets/images/jhyapliKhaja.webp";
       default:
         return "assets/images/bill.png";
     }

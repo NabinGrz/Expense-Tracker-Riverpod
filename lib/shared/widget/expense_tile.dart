@@ -112,7 +112,7 @@ class ExpenseTile extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              6.hGap,
+              2.hGap,
               Text(
                 "${expenseData?.category}",
                 style: const TextStyle(

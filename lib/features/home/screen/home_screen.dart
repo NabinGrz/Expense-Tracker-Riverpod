@@ -69,7 +69,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void listenToSorting() {
     ref.listen(
-      sortByProvider,
+      homeSortByProvider,
       (previous, next) {
         sortedExpenseSubject.add(List.from(originalExpenseList));
         final listedExpense = sortedExpenseSubject.valueOrNull;
