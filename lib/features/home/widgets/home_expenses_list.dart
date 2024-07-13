@@ -131,6 +131,9 @@ class HomeExpenseList extends StatelessWidget {
                                 builder: (context) => CategoryExpenses(
                                   expenseData: expenses,
                                   name: category?.key,
+                                  iconPath: category?.key.getIconPathByCategory,
+                                  totalAmount:
+                                      category?.value['totalAmount'].toString(),
                                 ),
                               );
                             },
@@ -154,11 +157,14 @@ class HomeExpenseList extends StatelessWidget {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Image.asset(
-                                    "${category?.key.getIconPathByCategory}",
-                                    height: 45,
-                                    width: 45,
-                                    fit: BoxFit.contain,
+                                  Hero(
+                                    tag: "${category?.key}",
+                                    child: Image.asset(
+                                      "${category?.key.getIconPathByCategory}",
+                                      height: 45,
+                                      width: 45,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
                                   6.hGap,
                                   Text(

@@ -8,11 +8,15 @@ import '../../../models/expense_model.dart';
 
 class CategoryExpenses extends StatelessWidget {
   final String? name;
+  final String? totalAmount;
+  final String? iconPath;
   final List<Expense> expenseData;
   const CategoryExpenses({
     super.key,
     required this.expenseData,
     this.name,
+    this.iconPath,
+    this.totalAmount,
   });
 
   @override
@@ -40,12 +44,36 @@ class CategoryExpenses extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             10.hGap,
-            Text(
-              "Category: $name",
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Hero(
+                  tag: "$name",
+                  child: Image.asset(
+                    "$iconPath",
+                    height: 35,
+                    width: 35,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                8.wGap,
+                Text(
+                  "Category: $name",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  "TotalAmount: Rs $totalAmount",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
             20.hGap,
             ListView.separated(
