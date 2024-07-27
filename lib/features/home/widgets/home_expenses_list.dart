@@ -1,8 +1,5 @@
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
-import 'package:expense_tracker_flutter/extension/date_extension.dart';
-import 'package:expense_tracker_flutter/features/home/widgets/analytics_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
@@ -11,82 +8,36 @@ import '../../../models/expense_model.dart';
 import '../../../shared/provider/tab_bar_provider.dart';
 import '../../../shared/widget/expense_tile.dart';
 import '../provider/home_provider.dart';
+import 'analytics_widget.dart';
 
-class HomeExpenseList extends StatelessWidget {
+class HomeExpenseList extends ConsumerStatefulWidget {
   const HomeExpenseList({
     super.key,
-    required this.sortedExpenseSubject,
-    required this.ref,
   });
 
-  final BehaviorSubject<List<Expense>> sortedExpenseSubject;
-  final WidgetRef ref;
+  @override
+  ConsumerState<HomeExpenseList> createState() => _HomeExpenseListState();
+}
 
-  void updateTotalAmount(List<Expense>? expenses) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        final amountList = expenses?.map((e) => e.amount);
-        ref
-            .read(dateFilterProvider.notifier)
-            .updateTotalAmount(amountList?.sum() ?? 0);
-      },
-    );
+class _HomeExpenseListState extends ConsumerState<HomeExpenseList> {
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller = ref.read(homeEntityProvider.notifier);
+    final homeEntity = ref.watch(homeEntityProvider);
     return StreamBuilder(
-      stream: sortedExpenseSubject,
+      stream: controller.sortedExpenseSubject,
       builder: (context, snapshot) {
-        final dateType = ref.watch(dateFilterProvider);
-        List<Expense>? expenses = [];
-        switch (dateType.dateFilter) {
-          case DateFilter.today:
-            expenses = snapshot.data?.where(
-              (element) {
-                final expenseDate = DateTime.parse(element.createAt);
-                return expenseDate.isSameDateAs(DateTime.now());
-              },
-            ).toList();
-            updateTotalAmount(expenses);
-            break;
-          case DateFilter.yesterday:
-            final yesterdayDate =
-                DateTime.now().subtract(const Duration(days: 1));
-            expenses = snapshot.data?.where(
-              (element) {
-                final expenseDate = DateTime.parse(element.createAt);
-                return expenseDate.isSameDateAs(yesterdayDate);
-              },
-            ).toList();
-            updateTotalAmount(expenses);
-            break;
-          case DateFilter.twoweeks:
-            final twoWeeks = DateTime.now().subtract(const Duration(days: 13));
-            expenses = snapshot.data?.where(
-              (element) {
-                final expenseDate = DateTime.parse(element.createAt);
-                return expenseDate.isSameDateAs(twoWeeks) ||
-                    expenseDate.isAfter(twoWeeks);
-              },
-            ).toList();
-            updateTotalAmount(expenses);
-            break;
-          case DateFilter.monthly:
-            final monthly = DateTime.now().subtract(const Duration(days: 29));
-            expenses = snapshot.data?.where(
-              (element) {
-                final expenseDate = DateTime.parse(element.createAt);
-                return expenseDate.isSameDateAs(monthly) ||
-                    expenseDate.isAfter(monthly);
-              },
-            ).toList();
-            updateTotalAmount(expenses);
-            break;
-          default:
-        }
-
-        final expenseGroup = expenses?.totalAmountByCategory();
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            controller.populateExpenses(snapshot.data);
+          },
+        );
+        final expenseGroup = homeEntity.expenses?.totalAmountByCategory();
         final sortedCategories = expenseGroup?.entries.toList()
           ?..sort(
             (a, b) {
@@ -96,7 +47,7 @@ class HomeExpenseList extends StatelessWidget {
             },
           );
 
-        return (expenses == null || expenses.isEmpty)
+        return (homeEntity.expenses == null || homeEntity.expenses == [])
             ? const Center(
                 child: Text(
                 "No expenses yet",
@@ -110,10 +61,10 @@ class HomeExpenseList extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     padding: EdgeInsets.zero,
-                    itemCount: expenses.length ?? 0,
+                    itemCount: homeEntity.expenses?.length ?? 0,
                     separatorBuilder: (context, index) => 12.hGap,
                     itemBuilder: (context, index) {
-                      final expenseData = expenses?[index];
+                      final expenseData = homeEntity.expenses?[index];
                       return ExpenseTile(expenseData: expenseData);
                     },
                   )

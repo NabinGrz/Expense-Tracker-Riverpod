@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final void Function() onRefresh;
   const HomeAppBar({
     super.key,
+    required this.onRefresh,
   });
 
   @override
@@ -23,6 +25,11 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
+        IconButton(
+          splashRadius: 20,
+          onPressed: onRefresh,
+          icon: const Icon(Icons.refresh),
+        ),
         IconButton(
           splashRadius: 20,
           onPressed: () {

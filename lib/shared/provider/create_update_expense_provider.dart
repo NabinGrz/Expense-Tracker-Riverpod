@@ -29,20 +29,19 @@ class ExpenseNotifier extends ChangeNotifier {
     expenseEntity;
   }
 
-  void addUpdateExpense(
-    ExpenseEntity expense,
-    bool isUpdate, {
-    String? docId,
-    required String cashAmount,
-    required String bankAmount,
-    int? previousExpenseAmount,
-    bool? isCashPreviously,
-  }) {
+  void addUpdateExpense(ExpenseEntity expense, bool isUpdate,
+      {String? docId,
+      required String cashAmount,
+      required String bankAmount,
+      int? previousExpenseAmount,
+      bool? isCashPreviously,
+      Expense? updatingExpense}) {
     final expenseData = Expense(
         id: const Uuid().v4(),
         name: expense.name!,
         category: expenseEntity!.category!,
-        createAt: DateTime.now().toString(),
+        createAt:
+            isUpdate ? updatingExpense!.createAt : DateTime.now().toString(),
         updatedAt: DateTime.now().toString(),
         amount: expense.amount!,
         isCash: expenseEntity?.isCash ?? false);
@@ -74,6 +73,7 @@ class ExpenseNotifier extends ChangeNotifier {
     required String bankAmount,
     int? previousExpenseAmount,
     bool? isCashPreviously,
+    Expense? updatingExpense,
   }) {
     bool validName = expenseData.name.isNotNullAndEmpty;
     bool validAmount = (expenseData.amount != 0 && expenseData.amount != null);
@@ -83,6 +83,7 @@ class ExpenseNotifier extends ChangeNotifier {
         validCategory &&
         expenseData.isCash != null) {
       addUpdateExpense(expenseData, isUpdate,
+          updatingExpense: updatingExpense,
           docId: docId,
           cashAmount: cashAmount,
           bankAmount: bankAmount,

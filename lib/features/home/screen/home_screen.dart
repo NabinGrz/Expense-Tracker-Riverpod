@@ -14,6 +14,7 @@ import '../../../helper/expense_query_helper.dart';
 import '../../../models/expense_model.dart';
 import '../../../shared/widget/sort_by_widget.dart';
 import '../../../utils/expense_utils.dart';
+import '../entity/home_entity.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/date_filter_row.dart';
 import '../widgets/home_app_bar.dart';
@@ -27,11 +28,11 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final searchController = TextEditingController();
   List<Expense> originalExpenseList = [];
-  final sortedExpenseSubject = BehaviorSubject<List<Expense>>();
-
-  @override
-  void initState() {
+  HomeNotifier get controller => ref.read(homeEntityProvider.notifier);
+  HomeEntity get homeEntity => ref.watch(homeEntityProvider);
+  void _initialize() {
     ExpenseQueryHelper.getExpenseAsFuture()?.then(
       (value) {
         final data = value.docs.map(
@@ -43,10 +44,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ).toList();
 
         originalExpenseList = List.from(data);
-        sortedExpenseSubject.add(data);
+        controller.sortedExpenseSubject.add(data);
       },
     );
     listenToChangesOnExpenses();
+  }
+
+  @override
+  void initState() {
+    _initialize();
     super.initState();
   }
 
@@ -61,8 +67,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           },
         ).toList();
         originalExpenseList = List.from(data);
-        sortedExpenseSubject.add([]);
-        sortedExpenseSubject.add(data);
+        controller.sortedExpenseSubject.add([]);
+        controller.sortedExpenseSubject.add(data);
       },
     );
   }
@@ -71,27 +77,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ref.listen(
       homeSortByProvider,
       (previous, next) {
-        sortedExpenseSubject.add(List.from(originalExpenseList));
-        final listedExpense = sortedExpenseSubject.valueOrNull;
+        controller.sortedExpenseSubject.add(List.from(originalExpenseList));
+        final listedExpense = controller.sortedExpenseSubject.valueOrNull;
         switch (next) {
           case SortBy.none:
-            sortedExpenseSubject.add(originalExpenseList);
+            controller.sortedExpenseSubject.add(originalExpenseList);
             break;
           case SortBy.hightolow:
             ExpenseUtils.sortBy(listedExpense ?? [], SortBy.hightolow);
-            sortedExpenseSubject.add(listedExpense ?? []);
+            controller.sortedExpenseSubject.add(listedExpense ?? []);
             break;
           case SortBy.lowtohigh:
             ExpenseUtils.sortBy(listedExpense ?? [], SortBy.lowtohigh);
-            sortedExpenseSubject.add(listedExpense ?? []);
+            controller.sortedExpenseSubject.add(listedExpense ?? []);
             break;
           case SortBy.highTolowDate:
             ExpenseUtils.sortBy(listedExpense ?? [], SortBy.highTolowDate);
-            sortedExpenseSubject.add(listedExpense ?? []);
+            controller.sortedExpenseSubject.add(listedExpense ?? []);
             break;
           case SortBy.lowTohighDate:
             ExpenseUtils.sortBy(listedExpense ?? [], SortBy.lowTohighDate);
-            sortedExpenseSubject.add(listedExpense ?? []);
+            controller.sortedExpenseSubject.add(listedExpense ?? []);
             break;
           default:
         }
@@ -106,7 +112,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       extendBody: true,
-      appBar: const HomeAppBar(),
+      appBar: HomeAppBar(
+        onRefresh: () {
+          _initialize();
+          controller.sortedExpenseSubject.add(originalExpenseList);
+          searchController.clear();
+          FocusScope.of(context).unfocus();
+        },
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +128,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               children: [
                 SvgPicture.asset("assets/images/header.svg"),
                 BalanceCard(
-                  sortedExpenseSubject: sortedExpenseSubject,
+                  sortedExpenseSubject: controller.sortedExpenseSubject,
                 )
               ],
             ),
@@ -136,7 +149,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   2.hGap,
                   Text(
-                    "Total Spend: Rs ${ref.watch(dateFilterProvider).totalAmount}",
+                    "Total Spend: Rs ${homeEntity.totalAmount}",
                     style: const TextStyle(
                       fontSize: 14,
                       color: Color(0xff666666),
@@ -144,24 +157,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   12.hGap,
                   TextFormField(
+                    controller: searchController,
                     onChanged: (value) {
-                      final searchedExpenses =
-                          sortedExpenseSubject.valueOrNull?.where(
-                        (element) {
-                          return element.name
-                              .toLowerCase()
-                              .contains(value.toLowerCase());
-                        },
-                      );
+                      if (value.isNotEmpty) {
+                        final searchedExpenses = homeEntity.expenses?.where(
+                          (element) {
+                            return element.name
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase()) ||
+                                element.category
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                          },
+                        ).toList();
+                        controller.sortedExpenseSubject
+                            .add(searchedExpenses ?? []);
+                      } else {
+                        controller.sortedExpenseSubject
+                            .add(originalExpenseList);
+                      }
                     },
                     decoration: InputDecoration(
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SvgPicture.asset("assets/images/search.svg"),
                       ),
+                      suffixIcon: InkWell(
+                        onTap: () {
+                          controller.sortedExpenseSubject
+                              .add(originalExpenseList);
+                          searchController.clear();
+                          FocusScope.of(context).unfocus();
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.clear),
+                        ),
+                      ),
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 18),
-                      hintText: "Search...",
+                      hintText: "Search expense/category name...",
                       hintStyle: const TextStyle(
                         color: Color(0xff888888),
                       ),
@@ -179,10 +214,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   },
                   const Divider(),
                   10.hGap,
-                  HomeExpenseList(
-                    sortedExpenseSubject: sortedExpenseSubject,
-                    ref: ref,
-                  ),
+                  const HomeExpenseList(),
                   130.hGap,
                 ],
               ),

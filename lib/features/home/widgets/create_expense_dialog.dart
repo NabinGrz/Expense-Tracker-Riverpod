@@ -285,6 +285,7 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                               bankAmount: balance?['bank'] ?? 0,
                               previousExpenseAmount: widget.expenseData?.amount,
                               isCashPreviously: widget.isCashPreviously,
+                              updatingExpense: widget.expenseData,
                             );
                           },
                           child: Text(

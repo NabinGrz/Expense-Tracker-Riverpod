@@ -115,18 +115,19 @@ class ExpenseTile extends StatelessWidget {
               Text(
                 "${expenseData?.name}",
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              2.hGap,
+              // 2.hGap,
               Text(
                 "${expenseData?.category}",
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 10,
                   color: Color(0xff666666),
                 ),
               ),
+              2.hGap,
               if (!DateTime.parse(expenseData!.createAt)
                       .isSameDateAs(DateTime.now()) &&
                   !DateTime.parse(expenseData!.createAt).isYesterday()) ...{
@@ -142,7 +143,7 @@ class ExpenseTile extends StatelessWidget {
                       DateTime.parse(expenseData!.createAt)
                           .toFormattedDateString(),
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 10,
                         color: Color(0xff666666),
                       ),
                     ),
@@ -152,9 +153,6 @@ class ExpenseTile extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          // expenseData?.isCash == true
-          //     ? const Icon(Icons.money)
-          //     : const Icon(Icons.food_bank),
           Text(
             "- Rs ${expenseData?.amount}",
             style: const TextStyle(
@@ -164,7 +162,6 @@ class ExpenseTile extends StatelessWidget {
             ),
           ),
           6.wGap,
-
           Image.asset(
             expenseData?.isCash == true
                 ? "assets/images/dollar.png"

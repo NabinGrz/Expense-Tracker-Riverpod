@@ -33,15 +33,18 @@ class DateFilterRow extends ConsumerWidget {
 
   Widget filterBox(String name, {required DateFilter selectedDateFilter}) {
     return Consumer(builder: (context, ref, _) {
-      final dateFilter = ref.watch(dateFilterProvider).dateFilter;
+      final dateFilter = ref.watch(homeEntityProvider).dateFilter;
       return InkWell(
         onTap: () {
-          ref.read(dateFilterProvider.notifier).selectDate(selectedDateFilter);
+          ref.read(homeEntityProvider.notifier).selectDate(selectedDateFilter);
           ref.read(homeSortByProvider.notifier).selectSortBy(SortBy.none);
         },
         child: Container(
           padding: dateFilter != selectedDateFilter
-              ? const EdgeInsetsDirectional.symmetric(horizontal: 10)
+              ? const EdgeInsetsDirectional.symmetric(
+                  horizontal: 10,
+                  vertical: 14,
+                )
               : const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 14,
