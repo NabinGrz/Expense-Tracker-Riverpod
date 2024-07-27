@@ -20,4 +20,13 @@ extension DateExtension on DateTime {
   String toFormattedDateString() => DateFormat('EEEE, d MMMM').format(this);
 
   String formatCustomDate(String format) => DateFormat(format).format(this);
+
+  bool isYesterday() {
+    final now = DateTime.now();
+    final yesterday = DateTime(now.year, now.month, now.day - 1);
+
+    return year == yesterday.year &&
+        month == yesterday.month &&
+        day == yesterday.day;
+  }
 }

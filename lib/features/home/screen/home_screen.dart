@@ -144,6 +144,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   12.hGap,
                   TextFormField(
+                    onChanged: (value) {
+                      final searchedExpenses =
+                          sortedExpenseSubject.valueOrNull?.where(
+                        (element) {
+                          return element.name
+                              .toLowerCase()
+                              .contains(value.toLowerCase());
+                        },
+                      );
+                    },
                     decoration: InputDecoration(
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(8.0),

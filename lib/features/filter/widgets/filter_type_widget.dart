@@ -3,7 +3,6 @@ import 'package:expense_tracker_flutter/features/filter/pages/filter_screen.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
 class FilterTypeBottomSheet extends StatelessWidget {
   const FilterTypeBottomSheet({super.key});
 

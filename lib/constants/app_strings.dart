@@ -28,4 +28,5 @@ class AppString {
   static const String categoryOffice = "office expense";
   static const String categoryJhyapliKhaja = "jhyapli khaja";
   static const String categoryColdDrink = "cold drink";
+  static const String categorySubinExpense = "subin expense";
 }

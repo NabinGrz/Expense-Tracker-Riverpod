@@ -1,4 +1,5 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
+import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/extension/string_extension.dart';
 import 'package:expense_tracker_flutter/helper/expense_query_helper.dart';
@@ -93,9 +94,15 @@ class ExpenseTile extends StatelessWidget {
             width: 50,
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
-              color: const Color(0xffF0F6F5),
-              borderRadius: BorderRadius.circular(8),
-            ),
+                color: const Color.fromARGB(255, 255, 255, 255),
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                      color: AppColor.primary.withOpacity(0.14),
+                      spreadRadius: -3,
+                      blurRadius: 12,
+                      offset: const Offset(4, 12))
+                ]),
             child: Image.asset(
               expenseData?.category.getIconPathByCategory ?? "",
               fit: BoxFit.contain,
@@ -120,13 +127,28 @@ class ExpenseTile extends StatelessWidget {
                   color: Color(0xff666666),
                 ),
               ),
-              // Text(
-              //   "${expenseData?.createAt}",
-              //   style: const TextStyle(
-              //     fontSize: 12,
-              //     color: Color(0xff666666),
-              //   ),
-              // ),
+              if (!DateTime.parse(expenseData!.createAt)
+                      .isSameDateAs(DateTime.now()) &&
+                  !DateTime.parse(expenseData!.createAt).isYesterday()) ...{
+                4.hGap,
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.date_range,
+                      size: 12,
+                    ),
+                    4.wGap,
+                    Text(
+                      DateTime.parse(expenseData!.createAt)
+                          .toFormattedDateString(),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xff666666),
+                      ),
+                    ),
+                  ],
+                )
+              },
             ],
           ),
           const Spacer(),
@@ -142,17 +164,14 @@ class ExpenseTile extends StatelessWidget {
             ),
           ),
           6.wGap,
-          expenseData?.isCash == true
-              ? Image.asset(
-                  "assets/images/dollar.png",
-                  height: 14,
-                  width: 14,
-                )
-              : Image.asset(
-                  "assets/images/bank.png",
-                  height: 14,
-                  width: 14,
-                ),
+
+          Image.asset(
+            expenseData?.isCash == true
+                ? "assets/images/dollar.png"
+                : "assets/images/bank.png",
+            height: 12,
+            width: 12,
+          ),
         ],
       ),
     );
