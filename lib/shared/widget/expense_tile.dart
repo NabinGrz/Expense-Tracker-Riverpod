@@ -12,9 +12,11 @@ class ExpenseTile extends StatelessWidget {
   const ExpenseTile({
     super.key,
     required this.expenseData,
+    required this.isFilter,
   });
 
   final Expense? expenseData;
+  final bool isFilter;
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +132,8 @@ class ExpenseTile extends StatelessWidget {
               2.hGap,
               if (!DateTime.parse(expenseData!.createAt)
                       .isSameDateAs(DateTime.now()) &&
-                  !DateTime.parse(expenseData!.createAt).isYesterday()) ...{
+                  !DateTime.parse(expenseData!.createAt).isYesterday() &&
+                  !isFilter) ...{
                 4.hGap,
                 Row(
                   children: [

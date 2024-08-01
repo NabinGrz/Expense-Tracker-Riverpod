@@ -47,6 +47,20 @@ class FirebaseQueryHelper {
     return null;
   }
 
+  static Future<DocumentSnapshot<Map<String, dynamic>>>?
+      getSingleDocumentAsFuture(
+          {required String collectionPath, required String docID}) {
+    try {
+      var data = firebaseFireStore.collection(collectionPath).doc(docID).get();
+      return data;
+    } on FirebaseException catch (e) {
+      showSnackBar(
+          message: e.message ?? "Something Went Wrong!!",
+          type: SnackBarTypes.Error);
+    }
+    return null;
+  }
+
   static void addDataToDocument({
     required String data,
     required String collectionID,

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../constants/app_strings.dart';
 
 extension StringNullEmptyExtension on String? {
@@ -65,6 +67,69 @@ extension ImagePathExtension on String {
         return "assets/images/jhyapliKhaja.webp";
       default:
         return "assets/images/bill.png";
+    }
+  }
+
+  Color get getColorByCategory {
+    switch (toLowerCase()) {
+      case AppString.categoryFood:
+        return Colors.deepOrangeAccent;
+      case AppString.categoryClothing:
+        return Colors.purple;
+      case AppString.categoryRent:
+        return Colors.pink;
+      case AppString.categoryBike:
+        return Colors.green;
+      case AppString.categoryTransport:
+        return Colors.blue;
+      case AppString.categoryUtils:
+        return Colors.blue;
+      case AppString.categoryKhaja:
+        return Colors.pink;
+      case AppString.categoryMilk:
+        return Colors.yellow;
+      case AppString.categoryWater:
+        return Colors.blueAccent;
+      case AppString.categoryGrocery:
+        return Colors.greenAccent;
+      case AppString.categoryChocolate:
+        return Colors.brown;
+      case AppString.categoryMeat:
+        return Colors.redAccent;
+      case AppString.categoryFruits:
+        return Colors.green;
+      case AppString.categoryStationary:
+        return Colors.pink;
+      case AppString.categoryCosmetic:
+        return Colors.pink;
+      case AppString.categoryPetrol:
+        return Colors.purple;
+      case AppString.categoryMedicine:
+        return Colors.amber;
+      case AppString.categoryGas:
+        return Colors.purpleAccent;
+      case AppString.categoryRice:
+        return Colors.red;
+      case AppString.categorySugar:
+        return Colors.green;
+      case AppString.categoryPersonal:
+        return Colors.green;
+      case AppString.categorySnacks:
+        return Colors.purple;
+      case AppString.categoryShampoo:
+        return Colors.amber;
+      case AppString.categoryIcecream:
+        return Colors.green;
+      case AppString.categoryOffice:
+        return Colors.orange;
+      case AppString.categoryJhyapliKhaja:
+        return Colors.greenAccent;
+      case AppString.categoryColdDrink:
+        return Colors.yellow;
+      case AppString.categorySubinExpense:
+        return Colors.red;
+      default:
+        return Colors.orange;
     }
   }
 }

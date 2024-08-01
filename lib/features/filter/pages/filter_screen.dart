@@ -231,6 +231,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                                                     expenses?[index];
 
                                                 return ExpenseTile(
+                                                    isFilter: true,
                                                     expenseData: expense);
                                               },
                                             )

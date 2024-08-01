@@ -65,7 +65,10 @@ class _HomeExpenseListState extends ConsumerState<HomeExpenseList> {
                     separatorBuilder: (context, index) => 12.hGap,
                     itemBuilder: (context, index) {
                       final expenseData = homeEntity.expenses?[index];
-                      return ExpenseTile(expenseData: expenseData);
+                      return ExpenseTile(
+                        expenseData: expenseData,
+                        isFilter: false,
+                      );
                     },
                   )
                 : AnalyticsWidget(

@@ -11,6 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../helper/expense_query_helper.dart';
+import '../../../helper/firebase_query_handler.dart';
 import '../../../models/expense_model.dart';
 import '../../../shared/widget/sort_by_widget.dart';
 import '../../../utils/expense_utils.dart';
@@ -115,6 +116,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       appBar: HomeAppBar(
         onRefresh: () {
           _initialize();
+          FirebaseQueryHelper.getSingleDocumentAsFuture(
+              collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
           controller.sortedExpenseSubject.add(originalExpenseList);
           searchController.clear();
           FocusScope.of(context).unfocus();
