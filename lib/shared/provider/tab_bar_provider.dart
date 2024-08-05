@@ -1,6 +1,12 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-enum SelectedTab { expense, analytic }
+enum SelectedTab {
+  expense('Expenses'),
+  analytic('Analytics');
+
+  const SelectedTab(this.value);
+  final String value;
+}
 
 final hometabProvider =
     StateNotifierProvider<HomeDateFilterNotifier, SelectedTab>(

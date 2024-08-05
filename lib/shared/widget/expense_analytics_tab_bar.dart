@@ -23,9 +23,11 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-              child: tabItem("Expenses", selectedTab: SelectedTab.expense)),
+              child: tabItem(SelectedTab.expense.value,
+                  selectedTab: SelectedTab.expense)),
           Expanded(
-              child: tabItem("Analytics", selectedTab: SelectedTab.analytic)),
+              child: tabItem(SelectedTab.analytic.value,
+                  selectedTab: SelectedTab.analytic)),
         ],
       ),
     );

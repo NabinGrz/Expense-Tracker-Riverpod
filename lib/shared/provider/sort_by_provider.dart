@@ -1,6 +1,15 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-enum SortBy { none, hightolow, lowtohigh, highTolowDate, lowTohighDate }
+enum SortBy {
+  none('None'),
+  hightolow('High To Low Price'),
+  lowtohigh('Low To High Price'),
+  highTolowDate('High To Low Date'),
+  lowTohighDate('Low To High Date');
+
+  const SortBy(this.value);
+  final String value;
+}
 
 final homeSortByProvider =
     StateNotifierProvider<SortByNotifier, SortBy>((ref) => SortByNotifier());
