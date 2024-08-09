@@ -28,7 +28,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 20, right: 20, top: 145),
+      margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(

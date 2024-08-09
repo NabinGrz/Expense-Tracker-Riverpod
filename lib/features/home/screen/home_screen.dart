@@ -5,6 +5,7 @@ import 'package:expense_tracker_flutter/features/home/provider/home_provider.dar
 import 'package:expense_tracker_flutter/shared/provider/sort_by_provider.dart';
 import 'package:expense_tracker_flutter/shared/provider/tab_bar_provider.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_analytics_tab_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,8 +16,10 @@ import '../../../helper/firebase_query_handler.dart';
 import '../../../models/expense_model.dart';
 import '../../../shared/widget/sort_by_widget.dart';
 import '../../../utils/expense_utils.dart';
+import '../../filter/widgets/filter_type_widget.dart';
 import '../entity/home_entity.dart';
 import '../widgets/balance_card.dart';
+import '../widgets/create_expense_dialog.dart';
 import '../widgets/date_filter_row.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/home_expenses_list.dart';
@@ -113,117 +116,165 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       extendBody: true,
-      appBar: HomeAppBar(
-        onRefresh: () {
-          _initialize();
-          FirebaseQueryHelper.getSingleDocumentAsFuture(
-              collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
-          controller.sortedExpenseSubject.add(originalExpenseList);
-          searchController.clear();
-          FocusScope.of(context).unfocus();
-        },
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                SvgPicture.asset("assets/images/header.svg"),
-                BalanceCard(
-                  sortedExpenseSubject: controller.sortedExpenseSubject,
-                )
-              ],
+      // appBar: HomeAppBar(
+      //   onRefresh: () {
+      //     _initialize();
+      //     FirebaseQueryHelper.getSingleDocumentAsFuture(
+      //         collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+      //     controller.sortedExpenseSubject.add(originalExpenseList);
+      //     searchController.clear();
+      //     FocusScope.of(context).unfocus();
+      //   },
+      // ),
+      body: CustomScrollView(
+        // crossAxisAlignment: CrossAxisAlignment.start,
+        slivers: [
+          SliverAppBar(
+            // pinned: true,
+            floating: true,
+            expandedHeight: 60,
+            // flexibleSpace: const Placeholder(),
+            title: const Text(
+              "Kharcha",
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 32,
+              ),
             ),
-            22.hGap,
-            const DateFilterRow(),
-            16.hGap,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Expenses List",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  2.hGap,
-                  Text(
-                    "Total Spend: Rs ${homeEntity.totalAmount}",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Color(0xff666666),
-                    ),
-                  ),
-                  12.hGap,
-                  TextFormField(
-                    controller: searchController,
-                    onChanged: (value) {
-                      if (value.isNotEmpty) {
-                        final searchedExpenses = homeEntity.expenses?.where(
-                          (element) {
-                            return element.name
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase()) ||
-                                element.category
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase());
-                          },
-                        ).toList();
-                        controller.sortedExpenseSubject
-                            .add(searchedExpenses ?? []);
-                      } else {
-                        controller.sortedExpenseSubject
-                            .add(originalExpenseList);
-                      }
+            actions: [
+              IconButton(
+                splashRadius: 20,
+                onPressed: () {
+                  //     _initialize();
+                  //     FirebaseQueryHelper.getSingleDocumentAsFuture(
+                  //         collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+                  //     controller.sortedExpenseSubject.add(originalExpenseList);
+                  //     searchController.clear();
+                  //     FocusScope.of(context).unfocus();
+                },
+                icon: const Icon(Icons.refresh),
+              ),
+              IconButton(
+                splashRadius: 20,
+                onPressed: () {
+                  showCupertinoModalPopup(
+                    context: context,
+                    builder: (context) => const FilterTypeBottomSheet(),
+                  );
+                },
+                icon: SvgPicture.asset("assets/images/filter.svg"),
+              ),
+              IconButton(
+                splashRadius: 20,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const CreateUpdateDialog(
+                        isUpdate: false,
+                      );
                     },
-                    decoration: InputDecoration(
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SvgPicture.asset("assets/images/search.svg"),
+                  );
+                },
+                icon: SvgPicture.asset("assets/images/add.svg"),
+              ),
+            ],
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              BalanceCard(
+                sortedExpenseSubject: controller.sortedExpenseSubject,
+              ),
+              30.hGap,
+              const DateFilterRow(),
+              16.hGap,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 22),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Expenses List",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
                       ),
-                      suffixIcon: InkWell(
-                        onTap: () {
+                    ),
+                    2.hGap,
+                    Text(
+                      "Total Spend: Rs ${homeEntity.totalAmount}",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xff666666),
+                      ),
+                    ),
+                    12.hGap,
+                    TextFormField(
+                      controller: searchController,
+                      onChanged: (value) {
+                        if (value.isNotEmpty) {
+                          final searchedExpenses = homeEntity.expenses?.where(
+                            (element) {
+                              return element.name
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()) ||
+                                  element.category
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase());
+                            },
+                          ).toList();
+                          controller.sortedExpenseSubject
+                              .add(searchedExpenses ?? []);
+                        } else {
                           controller.sortedExpenseSubject
                               .add(originalExpenseList);
-                          searchController.clear();
-                          FocusScope.of(context).unfocus();
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(Icons.clear),
+                        }
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SvgPicture.asset("assets/images/search.svg"),
+                        ),
+                        suffixIcon: InkWell(
+                          onTap: () {
+                            controller.sortedExpenseSubject
+                                .add(originalExpenseList);
+                            searchController.clear();
+                            FocusScope.of(context).unfocus();
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.clear),
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 18),
+                        hintText: "Search expense/category name...",
+                        hintStyle: const TextStyle(
+                          color: Color(0xff888888),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 18),
-                      hintText: "Search expense/category name...",
-                      hintStyle: const TextStyle(
-                        color: Color(0xff888888),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
                     ),
-                  ),
-                  30.hGap,
-                  const ExpenseAnalyticTabBar(),
-                  20.hGap,
-                  if (ref.watch(hometabProvider) == SelectedTab.expense) ...{
-                    const SortByWidget(),
+                    30.hGap,
+                    const ExpenseAnalyticTabBar(),
                     20.hGap,
-                  },
-                  const Divider(),
-                  10.hGap,
-                  const HomeExpenseList(),
-                  130.hGap,
-                ],
+                    if (ref.watch(hometabProvider) == SelectedTab.expense) ...{
+                      const SortByWidget(),
+                      20.hGap,
+                    },
+                    const Divider(),
+                    10.hGap,
+                    const HomeExpenseList(),
+                    130.hGap,
+                  ],
+                ),
               ),
-            )
-          ],
-        ),
+            ]),
+          ),
+        ],
       ),
     );
   }

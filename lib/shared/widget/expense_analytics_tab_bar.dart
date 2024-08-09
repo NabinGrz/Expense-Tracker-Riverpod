@@ -39,6 +39,9 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
           ? ref.watch(hometabProvider)
           : ref.watch(filterScreentabProvider);
       return InkWell(
+        borderRadius: BorderRadius.circular(50),
+        splashColor: AppColor.primary.withOpacity(0.2),
+        highlightColor: AppColor.primary.withOpacity(0.3),
         onTap: () {
           if (isFilter != true) {
             ref.read(hometabProvider.notifier).selectTab(selectedTab);

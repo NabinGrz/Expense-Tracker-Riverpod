@@ -13,9 +13,20 @@ class AnalyticsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      alignment: WrapAlignment.start,
-      runAlignment: WrapAlignment.center,
+    return GridView.count(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      // Create a grid with 2 columns. If you change the scrollDirection to
+      // horizontal, this produces 2 rows.
+      crossAxisCount: 2,
+      childAspectRatio: 1.5,
+      crossAxisSpacing: 6,
+      mainAxisSpacing: 6,
+      // padding: const EdgeInsets.all(10.0),
+      padding: EdgeInsets.zero,
+
+      // alignment: WrapAlignment.start,
+      // runAlignment: WrapAlignment.center,
       children: List.generate(
         sortedCategories?.length ?? 0,
         (index) {
@@ -25,27 +36,38 @@ class AnalyticsWidget extends StatelessWidget {
             onTap: () {
               showCupertinoModalPopup(
                 context: context,
-                builder: (context) => CategoryExpenses(
-                  expenseData: expenses,
-                  name: category.key,
-                  iconPath: category.key.getIconPathByCategory,
-                  totalAmount: category.value['totalAmount'].toString(),
-                ),
+                // builder: (context) => CategoryExpenses(
+                //   expenseData: expenses,
+                //   name: category.key,
+                //   iconPath: category.key.getIconPathByCategory,
+                //   totalAmount: category.value['totalAmount'].toString(),
+                // ),
+                builder: (context) {
+                  return CupertinoPopupSurface(
+                    child: CategoryExpenses(
+                      expenseData: expenses,
+                      name: category.key,
+                      iconPath: category.key.getIconPathByCategory,
+                      totalAmount: category.value['totalAmount'].toString(),
+                    ),
+                  );
+                },
               );
             },
             child: Container(
-              width: MediaQuery.sizeOf(context).width * 0.4,
-              // width: double.infinity,
+              // width: MediaQuery.sizeOf(context).width * 0.4,
+              // width: MediaQuery.sizeOf(context).width * 0.41,
+              width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              margin: const EdgeInsets.only(right: 10, bottom: 10),
+              // margin: const EdgeInsets.only(right: 10, bottom: 10),
               decoration: BoxDecoration(
                 // color: Colors.white,
                 // color: category?.key.getColorByCategory,
                 gradient: LinearGradient(
                   colors: [
-                    category!.key.getColorByCategory.withOpacity(0.4),
-                    category.key.getColorByCategory.withOpacity(0.6),
-                    category.key.getColorByCategory.withOpacity(0.8)
+                    category!.key.getColorByCategory.withOpacity(0.5),
+                    category.key.getColorByCategory.withOpacity(0.7),
+                    category.key.getColorByCategory.withOpacity(0.9)
                   ],
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
@@ -68,8 +90,8 @@ class AnalyticsWidget extends StatelessWidget {
                       tag: category.key,
                       child: Image.asset(
                         category.key.getIconPathByCategory,
-                        height: 55,
-                        width: 55,
+                        height: 50,
+                        width: 50,
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -80,7 +102,7 @@ class AnalyticsWidget extends StatelessWidget {
                     child: Text(
                       "Rs: ${category.value['totalAmount']}",
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -91,7 +113,7 @@ class AnalyticsWidget extends StatelessWidget {
                     child: Text(
                       category.key,
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
