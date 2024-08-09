@@ -1,22 +1,23 @@
-import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/features/filter/widgets/filter_type_widget.dart';
 import 'package:expense_tracker_flutter/features/home/widgets/create_expense_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+class SliverHomeAppBar extends StatelessWidget {
   final void Function() onRefresh;
-  const HomeAppBar({
+  const SliverHomeAppBar({
     super.key,
     required this.onRefresh,
   });
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: AppColor.primary,
-      elevation: 0,
+    return SliverAppBar(
+      // pinned: true,
+      floating: true,
+      expandedHeight: 60,
+      // flexibleSpace: const Placeholder(),
       title: const Text(
         "Kharcha",
         style: TextStyle(
@@ -55,10 +56,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: SvgPicture.asset("assets/images/add.svg"),
         ),
       ],
-      centerTitle: false,
     );
   }
-
-  @override
-  Size get preferredSize => const Size(double.infinity, 48);
 }

@@ -2,9 +2,7 @@ import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:rxdart/rxdart.dart';
 
-import '../../../models/expense_model.dart';
 import '../../../shared/provider/tab_bar_provider.dart';
 import '../../../shared/widget/expense_tile.dart';
 import '../provider/home_provider.dart';

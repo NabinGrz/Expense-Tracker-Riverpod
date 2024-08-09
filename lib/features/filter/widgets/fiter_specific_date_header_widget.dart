@@ -15,21 +15,21 @@ class FilterSpecificHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.sizeOf(context).height * 0.16,
+      // height: MediaQuery.sizeOf(context).height * 0.16,
       padding: const EdgeInsets.only(left: 22, bottom: 20),
-      width: double.infinity,
-      decoration: BoxDecoration(
-          color: AppColor.primary,
-          borderRadius: const BorderRadius.only(
-            bottomRight: Radius.circular(20),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0XFF02443F).withOpacity(0.3),
-              offset: const Offset(0, 4),
-              blurRadius: 16,
-            )
-          ]),
+      // width: double.infinity,
+      // decoration: BoxDecoration(
+      //     color: AppColor.primary,
+      //     borderRadius: const BorderRadius.only(
+      //       bottomRight: Radius.circular(20),
+      //     ),
+      //     boxShadow: [
+      //       BoxShadow(
+      //         color: const Color(0XFF02443F).withOpacity(0.3),
+      //         offset: const Offset(0, 4),
+      //         blurRadius: 16,
+      //       )
+      //     ]),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,

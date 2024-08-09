@@ -29,7 +29,12 @@ class FilterScreen extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _FilterScreenState();
 }
 
-class _FilterScreenState extends ConsumerState<FilterScreen> {
+class _FilterScreenState extends ConsumerState<FilterScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  final ScrollController _scrollController = ScrollController();
+
   List<Expense> expenses = [];
   void listenToDateChange() {
     ref.listen(selectedDateProvider, (previous, next) => getExpenses(next));
@@ -53,6 +58,12 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
 
   @override
   void initState() {
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+
+    _animation = Tween<double>(begin: 1.0, end: 0.0).animate(_controller);
     ExpenseQueryHelper.getExpenseAsFuture()?.then(
       (value) {
         expenses = value.docs
@@ -74,6 +85,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
         }
       },
     );
+    _scrollController.addListener(_scrollListener);
     super.initState();
   }
 
@@ -86,6 +98,34 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
     ).toList();
     filteredExpensesSubject.add(null);
     filteredExpensesSubject.add(filteredExpenses);
+  }
+
+  void _scrollListener() {
+    if (_scrollController.hasClients) {
+      double offset = _scrollController.offset;
+      double height = MediaQuery.of(context).padding.top + kToolbarHeight;
+      bool isCollapsed = offset > (height / 3);
+      if (isCollapsed != ref.watch(isAppBarCollapsed)) {
+        ref.read(isAppBarCollapsed.notifier).update((state) => isCollapsed);
+        _toggleFadeCollapsing(isCollapsed);
+      }
+    }
+  }
+
+  void _toggleFadeCollapsing(bool isCollapsed) {
+    if (!isCollapsed) {
+      _controller.reverse();
+    } else {
+      _controller.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -119,137 +159,123 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
               },
             );
           return Scaffold(
+            extendBodyBehindAppBar: true,
             backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: AppColor.primary,
-              elevation: 0,
-              centerTitle: false,
-              title: const Text(
-                "Filter",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            body: Stack(
-              children: [
-                widget.isSpecificDate
-                    ? const FilterSpecificHeaderWidget()
-                    : const FilterRangeHeaderWidget(),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.72,
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
+            body: CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                SliverAppBar(
+                    pinned: true,
+                    title: const Text(
+                      "Filter",
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    expandedHeight: 200,
+                    flexibleSpace: FadeTransition(
+                      opacity: _animation,
+                      child: Container(
+                        child: widget.isSpecificDate
+                            ? const FilterSpecificHeaderWidget()
+                            : const FilterRangeHeaderWidget(),
+                      ),
+                    )),
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    20.hGap,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          20.hGap,
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Expenses List",
-                                  style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold,
-                                    // color: Color(0xff666666),
-                                  ),
-                                ),
-                                2.hGap,
-                                Text(
-                                  "Total Amount: Rs $expenseAmount",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Color(0xff666666),
-                                  ),
-                                ),
-                                20.hGap,
-                                const ExpenseAnalyticTabBar(
-                                  isFilter: true,
-                                ),
-                              ],
+                          const Text(
+                            "Expenses List",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          30.hGap,
-                          !sortedDates.isNotNullAndNotEmpty ||
-                                  !sortedCategories.isNotNullAndNotEmpty
-                              ? const Center(
-                                  child: Text(
-                                  "No expenses yet",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 24,
-                                  ),
-                                ))
-                              : ref.watch(filterScreentabProvider) ==
-                                      SelectedTab.expense
-                                  ? ListView.builder(
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: sortedDates?.length ?? 0,
-                                      itemBuilder: (context, index) {
-                                        final data = sortedDates?[index];
-                                        final expenses = data?.value;
-                                        final date = DateTime.parse(data!.key);
-                                        final day = date.formatCustomDate('d');
-                                        final weekDay =
-                                            date.formatCustomDate('EEEE');
-                                        final month =
-                                            date.formatCustomDate('MMM y');
-                                        expenses?.sort(
-                                          (a, b) =>
-                                              a.amount.compareTo(b.amount),
-                                        );
-                                        return Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            DateWidget(
-                                                day: day,
-                                                weekDay: weekDay,
-                                                month: month,
-                                                expenses: expenses),
-                                            ListView.separated(
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 20,
-                                                      vertical: 18),
-                                              shrinkWrap: true,
-                                              itemCount: expenses?.length ?? 0,
-                                              separatorBuilder:
-                                                  (context, index) => 18.hGap,
-                                              itemBuilder: (context, index) {
-                                                final expense =
-                                                    expenses?[index];
-
-                                                return ExpenseTile(
-                                                    isFilter: true,
-                                                    expenseData: expense);
-                                              },
-                                            )
-                                          ],
-                                        );
-                                      },
-                                    )
-                                  : Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: AnalyticsWidget(
-                                        sortedCategories: sortedCategories,
-                                      ),
-                                    )
+                          2.hGap,
+                          Text(
+                            "Total Amount: Rs $expenseAmount",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xff666666),
+                            ),
+                          ),
+                          20.hGap,
+                          const ExpenseAnalyticTabBar(
+                            isFilter: true,
+                          ),
                         ],
                       ),
                     ),
-                  ),
+                    !sortedDates.isNotNullAndNotEmpty ||
+                            !sortedCategories.isNotNullAndNotEmpty
+                        ? const Center(
+                            child: Text(
+                            "No expenses yet",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 24,
+                            ),
+                          ))
+                        : ref.watch(filterScreentabProvider) ==
+                                SelectedTab.expense
+                            ? ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: sortedDates?.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  final data = sortedDates?[index];
+                                  final expenses = data?.value;
+                                  final date = DateTime.parse(data!.key);
+                                  final day = date.formatCustomDate('d');
+                                  final weekDay = date.formatCustomDate('EEEE');
+                                  final month = date.formatCustomDate('MMM y');
+                                  expenses?.sort(
+                                    (a, b) => a.amount.compareTo(b.amount),
+                                  );
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      DateWidget(
+                                          day: day,
+                                          weekDay: weekDay,
+                                          month: month,
+                                          expenses: expenses),
+                                      ListView.separated(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 18),
+                                        shrinkWrap: true,
+                                        itemCount: expenses?.length ?? 0,
+                                        separatorBuilder: (context, index) =>
+                                            18.hGap,
+                                        itemBuilder: (context, index) {
+                                          final expense = expenses?[index];
+
+                                          return ExpenseTile(
+                                              isFilter: true,
+                                              expenseData: expense);
+                                        },
+                                      )
+                                    ],
+                                  );
+                                },
+                              )
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: AnalyticsWidget(
+                                  sortedCategories: sortedCategories,
+                                ),
+                              )
+                  ]),
                 )
               ],
             ),

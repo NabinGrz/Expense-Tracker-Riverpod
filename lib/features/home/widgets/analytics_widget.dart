@@ -3,7 +3,6 @@ import 'package:expense_tracker_flutter/extension/string_extension.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants/app_color.dart';
 import '../../../models/expense_model.dart';
 import 'category_expense.dart';
 

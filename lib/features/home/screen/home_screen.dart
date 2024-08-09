@@ -5,23 +5,19 @@ import 'package:expense_tracker_flutter/features/home/provider/home_provider.dar
 import 'package:expense_tracker_flutter/shared/provider/sort_by_provider.dart';
 import 'package:expense_tracker_flutter/shared/provider/tab_bar_provider.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_analytics_tab_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../../helper/expense_query_helper.dart';
 import '../../../helper/firebase_query_handler.dart';
 import '../../../models/expense_model.dart';
 import '../../../shared/widget/sort_by_widget.dart';
 import '../../../utils/expense_utils.dart';
-import '../../filter/widgets/filter_type_widget.dart';
 import '../entity/home_entity.dart';
 import '../widgets/balance_card.dart';
-import '../widgets/create_expense_dialog.dart';
 import '../widgets/date_filter_row.dart';
-import '../widgets/home_app_bar.dart';
+import '../widgets/sliver_home_app_bar.dart';
 import '../widgets/home_expenses_list.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -116,69 +112,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       extendBody: true,
-      // appBar: HomeAppBar(
-      //   onRefresh: () {
-      //     _initialize();
-      //     FirebaseQueryHelper.getSingleDocumentAsFuture(
-      //         collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
-      //     controller.sortedExpenseSubject.add(originalExpenseList);
-      //     searchController.clear();
-      //     FocusScope.of(context).unfocus();
-      //   },
-      // ),
       body: CustomScrollView(
         // crossAxisAlignment: CrossAxisAlignment.start,
         slivers: [
-          SliverAppBar(
-            // pinned: true,
-            floating: true,
-            expandedHeight: 60,
-            // flexibleSpace: const Placeholder(),
-            title: const Text(
-              "Kharcha",
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 32,
-              ),
-            ),
-            actions: [
-              IconButton(
-                splashRadius: 20,
-                onPressed: () {
-                  //     _initialize();
-                  //     FirebaseQueryHelper.getSingleDocumentAsFuture(
-                  //         collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
-                  //     controller.sortedExpenseSubject.add(originalExpenseList);
-                  //     searchController.clear();
-                  //     FocusScope.of(context).unfocus();
-                },
-                icon: const Icon(Icons.refresh),
-              ),
-              IconButton(
-                splashRadius: 20,
-                onPressed: () {
-                  showCupertinoModalPopup(
-                    context: context,
-                    builder: (context) => const FilterTypeBottomSheet(),
-                  );
-                },
-                icon: SvgPicture.asset("assets/images/filter.svg"),
-              ),
-              IconButton(
-                splashRadius: 20,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const CreateUpdateDialog(
-                        isUpdate: false,
-                      );
-                    },
-                  );
-                },
-                icon: SvgPicture.asset("assets/images/add.svg"),
-              ),
-            ],
+          SliverHomeAppBar(
+            onRefresh: () {
+              //     _initialize();
+              FirebaseQueryHelper.getSingleDocumentAsFuture(
+                  collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+              controller.sortedExpenseSubject.add(originalExpenseList);
+              searchController.clear();
+              FocusScope.of(context).unfocus();
+            },
           ),
           SliverList(
             delegate: SliverChildListDelegate([
