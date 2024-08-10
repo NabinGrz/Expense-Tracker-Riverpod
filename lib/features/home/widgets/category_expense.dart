@@ -1,4 +1,6 @@
+import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/extension/date_extension.dart';
+import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:flutter/material.dart';
 
@@ -77,35 +79,7 @@ class CategoryExpenses extends StatelessWidget {
               ),
               20.hGap,
               if (name == "Petrol")
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Scooter petrol: ${expenseData.where((e) => !e.name.toLowerCase().contains("bike")).map(
-                            (e) => DateTime.parse(e.createAt),
-                          ).toList().daysDifferenceBetweenFirstAndLast()} days",
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      "Bike petrol: ${expenseData.where((e) => e.name.toLowerCase().contains("bike")).map(
-                            (e) => DateTime.parse(e.createAt),
-                          ).toList().daysDifferenceBetweenFirstAndLast()} days",
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                    8.hGap,
-                    Text("Start Date: ${expenseData.map(
-                          (e) => DateTime.parse(e.createAt),
-                        ).toList().firstDate()?.toFormattedDateString()}"),
-                    Text("End Date: ${expenseData.map(
-                          (e) => DateTime.parse(e.createAt),
-                        ).toList().lastDate()?.toFormattedDateString()}"),
-                    20.hGap,
-                  ],
-                ),
+                PetrolCategoryDetail(expenseData: expenseData),
               ListView.separated(
                 physics: const ClampingScrollPhysics(),
                 padding: EdgeInsets.zero,
@@ -171,6 +145,141 @@ class CategoryExpenses extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class PetrolCategoryDetail extends StatelessWidget {
+  const PetrolCategoryDetail({
+    super.key,
+    required this.expenseData,
+  });
+
+  final List<Expense> expenseData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          decoration: BoxDecoration(
+            color: AppColor.primary.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              expenseData
+                      .map((e) => e.name.toLowerCase())
+                      .contains("scooter petrol")
+                  ? Row(
+                      children: [
+                        Text(
+                          "${expenseData.where((e) => !e.name.toLowerCase().contains("bike")).map(
+                                (e) => DateTime.parse(e.createAt),
+                              ).toList().daysDifferenceBetweenFirstAndLast()} D",
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                        4.wGap,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Scooter",
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              "Rs: ${expenseData.where((e) => !e.name.toLowerCase().contains("bike")).map(
+                                    (e) => e.amount,
+                                  ).toList().sum()}",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+              expenseData
+                      .map((e) => e.name.toLowerCase())
+                      .contains("bike petrol")
+                  ? Row(
+                      children: [
+                        Text(
+                          "${expenseData.where((e) => e.name.toLowerCase().contains("bike")).map(
+                                (e) => DateTime.parse(e.createAt),
+                              ).toList().daysDifferenceBetweenFirstAndLast()} D",
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                        4.wGap,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Bike",
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              "Rs: ${expenseData.where((e) => e.name.toLowerCase().contains("bike")).map(
+                                    (e) => e.amount,
+                                  ).toList().sum()}",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+            ],
+          ),
+        ),
+        const Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.calendar_month,
+              color: AppColor.primary,
+            ),
+            4.wGap,
+            Text(
+              "${expenseData.map(
+                    (e) => DateTime.parse(e.createAt),
+                  ).toList().firstDate()?.toFormattedDateString()}",
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Icon(Icons.arrow_right),
+            Text(
+              "${expenseData.map(
+                    (e) => DateTime.parse(e.createAt),
+                  ).toList().lastDate()?.toFormattedDateString()}",
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        20.hGap,
+      ],
     );
   }
 }

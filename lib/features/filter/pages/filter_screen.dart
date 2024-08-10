@@ -212,6 +212,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                         ],
                       ),
                     ),
+                    20.hGap,
                     !sortedDates.isNotNullAndNotEmpty ||
                             !sortedCategories.isNotNullAndNotEmpty
                         ? const Center(
