@@ -76,6 +76,36 @@ class CategoryExpenses extends StatelessWidget {
                 ],
               ),
               20.hGap,
+              if (name == "Petrol")
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Scooter petrol: ${expenseData.where((e) => !e.name.toLowerCase().contains("bike")).map(
+                            (e) => DateTime.parse(e.createAt),
+                          ).toList().daysDifferenceBetweenFirstAndLast()} days",
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      "Bike petrol: ${expenseData.where((e) => e.name.toLowerCase().contains("bike")).map(
+                            (e) => DateTime.parse(e.createAt),
+                          ).toList().daysDifferenceBetweenFirstAndLast()} days",
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    8.hGap,
+                    Text("Start Date: ${expenseData.map(
+                          (e) => DateTime.parse(e.createAt),
+                        ).toList().firstDate()?.toFormattedDateString()}"),
+                    Text("End Date: ${expenseData.map(
+                          (e) => DateTime.parse(e.createAt),
+                        ).toList().lastDate()?.toFormattedDateString()}"),
+                    20.hGap,
+                  ],
+                ),
               ListView.separated(
                 physics: const ClampingScrollPhysics(),
                 padding: EdgeInsets.zero,

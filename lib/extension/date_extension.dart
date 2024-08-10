@@ -30,3 +30,30 @@ extension DateExtension on DateTime {
         day == yesterday.day;
   }
 }
+
+extension DateDifferenceExtension on List<DateTime> {
+  int daysDifferenceBetweenFirstAndLast() {
+    if (isEmpty) return 0; // Return 0 for an empty list
+
+    // Sort dates to get the earliest and latest dates
+    final sortedDates = this..sort();
+
+    final firstDate = sortedDates.first;
+    final lastDate = sortedDates.last;
+
+    // Adding 1 to include both first and last date in the difference
+    return lastDate.difference(firstDate).inDays + 1;
+  }
+
+  DateTime? firstDate() {
+    if (isEmpty) return null;
+    final sortedDates = this..sort();
+    return sortedDates.first;
+  }
+
+  DateTime? lastDate() {
+    if (isEmpty) return null;
+    final sortedDates = this..sort();
+    return sortedDates.last;
+  }
+}
