@@ -195,9 +195,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 18),
-                        hintText: "Search expense/category name...",
+                        hintText: "Search...",
                         hintStyle: const TextStyle(
-                          color: Color(0xff888888),
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w200,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),

@@ -1,5 +1,7 @@
+import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/extension/string_extension.dart';
+import 'package:expense_tracker_flutter/shared/widget/expense_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -99,7 +101,7 @@ class AnalyticsWidget extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "Rs: ${category.value['totalAmount'].currency}-",
+                        "Rs: ${int.tryParse("${category.value['totalAmount']}").toCurrency}-",
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
