@@ -34,6 +34,16 @@ class FilterRangeHeaderWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 8.hGap,
+          const Text(
+            "Select Range",
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          4.hGap,
           Consumer(builder: (context, ref, _) {
             final dateRange = ref.watch(dateRangeProvider);
             final fromDate = dateRange.from;
@@ -47,8 +57,8 @@ class FilterRangeHeaderWidget extends StatelessWidget {
                     const Text(
                       "From Date",
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        // fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
@@ -88,8 +98,8 @@ class FilterRangeHeaderWidget extends StatelessWidget {
                     const Text(
                       "To Date",
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        // fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),

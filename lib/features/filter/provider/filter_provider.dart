@@ -4,7 +4,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../models/expense_model.dart';
 
-final isAppBarCollapsed = StateProvider(
+final isAppBarCollapsed = StateProvider.autoDispose(
   (ref) => false,
 );
 

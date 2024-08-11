@@ -59,11 +59,11 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
   @override
   void initState() {
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
 
-    _animation = Tween<double>(begin: 1.0, end: 0.0).animate(_controller);
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
     ExpenseQueryHelper.getExpenseAsFuture()?.then(
       (value) {
         expenses = value.docs
@@ -104,7 +104,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
     if (_scrollController.hasClients) {
       double offset = _scrollController.offset;
       double height = MediaQuery.of(context).padding.top + kToolbarHeight;
-      bool isCollapsed = offset > (height / 3);
+      bool isCollapsed = offset > (height + 35);
       if (isCollapsed != ref.watch(isAppBarCollapsed)) {
         ref.read(isAppBarCollapsed.notifier).update((state) => isCollapsed);
         _toggleFadeCollapsing(isCollapsed);
@@ -113,11 +113,11 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
   }
 
   void _toggleFadeCollapsing(bool isCollapsed) {
-    if (!isCollapsed) {
-      _controller.reverse();
-    } else {
-      _controller.forward();
-    }
+    // if (!isCollapsed) {
+    //   _controller.reverse();
+    // } else {
+    _controller.forward();
+    // }
   }
 
   @override
@@ -159,29 +159,37 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
               },
             );
           return Scaffold(
-            extendBodyBehindAppBar: true,
             backgroundColor: Colors.white,
             body: CustomScrollView(
+              shrinkWrap: true,
               controller: _scrollController,
               slivers: [
-                SliverAppBar(
-                    pinned: true,
-                    title: const Text(
-                      "Filter",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    expandedHeight: 200,
-                    flexibleSpace: FadeTransition(
-                      opacity: _animation,
-                      child: Container(
-                        child: widget.isSpecificDate
-                            ? const FilterSpecificHeaderWidget()
-                            : const FilterRangeHeaderWidget(),
-                      ),
-                    )),
+                SliverAppBar.large(
+                  floating: true,
+                  pinned: false,
+                  centerTitle: false,
+                  expandedHeight: 200,
+                  flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: false,
+                    title: ref.watch(isAppBarCollapsed)
+                        ? FadeTransition(
+                            opacity: _animation,
+                            child: Text(
+                              widget.isSpecificDate
+                                  ? "Select Date"
+                                  : "Select Range",
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )
+                        : null,
+                    background: widget.isSpecificDate
+                        ? const FilterSpecificHeaderWidget()
+                        : const FilterRangeHeaderWidget(),
+                  ),
+                ),
                 SliverList(
                   delegate: SliverChildListDelegate([
                     20.hGap,

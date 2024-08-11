@@ -34,15 +34,24 @@ class FilterSpecificHeaderWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // const Text(
+          //   "Filter",
+          //   style: TextStyle(
+          //     fontSize: 28,
+          //     fontWeight: FontWeight.bold,
+          //     color: Colors.white,
+          //   ),
+          // ),
+          // 8.hGap,
           const Text(
             "Select Date",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 26,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
-          6.hGap,
+          4.hGap,
           Consumer(builder: (context, ref, _) {
             final selectedDate = ref.watch(selectedDateProvider);
             return InkWell(
