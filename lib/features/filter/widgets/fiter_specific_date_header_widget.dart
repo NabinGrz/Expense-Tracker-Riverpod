@@ -46,7 +46,7 @@ class FilterSpecificHeaderWidget extends StatelessWidget {
           const Text(
             "Select Date",
             style: TextStyle(
-              fontSize: 26,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),

@@ -102,10 +102,8 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
 
   void _scrollListener() {
     if (_scrollController.hasClients) {
-      double offset = _scrollController.offset;
-      double height = MediaQuery.of(context).padding.top + kToolbarHeight;
-      bool isCollapsed = offset > (height + 35);
-      if (isCollapsed != ref.watch(isAppBarCollapsed)) {
+      bool isCollapsed = _scrollController.offset > (200 - kToolbarHeight);
+      if (ref.watch(isAppBarCollapsed) != isCollapsed) {
         ref.read(isAppBarCollapsed.notifier).update((state) => isCollapsed);
         _toggleFadeCollapsing(isCollapsed);
       }
@@ -164,27 +162,30 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
               shrinkWrap: true,
               controller: _scrollController,
               slivers: [
-                SliverAppBar.large(
-                  floating: true,
+                SliverAppBar(
+                  floating: false,
                   pinned: false,
                   centerTitle: false,
                   expandedHeight: 200,
-                  flexibleSpace: FlexibleSpaceBar(
-                    centerTitle: false,
-                    title: ref.watch(isAppBarCollapsed)
-                        ? FadeTransition(
-                            opacity: _animation,
-                            child: Text(
-                              widget.isSpecificDate
-                                  ? "Select Date"
-                                  : "Select Range",
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
+                  shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.only(bottomRight: Radius.circular(20))),
+                  // snap: true,
+                  title: ref.watch(isAppBarCollapsed)
+                      ? FadeTransition(
+                          opacity: _animation,
+                          child: Text(
+                            widget.isSpecificDate
+                                ? "Select Date"
+                                : "Select Range",
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
-                          )
-                        : null,
+                          ),
+                        )
+                      : null,
+                  flexibleSpace: FlexibleSpaceBar(
                     background: widget.isSpecificDate
                         ? const FilterSpecificHeaderWidget()
                         : const FilterRangeHeaderWidget(),
@@ -198,9 +199,9 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Expenses List",
-                            style: TextStyle(
+                          Text(
+                            "Expenses List ${ref.watch(isAppBarCollapsed)}",
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),

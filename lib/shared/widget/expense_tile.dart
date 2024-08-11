@@ -4,11 +4,13 @@ import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/extension/string_extension.dart';
 import 'package:expense_tracker_flutter/helper/expense_query_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../features/filter/provider/filter_provider.dart';
 import '../../features/home/widgets/create_expense_dialog.dart';
 import '../../models/expense_model.dart';
 
-class ExpenseTile extends StatelessWidget {
+class ExpenseTile extends ConsumerWidget {
   const ExpenseTile({
     super.key,
     required this.expenseData,
@@ -19,7 +21,7 @@ class ExpenseTile extends StatelessWidget {
   final bool isFilter;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       borderRadius: BorderRadius.circular(8),
       splashColor: AppColor.primary.withOpacity(0.3),
@@ -115,7 +117,7 @@ class ExpenseTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${expenseData?.name}",
+                "${expenseData?.name}:${ref.watch(isAppBarCollapsed)}",
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,

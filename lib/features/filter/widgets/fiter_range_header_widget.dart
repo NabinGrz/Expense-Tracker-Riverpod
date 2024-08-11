@@ -7,13 +7,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../constants/app_color.dart';
 import '../provider/filter_provider.dart';
 
-class FilterRangeHeaderWidget extends StatelessWidget {
+class FilterRangeHeaderWidget extends ConsumerWidget {
   const FilterRangeHeaderWidget({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       // height: MediaQuery.sizeOf(context).height * 0.16,
       padding: const EdgeInsets.only(left: 22, bottom: 20),
@@ -35,10 +35,11 @@ class FilterRangeHeaderWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 8.hGap,
+
           const Text(
             "Select Range",
             style: TextStyle(
-              fontSize: 26,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
