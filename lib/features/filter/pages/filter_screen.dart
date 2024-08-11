@@ -59,7 +59,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
   @override
   void initState() {
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 600),
       vsync: this,
     );
 
@@ -113,11 +113,11 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
   }
 
   void _toggleFadeCollapsing(bool isCollapsed) {
-    // if (!isCollapsed) {
-    //   _controller.reverse();
-    // } else {
-    _controller.forward();
-    // }
+    if (!isCollapsed) {
+      _controller.reverse();
+    } else {
+      _controller.forward();
+    }
   }
 
   @override
