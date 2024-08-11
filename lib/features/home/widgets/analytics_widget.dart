@@ -18,7 +18,7 @@ class AnalyticsWidget extends StatelessWidget {
       // Create a grid with 2 columns. If you change the scrollDirection to
       // horizontal, this produces 2 rows.
       crossAxisCount: 2,
-      childAspectRatio: 1.5,
+      childAspectRatio: 1.7,
       crossAxisSpacing: 6,
       mainAxisSpacing: 6,
       // padding: const EdgeInsets.all(10.0),
@@ -95,28 +95,29 @@ class AnalyticsWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  6.hGap,
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Rs: ${category.value['totalAmount']}",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                  // 6.hGap,
+                  Row(
+                    children: [
+                      Text(
+                        "Rs: ${category.value['totalAmount'].currency}-",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      category.key,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                      Expanded(
+                        child: Text(
+                          overflow: TextOverflow.ellipsis,
+                          category.key,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),

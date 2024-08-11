@@ -1,6 +1,7 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
+import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:flutter/material.dart';
 
@@ -119,7 +120,7 @@ class CategoryExpenses extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "- Rs ${expense.amount}",
+                            "- Rs ${expense.amount.toCurrency}",
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -197,7 +198,7 @@ class PetrolCategoryDetail extends StatelessWidget {
                             Text(
                               "Rs: ${expenseData.where((e) => !e.name.toLowerCase().contains("bike")).map(
                                     (e) => e.amount,
-                                  ).toList().sum()}",
+                                  ).toList().sum().toCurrency}",
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,
@@ -234,7 +235,7 @@ class PetrolCategoryDetail extends StatelessWidget {
                             Text(
                               "Rs: ${expenseData.where((e) => e.name.toLowerCase().contains("bike")).map(
                                     (e) => e.amount,
-                                  ).toList().sum()}",
+                                  ).toList().sum().toCurrency}",
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,

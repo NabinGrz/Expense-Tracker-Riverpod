@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/home/provider/home_provider.dart';
 import 'package:expense_tracker_flutter/shared/provider/sort_by_provider.dart';
@@ -142,12 +143,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       "Expenses List",
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     2.hGap,
                     Text(
-                      "Total Spend: Rs ${homeEntity.totalAmount}",
+                      "Total Spend: Rs ${homeEntity.totalAmount.toCurrency}",
                       style: const TextStyle(
                         fontSize: 14,
                         color: Color(0xff666666),
@@ -210,7 +211,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SortByWidget(),
                       20.hGap,
                     },
-                    const Divider(),
+                    // const Divider(),
                     10.hGap,
                     const HomeExpenseList(),
                     130.hGap,

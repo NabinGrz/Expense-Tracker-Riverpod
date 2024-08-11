@@ -22,7 +22,7 @@ class SliverHomeAppBar extends StatelessWidget {
         "Kharcha",
         style: TextStyle(
           fontWeight: FontWeight.w900,
-          fontSize: 32,
+          fontSize: 24,
         ),
       ),
       actions: [

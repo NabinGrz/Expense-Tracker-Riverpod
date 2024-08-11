@@ -1,5 +1,6 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/extension/date_extension.dart';
+import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/extension/string_extension.dart';
 import 'package:expense_tracker_flutter/helper/expense_query_helper.dart';
@@ -117,7 +118,7 @@ class ExpenseTile extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${expenseData?.name}:${ref.watch(isAppBarCollapsed)}",
+                "${expenseData?.name}",
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -159,7 +160,7 @@ class ExpenseTile extends ConsumerWidget {
           ),
           const Spacer(),
           Text(
-            "- Rs ${expenseData?.amount}",
+            "- Rs ${expenseData?.amount.toCurrency}",
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
