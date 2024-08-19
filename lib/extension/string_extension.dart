@@ -65,6 +65,16 @@ extension ImagePathExtension on String {
         return "assets/images/coldDrink.png";
       case AppString.categorySubinExpense:
         return "assets/images/jhyapliKhaja.webp";
+      case AppString.categoryHouseHoldSupplies:
+        return "assets/images/household supplies.webp";
+      case AppString.categoryElectricty:
+        return "assets/images/electricity.webp";
+      case AppString.categorySoap:
+        return "assets/images/soap.png";
+      case AppString.categoryRestaurant:
+        return "assets/images/restaurant.webp";
+      case AppString.categoryKhanepaniBill:
+        return "assets/images/khanepanibill.webp";
       default:
         return "assets/images/bill.png";
     }

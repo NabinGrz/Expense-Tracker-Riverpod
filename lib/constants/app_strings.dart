@@ -29,4 +29,9 @@ class AppString {
   static const String categoryJhyapliKhaja = "jhyapli khaja";
   static const String categoryColdDrink = "cold drink";
   static const String categorySubinExpense = "subin expense";
+  static const String categoryHouseHoldSupplies = "household supplies";
+  static const String categoryElectricty = "electricty";
+  static const String categorySoap = "soap";
+  static const String categoryRestaurant = "restaurant/cafe";
+  static const String categoryKhanepaniBill = "khanepani bill";
 }
