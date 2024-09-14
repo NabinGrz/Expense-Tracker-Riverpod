@@ -2,6 +2,7 @@ import 'package:expense_tracker_flutter/features/filter/widgets/filter_type_widg
 import 'package:expense_tracker_flutter/features/home/widgets/create_expense_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SliverHomeAppBar extends StatelessWidget {
@@ -34,6 +35,7 @@ class SliverHomeAppBar extends StatelessWidget {
         IconButton(
           splashRadius: 20,
           onPressed: () {
+            HapticFeedback.selectionClick();
             showCupertinoModalPopup(
               context: context,
               builder: (context) => const FilterTypeBottomSheet(),
@@ -44,6 +46,7 @@ class SliverHomeAppBar extends StatelessWidget {
         IconButton(
           splashRadius: 20,
           onPressed: () {
+            HapticFeedback.selectionClick();
             showDialog(
               context: context,
               builder: (context) {

@@ -82,7 +82,50 @@ class HomeNotifier extends StateNotifier<HomeEntity> {
         state = state.copyWith(expenses: expenses);
         updateTotalAmount(expenses);
         break;
-      default:
     }
+  }
+
+  List<Expense>? dateWiseExpenses(List<Expense>? expenses,
+      AsyncSnapshot<List<Expense>> snapshot, DateFilter dateFilter) {
+    switch (dateFilter) {
+      case DateFilter.today:
+        expenses = snapshot.data?.where(
+          (element) {
+            final expenseDate = DateTime.parse(element.createAt);
+            return expenseDate.isSameDateAs(DateTime.now());
+          },
+        ).toList();
+        break;
+      case DateFilter.yesterday:
+        final yesterdayDate = DateTime.now().subtract(const Duration(days: 1));
+        expenses = snapshot.data?.where(
+          (element) {
+            final expenseDate = DateTime.parse(element.createAt);
+            return expenseDate.isSameDateAs(yesterdayDate);
+          },
+        ).toList();
+        break;
+      case DateFilter.twoweeks:
+        final twoWeeks = DateTime.now().subtract(const Duration(days: 13));
+        expenses = snapshot.data?.where(
+          (element) {
+            final expenseDate = DateTime.parse(element.createAt);
+            return expenseDate.isSameDateAs(twoWeeks) ||
+                expenseDate.isAfter(twoWeeks);
+          },
+        ).toList();
+        break;
+      case DateFilter.monthly:
+        final monthly = DateTime.now().subtract(const Duration(days: 29));
+        expenses = snapshot.data?.where(
+          (element) {
+            final expenseDate = DateTime.parse(element.createAt);
+            return expenseDate.isSameDateAs(monthly) ||
+                expenseDate.isAfter(monthly);
+          },
+        ).toList();
+        break;
+    }
+    return expenses;
   }
 }

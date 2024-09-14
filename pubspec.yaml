@@ -47,6 +47,7 @@ dependencies:
   fl_chart: ^0.68.0
   intl: ^0.19.0
   flutter_svg_provider: ^1.0.7
+  haptic_feedback: ^0.5.1+1
 
 dev_dependencies:
   flutter_test:

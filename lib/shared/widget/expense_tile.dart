@@ -5,6 +5,7 @@ import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/extension/string_extension.dart';
 import 'package:expense_tracker_flutter/helper/expense_query_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../features/filter/provider/filter_provider.dart';
@@ -30,6 +31,7 @@ class ExpenseTile extends ConsumerWidget {
       splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
       onTap: () {},
       onLongPress: () {
+        HapticFeedback.lightImpact();
         showDialog(
           context: context,
           builder: (context) {

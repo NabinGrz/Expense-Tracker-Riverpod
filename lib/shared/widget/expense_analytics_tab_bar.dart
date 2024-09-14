@@ -1,6 +1,7 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/shared/provider/sort_by_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../provider/tab_bar_provider.dart';
@@ -43,6 +44,7 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
         splashColor: AppColor.primary.withOpacity(0.2),
         highlightColor: AppColor.primary.withOpacity(0.3),
         onTap: () {
+          HapticFeedback.heavyImpact();
           if (isFilter != true) {
             ref.read(hometabProvider.notifier).selectTab(selectedTab);
             ref.read(homeSortByProvider.notifier).selectSortBy(SortBy.none);

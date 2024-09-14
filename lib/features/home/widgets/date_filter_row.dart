@@ -1,5 +1,6 @@
 import 'package:expense_tracker_flutter/features/home/provider/home_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants/app_color.dart';
@@ -13,17 +14,14 @@ class DateFilterRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      // margin: const EdgeInsets.symmetric(horizontal: 22),
       decoration: const BoxDecoration(
         color: Color(0xffF4F6F6),
-        // borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           filterBox("Today", selectedDateFilter: DateFilter.today),
           filterBox("Yesterday", selectedDateFilter: DateFilter.yesterday),
-          // filterBox("Weekly", selectedDateFilter: DateFilter.weekly),
           filterBox("2 Weeks", selectedDateFilter: DateFilter.twoweeks),
           filterBox("Monthly", selectedDateFilter: DateFilter.monthly),
         ],
@@ -36,6 +34,7 @@ class DateFilterRow extends ConsumerWidget {
       final dateFilter = ref.watch(homeEntityProvider).dateFilter;
       return InkWell(
         onTap: () {
+          HapticFeedback.mediumImpact();
           ref.read(homeEntityProvider.notifier).selectDate(selectedDateFilter);
           ref.read(homeSortByProvider.notifier).selectSortBy(SortBy.none);
         },
@@ -53,7 +52,6 @@ class DateFilterRow extends ConsumerWidget {
               ? null
               : BoxDecoration(
                   color: AppColor.primary,
-                  // borderRadius: BorderRadius.circular(8),
                 ),
           child: Text(
             name,

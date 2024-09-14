@@ -19,11 +19,6 @@ class HomeExpenseList extends ConsumerStatefulWidget {
 
 class _HomeExpenseListState extends ConsumerState<HomeExpenseList> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final controller = ref.read(homeEntityProvider.notifier);
     final homeEntity = ref.watch(homeEntityProvider);

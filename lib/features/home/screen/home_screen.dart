@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/home/provider/home_provider.dart';
@@ -7,6 +8,7 @@ import 'package:expense_tracker_flutter/shared/provider/sort_by_provider.dart';
 import 'package:expense_tracker_flutter/shared/provider/tab_bar_provider.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_analytics_tab_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -18,6 +20,7 @@ import '../../../utils/expense_utils.dart';
 import '../entity/home_entity.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/date_filter_row.dart';
+import '../widgets/search_text_field.dart';
 import '../widgets/sliver_home_app_bar.dart';
 import '../widgets/home_expenses_list.dart';
 
@@ -114,11 +117,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       backgroundColor: Colors.white,
       extendBody: true,
       body: CustomScrollView(
-        // crossAxisAlignment: CrossAxisAlignment.start,
         slivers: [
           SliverHomeAppBar(
             onRefresh: () {
-              //     _initialize();
+              HapticFeedback.lightImpact();
               FirebaseQueryHelper.getSingleDocumentAsFuture(
                   collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
               controller.sortedExpenseSubject.add(originalExpenseList);
@@ -134,91 +136,72 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               30.hGap,
               const DateFilterRow(),
               16.hGap,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 22),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Expenses List",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    2.hGap,
-                    Text(
-                      "Total Spend: Rs ${homeEntity.totalAmount.toCurrency}",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xff666666),
-                      ),
-                    ),
-                    12.hGap,
-                    TextFormField(
-                      controller: searchController,
-                      onChanged: (value) {
-                        if (value.isNotEmpty) {
-                          final searchedExpenses = homeEntity.expenses?.where(
-                            (element) {
-                              return element.name
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase()) ||
-                                  element.category
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase());
-                            },
-                          ).toList();
-                          controller.sortedExpenseSubject
-                              .add(searchedExpenses ?? []);
-                        } else {
-                          controller.sortedExpenseSubject
-                              .add(originalExpenseList);
-                        }
-                      },
-                      decoration: InputDecoration(
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SvgPicture.asset("assets/images/search.svg"),
-                        ),
-                        suffixIcon: InkWell(
-                          onTap: () {
-                            controller.sortedExpenseSubject
-                                .add(originalExpenseList);
-                            searchController.clear();
-                            FocusScope.of(context).unfocus();
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.clear),
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 18),
-                        hintText: "Search...",
-                        hintStyle: const TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w200,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                    30.hGap,
-                    const ExpenseAnalyticTabBar(),
-                    20.hGap,
-                    if (ref.watch(hometabProvider) == SelectedTab.expense) ...{
-                      const SortByWidget(),
-                      20.hGap,
-                    },
-                    // const Divider(),
-                    10.hGap,
-                    const HomeExpenseList(),
-                    130.hGap,
-                  ],
-                ),
-              ),
+              StreamBuilder(
+                  stream: controller.sortedExpenseSubject,
+                  builder: (context, snapshot) {
+                    List<Expense>? expenses = [];
+                    expenses = controller.dateWiseExpenses(expenses, snapshot,
+                        ref.watch(homeEntityProvider).dateFilter);
+                    return (expenses?.isEmpty != true)
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 22),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Expenses List",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                2.hGap,
+                                Text(
+                                  "Total Spend: Rs ${homeEntity.totalAmount.toCurrency}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Color(0xff666666),
+                                  ),
+                                ),
+                                12.hGap,
+                                SearchTextField(
+                                    searchController: searchController,
+                                    homeEntity: homeEntity,
+                                    controller: controller,
+                                    originalExpenseList: originalExpenseList),
+                                20.hGap,
+                                const ExpenseAnalyticTabBar(),
+                                20.hGap,
+                                if (ref.watch(hometabProvider) ==
+                                    SelectedTab.expense) ...{
+                                  const SortByWidget(),
+                                  20.hGap,
+                                },
+                                const HomeExpenseList(),
+                                50.hGap,
+                              ],
+                            ),
+                          )
+                        : Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  "assets/images/empty_expenses.webp",
+                                  height: 150,
+                                ),
+                                const Text(
+                                  "Oops...There are no expenses",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w100,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                  }),
             ]),
           ),
         ],
