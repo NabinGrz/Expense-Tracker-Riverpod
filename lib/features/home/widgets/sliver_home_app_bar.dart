@@ -1,4 +1,5 @@
 import 'package:expense_tracker_flutter/features/filter/widgets/filter_type_widget.dart';
+import 'package:expense_tracker_flutter/features/home/screen/search_screen.dart';
 import 'package:expense_tracker_flutter/features/home/widgets/create_expense_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,15 @@ class SliverHomeAppBar extends StatelessWidget {
         ),
       ),
       actions: [
+        IconButton(
+          splashRadius: 20,
+          onPressed: () {
+            Navigator.of(context).push(CupertinoPageRoute(
+              builder: (context) => const SearchExpenseScreen(),
+            ));
+          },
+          icon: const Icon(CupertinoIcons.search),
+        ),
         IconButton(
           splashRadius: 20,
           onPressed: onRefresh,

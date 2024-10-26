@@ -8,11 +8,11 @@ import '../shared/provider/sort_by_provider.dart';
 //       case SortBy.lowtohigh:
 //         return 'Low To High Price';
 //       case SortBy.highTolowDate:
-//         return 'High To Low Date';
+//         return 'Latest To Old Date';
 //       case SortBy.none:
 //         return 'None';
 //       case SortBy.lowTohighDate:
-//         return 'Low To High Date';
+//         return 'Old To Latest Date';
 //     }
 //   }
 // }
@@ -24,10 +24,14 @@ extension StringToEnumExtension on String {
         return SortBy.hightolow;
       case 'Low To High Price':
         return SortBy.lowtohigh;
-      case 'High To Low Date':
+      case 'Latest To Old Date':
         return SortBy.highTolowDate;
-      case 'Low To High Date':
+      case 'Old To Latest Date':
         return SortBy.lowTohighDate;
+      case 'Ascending':
+        return SortBy.ascending;
+      case 'Descending':
+        return SortBy.descending;
       case 'None':
         return SortBy.none;
       default:

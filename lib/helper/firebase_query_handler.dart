@@ -19,6 +19,67 @@ class FirebaseQueryHelper {
     return null;
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>>?
+      getPaginatedCollectionAsStream(
+          {required String collectionPath, required int limit}) {
+    try {
+      final data = firebaseFireStore
+          .collection(collectionPath)
+          .orderBy('createAt')
+          .limit(limit)
+          .snapshots();
+      return data;
+    } on FirebaseException catch (e) {
+      showSnackBar(
+          message: e.message ?? "Something Went Wrong!!",
+          type: SnackBarTypes.Error);
+    }
+    return null;
+  }
+
+  // static Future<QuerySnapshot<Map<String, dynamic>>>?
+  //     getPaginatedCollectionAsFuture(
+  //         {required String collectionPath, required int limit}) {
+  //   try {
+  //     final data = firebaseFireStore
+  //         .collection(collectionPath)
+  //         .orderBy('createAt')
+  //         .limit(limit)
+  //         .get();
+  //     return data;
+  //   } on FirebaseException catch (e) {
+  //     showSnackBar(
+  //         message: e.message ?? "Something Went Wrong!!",
+  //         type: SnackBarTypes.Error);
+  //   }
+  //   return null;
+  // }
+  static Future<QuerySnapshot<Map<String, dynamic>>>?
+      getPaginatedCollectionAsFuture({
+    required String collectionPath,
+    required int limit,
+    DocumentSnapshot? lastDocument,
+  }) {
+    try {
+      var query = firebaseFireStore
+          .collection(collectionPath)
+          .orderBy('createAt')
+          .limit(limit);
+
+      // If lastDocument is provided, start the query after this document
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument);
+      }
+
+      return query.get();
+    } on FirebaseException catch (e) {
+      showSnackBar(
+          message: e.message ?? "Something went wrong!",
+          type: SnackBarTypes.Error);
+    }
+    return null;
+  }
+
   static Future<QuerySnapshot<Map<String, dynamic>>>? getCollectionAsFuture(
       {required String collectionPath}) {
     try {

@@ -103,6 +103,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ExpenseUtils.sortBy(listedExpense ?? [], SortBy.lowTohighDate);
             controller.sortedExpenseSubject.add(listedExpense ?? []);
             break;
+          case SortBy.ascending:
+            ExpenseUtils.sortBy(listedExpense ?? [], SortBy.ascending);
+            controller.sortedExpenseSubject.add(listedExpense ?? []);
+            break;
+          case SortBy.descending:
+            ExpenseUtils.sortBy(listedExpense ?? [], SortBy.descending);
+            controller.sortedExpenseSubject.add(listedExpense ?? []);
+            break;
           default:
         }
       },

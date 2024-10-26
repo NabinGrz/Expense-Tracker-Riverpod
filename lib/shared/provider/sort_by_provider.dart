@@ -4,8 +4,10 @@ enum SortBy {
   none('None'),
   hightolow('High To Low Price'),
   lowtohigh('Low To High Price'),
-  highTolowDate('High To Low Date'),
-  lowTohighDate('Low To High Date');
+  highTolowDate('Latest To Old Date'),
+  lowTohighDate('Old To Latest Date'),
+  ascending('Ascending'),
+  descending('Descending');
 
   const SortBy(this.value);
   final String value;

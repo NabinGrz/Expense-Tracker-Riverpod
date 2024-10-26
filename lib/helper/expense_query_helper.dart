@@ -10,9 +10,25 @@ class ExpenseQueryHelper {
 
   static Stream<QuerySnapshot<Map<String, dynamic>>>? getExpense() =>
       FirebaseQueryHelper.getCollectionAsStream(collectionPath: "expenses");
+  static Stream<QuerySnapshot<Map<String, dynamic>>>? getPaginatedExpense(
+          int limit) =>
+      FirebaseQueryHelper.getPaginatedCollectionAsStream(
+          collectionPath: "expenses", limit: limit);
 
   static Future<QuerySnapshot<Map<String, dynamic>>>? getExpenseAsFuture() =>
       FirebaseQueryHelper.getCollectionAsFuture(collectionPath: "expenses");
+  static Future<QuerySnapshot<Map<String, dynamic>>>?
+      getPaginatedExpenseAsFuture({
+    required String collectionPath,
+    required int limit,
+    DocumentSnapshot? lastDocument,
+  }) =>
+          // FirebaseQueryHelper.getPaginatedCollectionAsFuture(
+          //     collectionPath: "expenses", limit: limit);
+          FirebaseQueryHelper.getPaginatedCollectionAsFuture(
+              collectionPath: collectionPath,
+              limit: limit,
+              lastDocument: lastDocument);
 
   static Stream<QuerySnapshot<Map<String, dynamic>>>? getExpenseCategory() =>
       FirebaseQueryHelper.getCollectionAsStream(

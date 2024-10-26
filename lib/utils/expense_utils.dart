@@ -15,6 +15,10 @@ class ExpenseUtils {
           return b.createAt.compareTo(a.createAt);
         } else if (sortBy == SortBy.lowTohighDate) {
           return a.createAt.compareTo(b.createAt);
+        } else if (sortBy == SortBy.ascending) {
+          return a.name.compareTo(b.name);
+        } else if (sortBy == SortBy.descending) {
+          return a.name.compareTo(b.name);
         }
         return 0;
       },
