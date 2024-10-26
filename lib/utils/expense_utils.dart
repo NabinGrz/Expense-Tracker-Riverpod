@@ -18,7 +18,7 @@ class ExpenseUtils {
         } else if (sortBy == SortBy.ascending) {
           return a.name.compareTo(b.name);
         } else if (sortBy == SortBy.descending) {
-          return a.name.compareTo(b.name);
+          return b.name.compareTo(a.name);
         }
         return 0;
       },
