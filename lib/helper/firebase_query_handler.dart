@@ -63,7 +63,7 @@ class FirebaseQueryHelper {
     try {
       var query = firebaseFireStore
           .collection(collectionPath)
-          .orderBy('createAt')
+          .orderBy('createAt', descending: true)
           .limit(limit);
 
       // If lastDocument is provided, start the query after this document

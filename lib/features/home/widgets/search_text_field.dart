@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -21,7 +22,7 @@ class SearchTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return CupertinoSearchTextField(
       controller: searchController,
       onChanged: (value) {
         if (value.isNotEmpty) {
@@ -36,33 +37,11 @@ class SearchTextField extends StatelessWidget {
           controller.sortedExpenseSubject.add(originalExpenseList);
         }
       },
-      decoration: InputDecoration(
-        prefixIcon: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SvgPicture.asset("assets/images/search.svg"),
-        ),
-        suffixIcon: InkWell(
-          onTap: () {
-            controller.sortedExpenseSubject.add(originalExpenseList);
-            searchController.clear();
-            FocusScope.of(context).unfocus();
-          },
-          child: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.clear),
-          ),
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
-        hintText: "Search...",
-        hintStyle: const TextStyle(
-          color: Colors.grey,
-          fontWeight: FontWeight.w200,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
+      onSuffixTap: () {
+        controller.sortedExpenseSubject.add(originalExpenseList);
+        searchController.clear();
+        FocusScope.of(context).unfocus();
+      },
     );
   }
 }

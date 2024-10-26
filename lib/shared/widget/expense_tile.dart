@@ -101,15 +101,9 @@ class ExpenseTile extends ConsumerWidget {
             width: 50,
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                      color: AppColor.primary.withOpacity(0.14),
-                      spreadRadius: -3,
-                      blurRadius: 12,
-                      offset: const Offset(4, 12))
-                ]),
+              color: AppColor.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
             child: Image.asset(
               expenseData?.category.getIconPathByCategory ?? "",
               fit: BoxFit.contain,
@@ -126,7 +120,6 @@ class ExpenseTile extends ConsumerWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              // 2.hGap,
               Text(
                 "${expenseData?.category}",
                 style: const TextStyle(
