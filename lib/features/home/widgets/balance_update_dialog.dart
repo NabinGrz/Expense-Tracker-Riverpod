@@ -2,6 +2,8 @@ import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/app_color.dart';
+
 class BalanceUpdateDialog extends StatefulWidget {
   final String docId;
   final String cashAmount;
@@ -40,9 +42,13 @@ class _BalanceUpdateDialogState extends State<BalanceUpdateDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: widget.isCash
-          ? const Text("Update Cash Amount")
-          : const Text("Update Bank Amount"),
+      title: Text(
+        "Update ${widget.isCash ? "Cash" : "Bank"} Amount",
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -80,7 +86,8 @@ class _BalanceUpdateDialogState extends State<BalanceUpdateDialog> {
             alignment: Alignment.center,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(MediaQuery.sizeOf(context).width * 0.5, 50),
+                minimumSize: const Size(double.infinity, 40),
+                backgroundColor: AppColor.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50), // button's shape
                 ),
@@ -109,8 +116,8 @@ class _BalanceUpdateDialogState extends State<BalanceUpdateDialog> {
               child: const Text(
                 "Update",
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
                 ),
               ),
             ),

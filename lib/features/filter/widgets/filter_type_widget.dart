@@ -96,6 +96,7 @@ class FilterTypeBottomSheet extends StatelessWidget {
                 ),
               ),
             ),
+            20.hGap,
           ],
         ),
       ),

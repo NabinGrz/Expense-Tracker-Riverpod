@@ -52,7 +52,7 @@ class DateRangeModel {
     DateTime? to,
   }) {
     return DateRangeModel(
-      from: DateTime.now().subtract(const Duration(days: 6)),
+      from: DateTime.now().subtract(const Duration(days: 30)),
       to: DateTime.now(),
     );
   }

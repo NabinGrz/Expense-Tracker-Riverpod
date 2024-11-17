@@ -168,11 +168,11 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                   floating: false,
                   pinned: false,
                   centerTitle: false,
+                  foregroundColor: Colors.white,
                   expandedHeight: 200,
                   shape: const RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.only(bottomRight: Radius.circular(20))),
-                  // snap: true,
                   title: ref.watch(isAppBarCollapsed)
                       ? FadeTransition(
                           opacity: _animation,
@@ -195,9 +195,9 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                 ),
                 SliverList(
                   delegate: SliverChildListDelegate([
-                    20.hGap,
+                    16.hGap,
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -208,7 +208,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          // 2.hGap,
+                          2.hGap,
                           Text(
                             "Total Amount: Rs ${expenseAmount?.toCurrency}",
                             style: const TextStyle(
@@ -218,7 +218,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                               color: Colors.grey,
                             ),
                           ),
-                          20.hGap,
+                          16.hGap,
                           const ExpenseAnalyticTabBar(
                             isFilter: true,
                           ),
