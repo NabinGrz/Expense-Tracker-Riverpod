@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
         //.poppins().fontFamily,
         appBarTheme: AppBarTheme(backgroundColor: AppColor.primary),
-        useMaterial3: true,
+        useMaterial3: false,
       ),
       home: const HomeScreen(),
       // home: const TestScreen(),
