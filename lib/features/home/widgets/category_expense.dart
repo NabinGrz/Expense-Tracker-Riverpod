@@ -31,10 +31,6 @@ class CategoryExpenses extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: MediaQuery.sizeOf(context).height * 0.55,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
         decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -47,43 +43,54 @@ class CategoryExpenses extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               10.hGap,
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Hero(
-                    tag: "$name",
-                    child: Image.asset(
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
                       "$iconPath",
                       height: 32,
                       width: 32,
                       fit: BoxFit.contain,
                     ),
-                  ),
-                  8.wGap,
-                  Text(
-                    "$name",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    8.wGap,
+                    Text(
+                      "$name",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    "Total Amount: Rs $totalAmount",
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
+                    const Spacer(),
+                    Text(
+                      "Total Amount: Rs $totalAmount",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+              const Divider(
+                height: 1,
+                thickness: 0.5,
               ),
               20.hGap,
               if (name == "Petrol")
                 PetrolCategoryDetail(expenseData: expenseData),
               ListView.separated(
                 physics: const ClampingScrollPhysics(),
-                padding: EdgeInsets.zero,
+                // padding: EdgeInsets.zero,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  // vertical: 16,
+                ),
                 itemCount: expenseData.length,
                 shrinkWrap: true,
                 separatorBuilder: (context, index) => 10.hGap,

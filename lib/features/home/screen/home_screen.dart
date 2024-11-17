@@ -152,7 +152,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ref.watch(homeEntityProvider).dateFilter);
                     return (expenses?.isEmpty != true)
                         ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 22),
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -171,7 +171,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     color: Color(0xff666666),
                                   ),
                                 ),
-                                12.hGap,
+                                16.hGap,
                                 SearchTextField(
                                     searchController: searchController,
                                     homeEntity: homeEntity,

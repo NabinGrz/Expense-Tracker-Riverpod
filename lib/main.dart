@@ -27,9 +27,10 @@ class MyApp extends StatelessWidget {
 
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
-        fontFamily: GoogleFonts.poppins().fontFamily,
+        fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
+        //.poppins().fontFamily,
         appBarTheme: AppBarTheme(backgroundColor: AppColor.primary),
-        useMaterial3: false,
+        useMaterial3: true,
       ),
       home: const HomeScreen(),
       // home: const TestScreen(),

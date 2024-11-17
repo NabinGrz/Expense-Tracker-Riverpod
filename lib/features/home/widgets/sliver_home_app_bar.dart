@@ -16,15 +16,14 @@ class SliverHomeAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      // pinned: true,
       floating: true,
       expandedHeight: 60,
-      // flexibleSpace: const Placeholder(),
       title: const Text(
         "Kharcha",
         style: TextStyle(
           fontWeight: FontWeight.w900,
           fontSize: 24,
+          color: Colors.white,
         ),
       ),
       actions: [
@@ -35,39 +34,54 @@ class SliverHomeAppBar extends StatelessWidget {
               builder: (context) => const SearchExpenseScreen(),
             ));
           },
-          icon: const Icon(CupertinoIcons.search),
+          icon: const Icon(
+            CupertinoIcons.search,
+            color: Colors.white,
+          ),
         ),
         IconButton(
           splashRadius: 20,
           onPressed: onRefresh,
-          icon: const Icon(Icons.refresh),
+          icon: const Icon(
+            // Icons.refresh,
+            CupertinoIcons.refresh,
+            color: Colors.white,
+          ),
         ),
         IconButton(
-          splashRadius: 20,
-          onPressed: () {
-            HapticFeedback.selectionClick();
-            showCupertinoModalPopup(
-              context: context,
-              builder: (context) => const FilterTypeBottomSheet(),
-            );
-          },
-          icon: SvgPicture.asset("assets/images/filter.svg"),
-        ),
+            splashRadius: 20,
+            onPressed: () {
+              HapticFeedback.selectionClick();
+              showCupertinoModalPopup(
+                context: context,
+                builder: (context) => const FilterTypeBottomSheet(),
+              );
+            },
+            icon: const Icon(
+              CupertinoIcons.selection_pin_in_out,
+              color: Colors.white,
+            )
+            //SvgPicture.asset("assets/images/filter.svg"),
+            ),
         IconButton(
-          splashRadius: 20,
-          onPressed: () {
-            HapticFeedback.selectionClick();
-            showDialog(
-              context: context,
-              builder: (context) {
-                return const CreateUpdateDialog(
-                  isUpdate: false,
-                );
-              },
-            );
-          },
-          icon: SvgPicture.asset("assets/images/add.svg"),
-        ),
+            splashRadius: 20,
+            onPressed: () {
+              HapticFeedback.selectionClick();
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return const CreateUpdateDialog(
+                    isUpdate: false,
+                  );
+                },
+              );
+            },
+            icon: const Icon(
+              CupertinoIcons.add,
+              color: Colors.white,
+            )
+            //SvgPicture.asset("assets/images/add.svg"),
+            ),
       ],
     );
   }

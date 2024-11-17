@@ -61,7 +61,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
       child: FadeTransition(
         opacity: animation,
         child: Container(
-          margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
+          margin: const EdgeInsets.only(left: 12, right: 12, top: 20),
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(

@@ -69,7 +69,7 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
             name,
             style: const TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w800,
                 color: Color(0xff666666)),
           ),
         ),
