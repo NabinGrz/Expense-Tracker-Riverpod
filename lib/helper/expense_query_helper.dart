@@ -23,8 +23,6 @@ class ExpenseQueryHelper {
     required int limit,
     DocumentSnapshot? lastDocument,
   }) =>
-          // FirebaseQueryHelper.getPaginatedCollectionAsFuture(
-          //     collectionPath: "expenses", limit: limit);
           FirebaseQueryHelper.getPaginatedCollectionAsFuture(
               collectionPath: collectionPath,
               limit: limit,

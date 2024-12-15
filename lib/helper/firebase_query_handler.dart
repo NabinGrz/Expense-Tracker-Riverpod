@@ -37,23 +37,6 @@ class FirebaseQueryHelper {
     return null;
   }
 
-  // static Future<QuerySnapshot<Map<String, dynamic>>>?
-  //     getPaginatedCollectionAsFuture(
-  //         {required String collectionPath, required int limit}) {
-  //   try {
-  //     final data = firebaseFireStore
-  //         .collection(collectionPath)
-  //         .orderBy('createAt')
-  //         .limit(limit)
-  //         .get();
-  //     return data;
-  //   } on FirebaseException catch (e) {
-  //     showSnackBar(
-  //         message: e.message ?? "Something Went Wrong!!",
-  //         type: SnackBarTypes.Error);
-  //   }
-  //   return null;
-  // }
   static Future<QuerySnapshot<Map<String, dynamic>>>?
       getPaginatedCollectionAsFuture({
     required String collectionPath,
@@ -66,7 +49,6 @@ class FirebaseQueryHelper {
           .orderBy('createAt', descending: true)
           .limit(limit);
 
-      // If lastDocument is provided, start the query after this document
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
       }

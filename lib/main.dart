@@ -1,6 +1,5 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/features/home/screen/home_screen.dart';
-import 'package:expense_tracker_flutter/features/test_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

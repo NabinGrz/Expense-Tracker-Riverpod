@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/home/provider/home_provider.dart';
@@ -9,7 +8,6 @@ import 'package:expense_tracker_flutter/shared/provider/tab_bar_provider.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_analytics_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../helper/expense_query_helper.dart';
@@ -19,6 +17,7 @@ import '../../../shared/widget/sort_by_widget.dart';
 import '../../../utils/expense_utils.dart';
 import '../entity/home_entity.dart';
 import '../widgets/balance_card.dart';
+import '../widgets/create_expense_dialog.dart';
 import '../widgets/date_filter_row.dart';
 import '../widgets/search_text_field.dart';
 import '../widgets/sliver_home_app_bar.dart';
@@ -124,6 +123,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       extendBody: true,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          HapticFeedback.selectionClick();
+          showDialog(
+            context: context,
+            builder: (context) {
+              return const CreateUpdateDialog(
+                isUpdate: false,
+              );
+            },
+          );
+        },
+        child: const Icon(
+          Icons.add,
+        ),
+      ),
       body: CustomScrollView(
         slivers: [
           SliverHomeAppBar(

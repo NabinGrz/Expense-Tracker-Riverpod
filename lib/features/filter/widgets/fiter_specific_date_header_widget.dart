@@ -2,10 +2,8 @@ import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/filter/widgets/date_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../constants/app_color.dart';
 import '../provider/filter_provider.dart';
 
 class FilterSpecificHeaderWidget extends StatefulWidget {

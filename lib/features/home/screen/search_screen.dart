@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -84,6 +83,7 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
 
     return Scaffold(
       body: CustomScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         controller: _scrollController,
         slivers: [
           CupertinoSliverNavigationBar(
@@ -139,7 +139,10 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 4.0),
-                    child: ExpenseTile(expenseData: expense, isFilter: false),
+                    child: ExpenseTile(
+                      expenseData: expense,
+                      isFilter: false,
+                    ),
                   );
                 } else {
                   return const SizedBox.shrink();

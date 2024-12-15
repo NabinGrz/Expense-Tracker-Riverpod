@@ -1,8 +1,6 @@
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
-import 'package:expense_tracker_flutter/features/filter/pages/filter_screen.dart';
-import 'package:expense_tracker_flutter/features/home/widgets/category_expense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

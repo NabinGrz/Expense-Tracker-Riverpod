@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../features/filter/provider/filter_provider.dart';
 import '../../features/home/widgets/create_expense_dialog.dart';
 import '../../models/expense_model.dart';
 

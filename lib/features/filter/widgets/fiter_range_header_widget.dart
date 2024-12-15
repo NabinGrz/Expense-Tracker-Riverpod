@@ -4,7 +4,6 @@ import 'package:expense_tracker_flutter/features/filter/widgets/date_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../constants/app_color.dart';
 import '../provider/filter_provider.dart';
 
 class FilterRangeHeaderWidget extends ConsumerStatefulWidget {
