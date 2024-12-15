@@ -6,6 +6,7 @@ import 'package:expense_tracker_flutter/features/home/provider/home_provider.dar
 import 'package:expense_tracker_flutter/shared/provider/sort_by_provider.dart';
 import 'package:expense_tracker_flutter/shared/provider/tab_bar_provider.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_analytics_tab_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -22,6 +23,8 @@ import '../widgets/date_filter_row.dart';
 import '../widgets/search_text_field.dart';
 import '../widgets/sliver_home_app_bar.dart';
 import '../widgets/home_expenses_list.dart';
+
+final bottomNavBarProvider = StateProvider((ref) => 0);
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -123,6 +126,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       extendBody: true,
+      bottomNavigationBar: BottomNavigationBar(
+          currentIndex: ref.read(bottomNavBarProvider),
+          onTap: (value) {
+            ref.read(bottomNavBarProvider.notifier).state = value;
+          },
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(
+                  CupertinoIcons.home,
+                ),
+                label: "Home"),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  CupertinoIcons.search,
+                ),
+                label: "Search"),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  CupertinoIcons.list_bullet,
+                ),
+                label: "Filter")
+          ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           HapticFeedback.selectionClick();
