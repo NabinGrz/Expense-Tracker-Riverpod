@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'features/dashboard/dashboard.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(backgroundColor: AppColor.primary),
         useMaterial3: false,
       ),
-      home: const HomeScreen(),
+      home: const Dashboard(),
       // home: const TestScreen(),
     );
   }

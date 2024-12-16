@@ -24,152 +24,164 @@ class ExpenseTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
+      key: ValueKey(expenseData?.id),
       borderRadius: BorderRadius.circular(8),
       splashColor: AppColor.primary.withOpacity(0.3),
-      highlightColor: AppColor.primary.withOpacity(0.4),
+      // highlightColor: AppColor.primary.withOpacity(0.4),
       splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
+      // splashColor: Colors.blue.withOpacity(0.3),
+      highlightColor: Colors.transparent,
+      // onTap: () {}, // Required to show ripple
       onTap: () {},
-      onLongPress: () {
-        HapticFeedback.lightImpact();
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              backgroundColor: Colors.white,
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return CreateUpdateDialog(
-                            isUpdate: true,
-                            expenseData: expenseData,
-                            isCashPreviously: expenseData?.isCash,
-                            docId: expenseData?.docId,
-                          );
-                        },
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.update_outlined),
-                        4.wGap,
-                        const Text(
-                          "Update",
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  25.hGap,
-                  InkWell(
-                    onTap: () {
-                      ExpenseQueryHelper.deleteExpense(expenseData!.docId!);
-                      Navigator.pop(context);
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.delete_outline_rounded),
-                        4.wGap,
-                        const Text(
-                          "Delete",
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+      // onLongPress: () {
+      //   HapticFeedback.lightImpact();
+      //   showDialog(
+      //     context: context,
+      //     builder: (context) {
+      //       return AlertDialog(
+      //         backgroundColor: Colors.white,
+      //         content: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           mainAxisSize: MainAxisSize.min,
+      //           children: [
+      //             InkWell(
+      //               onTap: () {
+      //                 Navigator.pop(context);
+      //                 showDialog(
+      //                   context: context,
+      //                   builder: (context) {
+      //                     return CreateUpdateDialog(
+      //                       isUpdate: true,
+      //                       expenseData: expenseData,
+      //                       isCashPreviously: expenseData?.isCash,
+      //                       docId: expenseData?.docId,
+      //                     );
+      //                   },
+      //                 );
+      //               },
+      //               child: Row(
+      //                 children: [
+      //                   const Icon(Icons.update_outlined),
+      //                   4.wGap,
+      //                   const Text(
+      //                     "Update",
+      //                     style: TextStyle(
+      //                       fontSize: 16,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             25.hGap,
+      //             InkWell(
+      //               onTap: () {
+      //                 ExpenseQueryHelper.deleteExpense(expenseData!.docId!);
+      //                 Navigator.pop(context);
+      //               },
+      //               child: Row(
+      //                 children: [
+      //                   const Icon(Icons.delete_outline_rounded),
+      //                   4.wGap,
+      //                   const Text(
+      //                     "Delete",
+      //                     style: TextStyle(
+      //                       fontSize: 16,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       );
+      //     },
+      //   );
+      // },
+
+      child: Ink(
+        decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 251, 251, 251),
+            borderRadius: BorderRadius.circular(8),
+            border:
+                Border.all(color: const Color.fromARGB(255, 246, 246, 246))),
+        child: Row(
+          children: [
+            Container(
+              height: 50,
+              width: 50,
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: AppColor.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
               ),
-            );
-          },
-        );
-      },
-      child: Row(
-        children: [
-          Container(
-            height: 50,
-            width: 50,
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              color: AppColor.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                expenseData?.category.getIconPathByCategory ?? "",
+                fit: BoxFit.contain,
+              ),
             ),
-            child: Image.asset(
-              expenseData?.category.getIconPathByCategory ?? "",
-              fit: BoxFit.contain,
-            ),
-          ),
-          10.wGap,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${expenseData?.name}",
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+            10.wGap,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${expenseData?.name}",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              Text(
-                "${expenseData?.category}",
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: Color(0xff666666),
+                Text(
+                  "${expenseData?.category}",
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: Color(0xff666666),
+                  ),
                 ),
-              ),
-              2.hGap,
-              if (!DateTime.parse(expenseData!.createAt)
-                      .isSameDateAs(DateTime.now()) &&
-                  !DateTime.parse(expenseData!.createAt).isYesterday() &&
-                  !isFilter) ...{
-                4.hGap,
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.date_range,
-                      size: 12,
-                    ),
-                    4.wGap,
-                    Text(
-                      DateTime.parse(expenseData!.createAt)
-                          .toFormattedDateString(),
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: Color(0xff666666),
+                2.hGap,
+                if (!DateTime.parse(expenseData!.createAt)
+                        .isSameDateAs(DateTime.now()) &&
+                    !DateTime.parse(expenseData!.createAt).isYesterday() &&
+                    !isFilter) ...{
+                  4.hGap,
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.date_range,
+                        size: 12,
                       ),
-                    ),
-                  ],
-                )
-              },
-            ],
-          ),
-          const Spacer(),
-          Text(
-            "- Rs ${expenseData?.amount.toCurrency}",
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Color(0xffF95B51),
+                      4.wGap,
+                      Text(
+                        DateTime.parse(expenseData!.createAt)
+                            .toFormattedDateString(),
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Color(0xff666666),
+                        ),
+                      ),
+                    ],
+                  )
+                },
+              ],
             ),
-          ),
-          6.wGap,
-          Image.asset(
-            expenseData?.isCash == true
-                ? "assets/images/dollar.png"
-                : "assets/images/bank.png",
-            height: 12,
-            width: 12,
-          ),
-        ],
+            const Spacer(),
+            Text(
+              "- Rs ${expenseData?.amount.toCurrency}",
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Color(0xffF95B51),
+              ),
+            ),
+            6.wGap,
+            Image.asset(
+              expenseData?.isCash == true
+                  ? "assets/images/dollar.png"
+                  : "assets/images/bank.png",
+              height: 12,
+              width: 12,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class SliverHomeAppBar extends StatelessWidget {
-  final void Function() onRefresh;
   const SliverHomeAppBar({
     super.key,
-    required this.onRefresh,
   });
 
   @override
@@ -26,27 +24,6 @@ class SliverHomeAppBar extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          splashRadius: 20,
-          onPressed: () {
-            Navigator.of(context).push(CupertinoPageRoute(
-              builder: (context) => const SearchExpenseScreen(),
-            ));
-          },
-          icon: const Icon(
-            CupertinoIcons.search,
-            color: Colors.white,
-          ),
-        ),
-        IconButton(
-          splashRadius: 20,
-          onPressed: onRefresh,
-          icon: const Icon(
-            // Icons.refresh,
-            CupertinoIcons.refresh,
-            color: Colors.white,
-          ),
-        ),
-        IconButton(
             splashRadius: 20,
             onPressed: () {
               HapticFeedback.selectionClick();
@@ -55,10 +32,7 @@ class SliverHomeAppBar extends StatelessWidget {
                 builder: (context) => const FilterTypeBottomSheet(),
               );
             },
-            icon: const Icon(
-              CupertinoIcons.selection_pin_in_out,
-              color: Colors.white,
-            )),
+            icon: const Icon(CupertinoIcons.calendar)),
       ],
     );
   }

@@ -126,28 +126,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       extendBody: true,
-      bottomNavigationBar: BottomNavigationBar(
-          currentIndex: ref.read(bottomNavBarProvider),
-          onTap: (value) {
-            ref.read(bottomNavBarProvider.notifier).state = value;
-          },
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(
-                  CupertinoIcons.home,
-                ),
-                label: "Home"),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  CupertinoIcons.search,
-                ),
-                label: "Search"),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  CupertinoIcons.list_bullet,
-                ),
-                label: "Filter")
-          ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           HapticFeedback.selectionClick();
@@ -164,95 +142,98 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Icons.add,
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverHomeAppBar(
-            onRefresh: () {
-              HapticFeedback.lightImpact();
-              FirebaseQueryHelper.getSingleDocumentAsFuture(
-                  collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
-              controller.sortedExpenseSubject.add(originalExpenseList);
-              searchController.clear();
-              FocusScope.of(context).unfocus();
-            },
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              BalanceCard(
-                sortedExpenseSubject: controller.sortedExpenseSubject,
-              ),
-              30.hGap,
-              const DateFilterRow(),
-              16.hGap,
-              StreamBuilder(
-                  stream: controller.sortedExpenseSubject,
-                  builder: (context, snapshot) {
-                    List<Expense>? expenses = [];
-                    expenses = controller.dateWiseExpenses(expenses, snapshot,
-                        ref.watch(homeEntityProvider).dateFilter);
-                    return (expenses?.isEmpty != true)
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Expenses List",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+      body: RefreshIndicator.adaptive(
+        color: Colors.white,
+        onRefresh: () async {
+          HapticFeedback.lightImpact();
+          FirebaseQueryHelper.getSingleDocumentAsFuture(
+              collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+          controller.sortedExpenseSubject.add(originalExpenseList);
+          searchController.clear();
+          FocusScope.of(context).unfocus();
+        },
+        child: CustomScrollView(
+          slivers: [
+            const SliverHomeAppBar(),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                BalanceCard(
+                  sortedExpenseSubject: controller.sortedExpenseSubject,
+                ),
+                30.hGap,
+                const DateFilterRow(),
+                16.hGap,
+                StreamBuilder(
+                    stream: controller.sortedExpenseSubject,
+                    builder: (context, snapshot) {
+                      List<Expense>? expenses = [];
+                      expenses = controller.dateWiseExpenses(expenses, snapshot,
+                          ref.watch(homeEntityProvider).dateFilter);
+                      return (expenses?.isEmpty != true)
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Expenses List",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                2.hGap,
-                                Text(
-                                  "Total Spend: Rs ${homeEntity.totalAmount.toCurrency}",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Color(0xff666666),
+                                  2.hGap,
+                                  Text(
+                                    "Total Spend: Rs ${homeEntity.totalAmount.toCurrency}",
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xff666666),
+                                    ),
                                   ),
-                                ),
-                                16.hGap,
-                                SearchTextField(
-                                    searchController: searchController,
-                                    homeEntity: homeEntity,
-                                    controller: controller,
-                                    originalExpenseList: originalExpenseList),
-                                20.hGap,
-                                const ExpenseAnalyticTabBar(),
-                                20.hGap,
-                                if (ref.watch(hometabProvider) ==
-                                    SelectedTab.expense) ...{
-                                  const SortByWidget(),
+                                  16.hGap,
+                                  SearchTextField(
+                                      searchController: searchController,
+                                      homeEntity: homeEntity,
+                                      controller: controller,
+                                      originalExpenseList: originalExpenseList),
                                   20.hGap,
-                                },
-                                const HomeExpenseList(),
-                                50.hGap,
-                              ],
-                            ),
-                          )
-                        : Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Image.asset(
-                                  "assets/images/empty_expenses.webp",
-                                  height: 150,
-                                ),
-                                const Text(
-                                  "Oops...There are no expenses",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w100,
-                                    fontSize: 16,
+                                  const ExpenseAnalyticTabBar(),
+                                  20.hGap,
+                                  if (ref.watch(hometabProvider) ==
+                                      SelectedTab.expense) ...{
+                                    const SortByWidget(),
+                                    20.hGap,
+                                  },
+                                  const HomeExpenseList(),
+                                  50.hGap,
+                                ],
+                              ),
+                            )
+                          : Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    "assets/images/empty_expenses.webp",
+                                    height: 150,
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                  }),
-            ]),
-          ),
-        ],
+                                  const Text(
+                                    "Oops...There are no expenses",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w100,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                    }),
+              ]),
+            ),
+          ],
+        ),
       ),
     );
   }

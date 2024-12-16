@@ -26,6 +26,7 @@ class AnalyticsWidget extends StatelessWidget {
           final category = sortedCategories?[index];
           final expenses = category?.value['expenses'] as List<Expense>;
           return GestureDetector(
+            key: ValueKey(category?.key),
             onTap: () {
               showCupertinoModalPopup(
                 context: context,
@@ -47,7 +48,7 @@ class AnalyticsWidget extends StatelessWidget {
                   colors: [
                     category!.key.getColorByCategory.withOpacity(0.5),
                     category.key.getColorByCategory.withOpacity(0.7),
-                    category.key.getColorByCategory.withOpacity(0.9)
+                    category.key.getColorByCategory.withOpacity(0.95),
                   ],
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
@@ -58,7 +59,7 @@ class AnalyticsWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Align(
-                    alignment: Alignment.centerRight,
+                    alignment: Alignment.centerLeft,
                     child: Image.asset(
                       category.key.getIconPathByCategory,
                       height: 55,
@@ -69,10 +70,10 @@ class AnalyticsWidget extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "Rs: ${int.tryParse("${category.value['totalAmount']}").toCurrency}-",
+                        "Rs: ${int.tryParse("${category.value['totalAmount']}").toCurrency} | ",
                         style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                           color: Colors.white,
                         ),
                       ),
@@ -81,7 +82,7 @@ class AnalyticsWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           category.key,
                           style: const TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),

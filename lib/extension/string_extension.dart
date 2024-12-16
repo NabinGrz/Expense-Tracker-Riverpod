@@ -97,15 +97,15 @@ extension ImagePathExtension on String {
       case AppString.categoryKhaja:
         return Colors.pink;
       case AppString.categoryMilk:
-        return Colors.yellow;
+        return const Color.fromARGB(255, 224, 61, 178);
       case AppString.categoryWater:
         return Colors.blueAccent;
       case AppString.categoryGrocery:
-        return Colors.greenAccent;
+        return const Color.fromARGB(255, 56, 161, 190);
       case AppString.categoryChocolate:
         return Colors.brown;
       case AppString.categoryMeat:
-        return Colors.redAccent;
+        return const Color.fromARGB(255, 82, 114, 255);
       case AppString.categoryFruits:
         return Colors.green;
       case AppString.categoryStationary:
@@ -133,7 +133,7 @@ extension ImagePathExtension on String {
       case AppString.categoryOffice:
         return Colors.orange;
       case AppString.categoryJhyapliKhaja:
-        return Colors.greenAccent;
+        return const Color.fromARGB(255, 70, 195, 134);
       case AppString.categoryColdDrink:
         return Colors.yellow;
       case AppString.categorySubinExpense:

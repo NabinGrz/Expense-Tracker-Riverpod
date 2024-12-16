@@ -1,3 +1,4 @@
+import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -82,82 +83,83 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
     final searchState = ref.watch(searchProvider);
 
     return Scaffold(
-      body: CustomScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        controller: _scrollController,
-        slivers: [
-          CupertinoSliverNavigationBar(
-            leading: InkWell(
-              onTap: () {
-                Navigator.of(context).pop();
-                FocusScope.of(context).unfocus();
-              },
-              child: const Icon(CupertinoIcons.left_chevron),
-            ),
-            largeTitle: const Text(
-              'Recent Expenses',
-              style: TextStyle(fontFamily: 'Manrope', fontSize: 20),
-            ),
-            trailing: InkWell(
-              onTap: () {
-                _loadExpenses();
-                FocusScope.of(context).unfocus();
-              },
-              child: const Icon(
-                CupertinoIcons.refresh,
+      body: RefreshIndicator.adaptive(
+        color: Colors.white,
+        onRefresh: () async {
+          await _loadExpenses();
+          FocusScope.of(context).unfocus();
+        },
+        child: CustomScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          controller: _scrollController,
+          slivers: [
+            CupertinoSliverNavigationBar(
+              backgroundColor: AppColor.primary,
+              largeTitle: const Text(
+                'Recent Expenses',
+                style: TextStyle(
+                  fontFamily: 'Manrope',
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: CupertinoSearchTextField(
-                controller: _searchController,
-                placeholder: 'Search expenses',
-                style: const TextStyle(color: CupertinoColors.black),
-                onSuffixTap: () {
-                  _searchController.clear();
-                  FocusScope.of(context).unfocus();
-                  _loadExpenses();
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CupertinoSearchTextField(
+                  controller: _searchController,
+                  placeholder: 'Search expenses',
+                  style: const TextStyle(color: CupertinoColors.black),
+                  // placeholderStyle: const TextStyle(
+                  //   fontWeight: FontWeight.w100,
+                  //   color: CupertinoColors.secondaryLabel,
+                  // ),
+                  onSuffixTap: () {
+                    _searchController.clear();
+                    FocusScope.of(context).unfocus();
+                    _loadExpenses();
+                  },
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: searchState.isLoading
+                  ? const LinearProgressIndicator()
+                  : const SizedBox.shrink(),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  if (index < searchState.filteredDocuments.length) {
+                    final expense = Expense.fromMap(
+                      searchState.filteredDocuments[index].data()
+                          as Map<String, dynamic>,
+                    );
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 4.0),
+                      child: ExpenseTile(
+                        expenseData: expense,
+                        isFilter: false,
+                      ),
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
                 },
+                childCount: searchState.filteredDocuments.length,
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: searchState.isLoading
-                ? const LinearProgressIndicator()
-                : const SizedBox.shrink(),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                if (index < searchState.filteredDocuments.length) {
-                  final expense = Expense.fromMap(
-                    searchState.filteredDocuments[index].data()
-                        as Map<String, dynamic>,
-                  );
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 4.0),
-                    child: ExpenseTile(
-                      expenseData: expense,
-                      isFilter: false,
-                    ),
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
-              childCount: searchState.filteredDocuments.length,
-            ),
-          ),
-          if (!searchState.hasMoreData && searchState.filteredDocuments.isEmpty)
-            const SliverToBoxAdapter(
-              child: Center(
-                child: Text('No expenses found.'),
+            if (!searchState.hasMoreData &&
+                searchState.filteredDocuments.isEmpty)
+              const SliverToBoxAdapter(
+                child: Center(
+                  child: Text('No expenses found.'),
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
