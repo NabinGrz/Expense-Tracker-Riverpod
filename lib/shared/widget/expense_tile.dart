@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../features/home/widgets/create_expense_dialog.dart';
+import '../../features/expense/widgets/create_expense_dialog.dart';
 import '../../models/expense_model.dart';
 
 class ExpenseTile extends ConsumerWidget {
@@ -31,72 +31,71 @@ class ExpenseTile extends ConsumerWidget {
       splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
       // splashColor: Colors.blue.withOpacity(0.3),
       highlightColor: Colors.transparent,
-      // onTap: () {}, // Required to show ripple
-      onTap: () {},
-      // onLongPress: () {
-      //   HapticFeedback.lightImpact();
-      //   showDialog(
-      //     context: context,
-      //     builder: (context) {
-      //       return AlertDialog(
-      //         backgroundColor: Colors.white,
-      //         content: Column(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           mainAxisSize: MainAxisSize.min,
-      //           children: [
-      //             InkWell(
-      //               onTap: () {
-      //                 Navigator.pop(context);
-      //                 showDialog(
-      //                   context: context,
-      //                   builder: (context) {
-      //                     return CreateUpdateDialog(
-      //                       isUpdate: true,
-      //                       expenseData: expenseData,
-      //                       isCashPreviously: expenseData?.isCash,
-      //                       docId: expenseData?.docId,
-      //                     );
-      //                   },
-      //                 );
-      //               },
-      //               child: Row(
-      //                 children: [
-      //                   const Icon(Icons.update_outlined),
-      //                   4.wGap,
-      //                   const Text(
-      //                     "Update",
-      //                     style: TextStyle(
-      //                       fontSize: 16,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             25.hGap,
-      //             InkWell(
-      //               onTap: () {
-      //                 ExpenseQueryHelper.deleteExpense(expenseData!.docId!);
-      //                 Navigator.pop(context);
-      //               },
-      //               child: Row(
-      //                 children: [
-      //                   const Icon(Icons.delete_outline_rounded),
-      //                   4.wGap,
-      //                   const Text(
-      //                     "Delete",
-      //                     style: TextStyle(
-      //                       fontSize: 16,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       );
-      //     },
-      //   );
-      // },
+      onTap: () {}, // Required to show ripple
+      onLongPress: () {
+        HapticFeedback.lightImpact();
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CreateUpdateDialog(
+                            isUpdate: true,
+                            expenseData: expenseData,
+                            isCashPreviously: expenseData?.isCash,
+                            docId: expenseData?.docId,
+                          );
+                        },
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        const Icon(Icons.update_outlined),
+                        4.wGap,
+                        const Text(
+                          "Update",
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  25.hGap,
+                  InkWell(
+                    onTap: () {
+                      ExpenseQueryHelper.deleteExpense(expenseData!.docId!);
+                      Navigator.pop(context);
+                    },
+                    child: Row(
+                      children: [
+                        const Icon(Icons.delete_outline_rounded),
+                        4.wGap,
+                        const Text(
+                          "Delete",
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
 
       child: Ink(
         decoration: BoxDecoration(
@@ -180,6 +179,7 @@ class ExpenseTile extends ConsumerWidget {
               height: 12,
               width: 12,
             ),
+            6.wGap,
           ],
         ),
       ),

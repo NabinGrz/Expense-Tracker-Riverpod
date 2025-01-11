@@ -5,7 +5,7 @@ import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/filter/widgets/fiter_range_header_widget.dart';
-import 'package:expense_tracker_flutter/features/home/widgets/analytics_widget.dart';
+import 'package:expense_tracker_flutter/features/expense/widgets/analytics_widget.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_analytics_tab_bar.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_tile.dart';
 import 'package:flutter/material.dart';

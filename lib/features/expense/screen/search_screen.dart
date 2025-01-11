@@ -20,7 +20,7 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   SearchNotifier get searchProviderNotifier =>
-      ref.read(searchProvider.notifier);
+      ref.read(searchExpenseProvider.notifier);
 
   @override
   void initState() {
@@ -78,16 +78,17 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
     super.dispose();
   }
 
+  SearchNotifier get watchSearchExpenses => ref.watch(searchExpenseProvider);
   @override
   Widget build(BuildContext context) {
-    final searchState = ref.watch(searchProvider);
-
     return Scaffold(
       body: RefreshIndicator.adaptive(
         color: Colors.white,
         onRefresh: () async {
           await _loadExpenses();
-          FocusScope.of(context).unfocus();
+          if (context.mounted) {
+            FocusScope.of(context).unfocus();
+          }
         },
         child: CustomScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -96,12 +97,31 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
             CupertinoSliverNavigationBar(
               backgroundColor: AppColor.primary,
               largeTitle: const Text(
-                'Recent Expenses',
+                'All Expenses',
                 style: TextStyle(
                   fontFamily: 'Manrope',
                   fontSize: 20,
                   color: Colors.white,
                 ),
+              ),
+              trailing: PopupMenuButton(
+                iconColor: Colors.white,
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem(
+                      onTap: () => sortBy(true),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      child: const Text("Sort By Amount"),
+                    ),
+                    PopupMenuItem(
+                      onTap: () => sortBy(false),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      child: const Text("Sort By Date"),
+                    ),
+                  ];
+                },
               ),
             ),
             SliverToBoxAdapter(
@@ -111,10 +131,6 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
                   controller: _searchController,
                   placeholder: 'Search expenses',
                   style: const TextStyle(color: CupertinoColors.black),
-                  // placeholderStyle: const TextStyle(
-                  //   fontWeight: FontWeight.w100,
-                  //   color: CupertinoColors.secondaryLabel,
-                  // ),
                   onSuffixTap: () {
                     _searchController.clear();
                     FocusScope.of(context).unfocus();
@@ -124,22 +140,22 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
               ),
             ),
             SliverToBoxAdapter(
-              child: searchState.isLoading
-                  ? const LinearProgressIndicator()
-                  : const SizedBox.shrink(),
-            ),
+                child: watchSearchExpenses.isLoading
+                    ? const LinearProgressIndicator()
+                    : const SizedBox.shrink()),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  if (index < searchState.filteredDocuments.length) {
+                  if (index < watchSearchExpenses.filteredDocuments.length) {
                     final expense = Expense.fromMap(
-                      searchState.filteredDocuments[index].data()
+                      watchSearchExpenses.filteredDocuments[index].data()
                           as Map<String, dynamic>,
                     );
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 4.0),
                       child: ExpenseTile(
+                        key: Key("$index"),
                         expenseData: expense,
                         isFilter: false,
                       ),
@@ -148,11 +164,11 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
                     return const SizedBox.shrink();
                   }
                 },
-                childCount: searchState.filteredDocuments.length,
+                childCount: watchSearchExpenses.filteredDocuments.length,
               ),
             ),
-            if (!searchState.hasMoreData &&
-                searchState.filteredDocuments.isEmpty)
+            if (!watchSearchExpenses.hasMoreData &&
+                watchSearchExpenses.filteredDocuments.isEmpty)
               const SliverToBoxAdapter(
                 child: Center(
                   child: Text('No expenses found.'),
@@ -162,5 +178,17 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
         ),
       ),
     );
+  }
+
+  void sortBy(bool isAmount) {
+    watchSearchExpenses.filteredDocuments.sort((a, b) {
+      var aData = Expense.fromMap(a.data() as Map<String, dynamic>);
+      var bData = Expense.fromMap(b.data() as Map<String, dynamic>);
+      return isAmount
+          ? aData.amount.compareTo(bData.amount)
+          : aData.createAt.compareTo(bData.createAt);
+    });
+    searchProviderNotifier
+        .updateSortedExpenses(watchSearchExpenses.filteredDocuments);
   }
 }

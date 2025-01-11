@@ -3,11 +3,13 @@ import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
+import 'package:expense_tracker_flutter/features/expense/provider/category_expense_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../models/expense_model.dart';
 
-class CategoryExpenses extends StatelessWidget {
+class CategoryExpenses extends ConsumerStatefulWidget {
   final String? name;
   final String? totalAmount;
   final String? iconPath;
@@ -21,10 +23,33 @@ class CategoryExpenses extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    expenseData.sort(
-      (a, b) => b.amount.compareTo(a.amount),
+  ConsumerState<CategoryExpenses> createState() => _CategoryExpensesState();
+}
+
+class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
+  CategoryExpenseNotifier get controller =>
+      ref.read(categoryExpenseProvider.notifier);
+  CategoryExpenseNotifier get watchController =>
+      ref.watch(categoryExpenseProvider);
+  List<Expense> get sortedExpenseData => watchController.sortedExpenseData;
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        controller.updateOriginalExpense(widget.expenseData);
+        widget.expenseData.sort(
+          (a, b) => b.amount.compareTo(a.amount),
+        );
+        controller.updateSortByDate(false);
+        controller.updateSortedExpense(widget.expenseData);
+      },
     );
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Material(
       // color: Colors.white,
       color: Colors.transparent,
@@ -52,14 +77,14 @@ class CategoryExpenses extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
-                      "$iconPath",
+                      "${widget.iconPath}",
                       height: 32,
                       width: 32,
                       fit: BoxFit.contain,
                     ),
                     8.wGap,
                     Text(
-                      "$name",
+                      "${widget.name}",
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -67,7 +92,7 @@ class CategoryExpenses extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
-                      "Total Amount: Rs $totalAmount",
+                      "Total Amount: Rs ${widget.totalAmount}",
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
@@ -77,13 +102,31 @@ class CategoryExpenses extends StatelessWidget {
                   ],
                 ),
               ),
+              TextButton(
+                  onPressed: () {
+                    if (watchController.isSortByDate) {
+                      widget.expenseData.sort(
+                        (a, b) => b.amount.compareTo(a.amount),
+                      );
+                      controller.updateSortByDate(false);
+                      controller.updateSortedExpense(widget.expenseData);
+                    } else {
+                      widget.expenseData.sort(
+                        (a, b) => b.createAt.compareTo(a.createAt),
+                      );
+                      controller.updateSortByDate(true);
+                      controller.updateSortedExpense(widget.expenseData);
+                    }
+                  },
+                  child: Text(
+                      "Sort By ${watchController.isSortByDate ? "Amount" : "Date"}")),
               const Divider(
                 height: 1,
                 thickness: 0.5,
               ),
               20.hGap,
-              if (name == "Petrol")
-                PetrolCategoryDetail(expenseData: expenseData),
+              if (widget.name == "Petrol")
+                PetrolCategoryDetail(expenseData: sortedExpenseData),
               ListView.separated(
                 physics: const ClampingScrollPhysics(),
                 // padding: EdgeInsets.zero,
@@ -91,11 +134,11 @@ class CategoryExpenses extends StatelessWidget {
                   horizontal: 16,
                   // vertical: 16,
                 ),
-                itemCount: expenseData.length,
+                itemCount: sortedExpenseData.length,
                 shrinkWrap: true,
                 separatorBuilder: (context, index) => 10.hGap,
                 itemBuilder: (context, index) {
-                  final expense = expenseData[index];
+                  final expense = sortedExpenseData[index];
 
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

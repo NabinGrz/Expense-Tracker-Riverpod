@@ -2,7 +2,7 @@ import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
-import 'package:expense_tracker_flutter/features/home/widgets/balance_update_dialog.dart';
+import 'package:expense_tracker_flutter/features/expense/widgets/balance_update_dialog.dart';
 import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_svg/flutter_svg.dart';

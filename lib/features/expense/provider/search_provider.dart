@@ -4,11 +4,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../models/expense_model.dart';
 
-final searchProvider = ChangeNotifierProvider((ref) => SearchNotifier());
+final searchExpenseProvider = ChangeNotifierProvider((ref) => SearchNotifier());
 
 class SearchNotifier extends ChangeNotifier {
   List<DocumentSnapshot> documents = [];
   List<DocumentSnapshot> filteredDocuments = [];
+  List<DocumentSnapshot> sortedDocuments = [];
   DocumentSnapshot? lastDocument;
   bool isLoading = false;
   bool hasMoreData = true;
@@ -49,6 +50,11 @@ class SearchNotifier extends ChangeNotifier {
       hasMoreData = false;
     }
     isLoading = false;
+    notifyListeners();
+  }
+
+  void updateSortedExpenses(List<DocumentSnapshot<Object?>> val) {
+    sortedDocuments = val;
     notifyListeners();
   }
 

@@ -1,4 +1,4 @@
-import 'package:expense_tracker_flutter/features/home/provider/home_provider.dart';
+import 'package:expense_tracker_flutter/features/expense/provider/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

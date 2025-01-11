@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
-import 'package:expense_tracker_flutter/features/home/provider/home_provider.dart';
+import 'package:expense_tracker_flutter/features/expense/provider/home_provider.dart';
 import 'package:expense_tracker_flutter/shared/provider/sort_by_provider.dart';
 import 'package:expense_tracker_flutter/shared/provider/tab_bar_provider.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_analytics_tab_bar.dart';

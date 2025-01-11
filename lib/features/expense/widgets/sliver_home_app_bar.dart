@@ -1,5 +1,5 @@
 import 'package:expense_tracker_flutter/features/filter/widgets/filter_type_widget.dart';
-import 'package:expense_tracker_flutter/features/home/screen/search_screen.dart';
+import 'package:expense_tracker_flutter/features/expense/screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
