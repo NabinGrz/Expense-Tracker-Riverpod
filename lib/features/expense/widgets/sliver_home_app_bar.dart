@@ -1,8 +1,6 @@
 import 'package:expense_tracker_flutter/features/filter/widgets/filter_type_widget.dart';
-import 'package:expense_tracker_flutter/features/expense/screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class SliverHomeAppBar extends StatelessWidget {
   const SliverHomeAppBar({
@@ -24,15 +22,28 @@ class SliverHomeAppBar extends StatelessWidget {
       ),
       actions: [
         IconButton(
-            splashRadius: 20,
-            onPressed: () {
-              HapticFeedback.selectionClick();
-              showCupertinoModalPopup(
-                context: context,
-                builder: (context) => const FilterTypeBottomSheet(),
-              );
-            },
-            icon: const Icon(CupertinoIcons.calendar)),
+          splashRadius: 20,
+          onPressed: () {
+            // Navigator.push(
+            //   context,
+            //   CupertinoSheetRoute(
+            //     builder: (context) => const FilterTypeBottomSheet(),
+            //   ),
+            // );
+            // showCupertinoModalPopup(
+            //     context: context,
+            //     builder: (context) => const CupertinoActionSheet(
+            //         title: Text('Choose Options'),
+            //         message: Text('Your options are'),
+            //         actions: <Widget>[]));
+            showCupertinoModalPopup(
+              context: context,
+              builder: (BuildContext context) =>
+                  showFilterTypeBottomSheet(context),
+            );
+          },
+          icon: const Icon(CupertinoIcons.calendar),
+        ),
       ],
     );
   }

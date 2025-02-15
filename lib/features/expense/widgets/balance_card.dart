@@ -107,12 +107,12 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                               ),
                             ),
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Rs ${int.tryParse(balance?['cash'] ?? "").toCurrency}",
+                                  "Rs ${int.tryParse(balance?['cash'] ?? "")?.toCurrency}",
                                   style: const TextStyle(
-                                    fontSize: 22,
+                                    fontSize: 20,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -135,6 +135,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                                     child: const Icon(
                                       Icons.edit,
                                       color: Colors.white,
+                                      size: 18,
                                     ))
                               ],
                             )
@@ -150,12 +151,13 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                               ),
                             ),
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Rs ${int.tryParse(balance?['bank'] ?? "").toCurrency}",
+                                  "Rs ${int.tryParse(balance?['bank'] ?? "")?.toCurrency}",
+                                  overflow: TextOverflow.clip,
                                   style: const TextStyle(
-                                    fontSize: 22,
+                                    fontSize: 20,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -178,6 +180,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                                     child: const Icon(
                                       Icons.edit,
                                       color: Colors.white,
+                                      size: 18,
                                     ))
                               ],
                             )

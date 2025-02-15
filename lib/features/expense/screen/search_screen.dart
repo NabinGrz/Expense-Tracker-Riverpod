@@ -1,8 +1,8 @@
-import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../constants/app_color.dart';
 import '../../../helper/expense_query_helper.dart';
 import '../../../models/expense_model.dart';
 import '../../../shared/widget/expense_tile.dart';
@@ -81,9 +81,11 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
   SearchNotifier get watchSearchExpenses => ref.watch(searchExpenseProvider);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: RefreshIndicator.adaptive(
+    // return CupertinoPageScaffold();
+    return CupertinoPageScaffold(
+      child: RefreshIndicator.adaptive(
         color: Colors.white,
+        // color: AppColor.primary,
         onRefresh: () async {
           await _loadExpenses();
           if (context.mounted) {
@@ -95,17 +97,19 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
           controller: _scrollController,
           slivers: [
             CupertinoSliverNavigationBar(
-              backgroundColor: AppColor.primary,
-              largeTitle: const Text(
+              automaticBackgroundVisibility: true,
+              largeTitle: Text(
                 'All Expenses',
                 style: TextStyle(
                   fontFamily: 'Manrope',
-                  fontSize: 20,
-                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: AppColor.primary,
                 ),
               ),
               trailing: PopupMenuButton(
-                iconColor: Colors.white,
+                // iconColor: Colors.white,.
+                iconColor: AppColor.primary,
                 itemBuilder: (context) {
                   return [
                     PopupMenuItem(
@@ -123,10 +127,7 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
                   ];
                 },
               ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
+              bottom: _NavigationBarSearchField(
                 child: CupertinoSearchTextField(
                   controller: _searchController,
                   placeholder: 'Search expenses',
@@ -138,6 +139,7 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
                   },
                 ),
               ),
+              // bottomMode: NavigationBarBottomMode.always,
             ),
             SliverToBoxAdapter(
                 child: watchSearchExpenses.isLoading
@@ -147,10 +149,11 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   if (index < watchSearchExpenses.filteredDocuments.length) {
-                    final expense = Expense.fromMap(
-                      watchSearchExpenses.filteredDocuments[index].data()
-                          as Map<String, dynamic>,
-                    );
+                    final mapData = watchSearchExpenses.filteredDocuments[index]
+                        .data() as Map<String, dynamic>;
+                    mapData['docId'] =
+                        watchSearchExpenses.filteredDocuments[index].id;
+                    final expense = Expense.fromMap(mapData);
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 4.0),
@@ -191,4 +194,28 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
     searchProviderNotifier
         .updateSortedExpenses(watchSearchExpenses.filteredDocuments);
   }
+}
+
+class _NavigationBarSearchField extends StatelessWidget
+    implements PreferredSizeWidget {
+  final Widget child;
+  const _NavigationBarSearchField({required this.child});
+
+  static const double padding = 12.0;
+  static const double searchFieldHeight = 35.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: padding,
+        vertical: padding,
+      ),
+      child: SizedBox(height: searchFieldHeight, child: child),
+    );
+  }
+
+  @override
+  Size get preferredSize =>
+      const Size.fromHeight(searchFieldHeight + padding * 2);
 }

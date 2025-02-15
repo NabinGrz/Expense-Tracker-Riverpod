@@ -4,6 +4,9 @@ import '../constants/app_strings.dart';
 
 extension StringNullEmptyExtension on String? {
   bool get isNotNullAndEmpty => this != null && this!.isNotEmpty;
+  String capitalize() {
+    return "${this?[0].toUpperCase()}${this?.substring(1)}";
+  }
 }
 
 extension ImagePathExtension on String {

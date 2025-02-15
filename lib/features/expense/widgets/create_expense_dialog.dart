@@ -15,12 +15,12 @@ class CreateUpdateDialog extends ConsumerStatefulWidget {
   final bool isUpdate;
   final bool? isCashPreviously;
   final Expense? expenseData;
-  final String? docId;
+  final String docId;
   const CreateUpdateDialog({
     super.key,
     this.isUpdate = false,
     this.expenseData,
-    this.docId,
+    required this.docId,
     this.isCashPreviously,
   });
 

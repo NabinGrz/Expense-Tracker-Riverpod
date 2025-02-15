@@ -70,7 +70,7 @@ class AnalyticsWidget extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "Rs: ${int.tryParse("${category.value['totalAmount']}").toCurrency} | ",
+                        "Rs: ${int.tryParse("${category.value['totalAmount']}")?.toCurrency} | ",
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,

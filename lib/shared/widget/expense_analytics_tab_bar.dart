@@ -18,7 +18,7 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColor.primary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,7 +40,7 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
           ? ref.watch(hometabProvider)
           : ref.watch(filterScreentabProvider);
       return InkWell(
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(10),
         splashColor: AppColor.primary.withOpacity(0.2),
         highlightColor: AppColor.primary.withOpacity(0.3),
         onTap: () {
@@ -57,20 +57,23 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(
             // horizontal: 50,
-            vertical: 14,
+            vertical: 8,
           ),
           decoration: tab != selectedTab
               ? null
               : BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(50),
+                  borderRadius: BorderRadius.circular(10),
                 ),
           child: Text(
             name,
-            style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                color: Color(0xff666666)),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: tab != selectedTab
+                  ? const Color(0xff666666)
+                  : AppColor.primary,
+            ),
           ),
         ),
       );

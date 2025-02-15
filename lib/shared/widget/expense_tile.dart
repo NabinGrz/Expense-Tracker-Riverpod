@@ -53,7 +53,7 @@ class ExpenseTile extends ConsumerWidget {
                             isUpdate: true,
                             expenseData: expenseData,
                             isCashPreviously: expenseData?.isCash,
-                            docId: expenseData?.docId,
+                            docId: expenseData?.docId ?? "from expense tile",
                           );
                         },
                       );
@@ -98,19 +98,31 @@ class ExpenseTile extends ConsumerWidget {
       },
 
       child: Ink(
-        decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 251, 251, 251),
-            borderRadius: BorderRadius.circular(8),
-            border:
-                Border.all(color: const Color.fromARGB(255, 246, 246, 246))),
+        // decoration: BoxDecoration(
+        //     color: const Color.fromARGB(255, 251, 251, 251),
+        //     borderRadius: BorderRadius.circular(8),
+        //     border:
+        //         Border.all(color: const Color.fromARGB(255, 246, 246, 246))),
         child: Row(
           children: [
             Container(
-              height: 50,
-              width: 50,
+              height: 34,
+              width: 34,
               padding: const EdgeInsets.all(2),
               decoration: BoxDecoration(
-                color: AppColor.primary.withOpacity(0.1),
+                gradient: LinearGradient(
+                  colors: [
+                    expenseData?.category.getColorByCategory.withOpacity(0.5) ??
+                        Colors.red,
+                    expenseData?.category.getColorByCategory.withOpacity(0.7) ??
+                        Colors.red,
+                    expenseData?.category.getColorByCategory
+                            .withOpacity(0.95) ??
+                        Colors.red,
+                  ],
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Image.asset(
@@ -118,21 +130,22 @@ class ExpenseTile extends ConsumerWidget {
                 fit: BoxFit.contain,
               ),
             ),
-            10.wGap,
+            12.wGap,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${expenseData?.name}",
+                  "${expenseData?.name.capitalize()}",
                   style: const TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
+                2.hGap,
                 Text(
                   "${expenseData?.category}",
                   style: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 12,
                     color: Color(0xff666666),
                   ),
                 ),
@@ -147,6 +160,7 @@ class ExpenseTile extends ConsumerWidget {
                       const Icon(
                         Icons.date_range,
                         size: 12,
+                        color: Color(0xff666666),
                       ),
                       4.wGap,
                       Text(
@@ -164,22 +178,15 @@ class ExpenseTile extends ConsumerWidget {
             ),
             const Spacer(),
             Text(
-              "- Rs ${expenseData?.amount.toCurrency}",
+              "-\$ ${expenseData?.amount.toCurrency}",
               style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Color(0xffF95B51),
+                fontSize: 12,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -1,
+                // fontFamily: 'Inter'
+                // color: Color(0xffF95B51),
               ),
             ),
-            6.wGap,
-            Image.asset(
-              expenseData?.isCash == true
-                  ? "assets/images/dollar.png"
-                  : "assets/images/bank.png",
-              height: 12,
-              width: 12,
-            ),
-            6.wGap,
           ],
         ),
       ),
