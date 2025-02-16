@@ -75,7 +75,10 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
             children: [
               const Text(
                 "Expense Name",
-                style: TextStyle(fontSize: 12),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               4.hGap,
               TextFormField(
@@ -115,7 +118,10 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
               20.hGap,
               const Text(
                 "Amount",
-                style: TextStyle(fontSize: 12),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               4.hGap,
               TextFormField(
@@ -154,7 +160,10 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
               20.hGap,
               const Text(
                 "Category",
-                style: TextStyle(fontSize: 12),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               4.hGap,
               StreamBuilder(
@@ -207,7 +216,13 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                                     ),
                                   ),
                                   4.wGap,
-                                  Text(e),
+                                  Text(
+                                    e,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ],
                               ),
                             );
@@ -241,7 +256,10 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                   children: [
                     const Text(
                       "Is Cash",
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Checkbox.adaptive(
                         value: watch.expenseEntity?.isCash ?? false,

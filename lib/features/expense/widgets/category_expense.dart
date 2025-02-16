@@ -3,7 +3,9 @@ import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
+import 'package:expense_tracker_flutter/extension/string_extension.dart';
 import 'package:expense_tracker_flutter/features/expense/provider/category_expense_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -69,20 +71,22 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
             children: [
               10.hGap,
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 16,
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Image.asset(
                       "${widget.iconPath}",
-                      height: 32,
-                      width: 32,
+                      height: 42,
+                      width: 42,
                       fit: BoxFit.contain,
                     ),
-                    8.wGap,
+                    4.wGap,
                     Text(
                       "${widget.name}",
                       style: const TextStyle(
@@ -94,7 +98,7 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                     Text(
                       "Total Amount: Rs ${widget.totalAmount}",
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
                         color: Colors.grey,
                         fontWeight: FontWeight.bold,
                       ),
@@ -102,7 +106,9 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                   ],
                 ),
               ),
-              TextButton(
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
                   onPressed: () {
                     if (watchController.isSortByDate) {
                       widget.expenseData.sort(
@@ -118,13 +124,28 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                       controller.updateSortedExpense(widget.expenseData);
                     }
                   },
-                  child: Text(
-                      "Sort By ${watchController.isSortByDate ? "Amount" : "Date"}")),
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Sort By ${watchController.isSortByDate ? "Amount" : "Date"}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Icon(
+                        CupertinoIcons.sort_up,
+                        size: 18,
+                      )
+                    ],
+                  ),
+                ),
+              ),
               const Divider(
                 height: 1,
                 thickness: 0.5,
               ),
-              20.hGap,
+              10.hGap,
               if (widget.name == "Petrol")
                 PetrolCategoryDetail(expenseData: sortedExpenseData),
               ListView.separated(
@@ -146,13 +167,19 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(expense.name),
+                          Text(
+                            expense.name.capitalize(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                           4.hGap,
                           Row(
                             children: [
                               const Icon(
                                 Icons.date_range,
                                 size: 12,
+                                color: Colors.grey,
                               ),
                               4.wGap,
                               Text(
@@ -161,6 +188,7 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                                 style: const TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
@@ -172,18 +200,18 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                           Text(
                             "- Rs ${expense.amount.toCurrency}",
                             style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
                               color: Color(0xffF95B51),
                             ),
                           ),
-                          6.wGap,
+                          2.wGap,
                           Image.asset(
                             expense.isCash
                                 ? "assets/images/dollar.png"
                                 : "assets/images/bank.png",
-                            height: 12,
-                            width: 12,
+                            height: 10,
+                            width: 10,
                           ),
                         ],
                       )
