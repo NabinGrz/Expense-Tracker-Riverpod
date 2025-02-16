@@ -1,13 +1,15 @@
 import 'dart:convert';
 
+import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
-import 'package:expense_tracker_flutter/features/filter/widgets/fiter_range_header_widget.dart';
+
 import 'package:expense_tracker_flutter/features/expense/widgets/analytics_widget.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_analytics_tab_bar.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_tile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -16,7 +18,7 @@ import '../../../models/expense_model.dart';
 import '../../../shared/provider/tab_bar_provider.dart';
 import '../provider/filter_provider.dart';
 import '../widgets/date_widget.dart';
-import '../widgets/fiter_specific_date_header_widget.dart';
+import '../widgets/filter_date_column_widget.dart';
 
 class FilterScreen extends ConsumerStatefulWidget {
   final bool isSpecificDate;
@@ -158,42 +160,100 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
             );
           return Scaffold(
             backgroundColor: Colors.white,
+            appBar: AppBar(
+              toolbarHeight: 0,
+              elevation: 2,
+              // title: Text(
+              //     widget.isSpecificDate ? "Select Date" : "Select Date Range"),
+            ),
             body: CustomScrollView(
               shrinkWrap: true,
               controller: _scrollController,
+              // physics: const ClampingScrollPhysics(),
               slivers: [
-                SliverAppBar(
-                  floating: false,
-                  pinned: false,
-                  centerTitle: false,
-                  foregroundColor: Colors.white,
-                  expandedHeight: 200,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.only(bottomRight: Radius.circular(20))),
-                  title: ref.watch(isAppBarCollapsed)
-                      ? FadeTransition(
-                          opacity: _animation,
-                          child: Text(
-                            widget.isSpecificDate
-                                ? "Select Date"
-                                : "Select Range",
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                Consumer(builder: (context, ref, _) {
+                  DateRangeModel watchDateRange = ref.watch(dateRangeProvider);
+                  final fromDate = watchDateRange.from;
+                  final toDate = watchDateRange.to;
+                  DateRangeNotifier controller =
+                      ref.read(dateRangeProvider.notifier);
+                  return SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: widget.isSpecificDate
+                          ? FilterDateColumnWidget(
+                              title: "Date: ",
+                              val: ref.watch(selectedDateProvider),
+                              onTap: () async {
+                                final selectedDate = await showDatePicker(
+                                  context: context,
+                                  firstDate: DateTime.now()
+                                      .subtract(const Duration(days: 200)),
+                                  lastDate: DateTime.now(),
+                                  initialDate: ref.watch(selectedDateProvider),
+                                );
+                                ref.read(selectedDateProvider.notifier).update(
+                                    (state) => selectedDate ?? DateTime.now());
+                              },
+                            )
+                          : Column(
+                              children: [
+                                FilterDateColumnWidget(
+                                    title: "From: ",
+                                    val: ref.watch(dateRangeProvider).from,
+                                    onTap: () async {
+                                      final selectedDate = await showDatePicker(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        firstDate: DateTime.now().subtract(
+                                            const Duration(days: 200)),
+                                        lastDate: DateTime.now(),
+                                        initialDate: fromDate,
+                                      );
+                                      controller.updateFromDate(
+                                          selectedDate ?? fromDate);
+
+                                      if (selectedDate != null) {
+                                        if (selectedDate.isAfter(toDate) ||
+                                            selectedDate
+                                                .isSameDateAs(selectedDate)) {
+                                          final newToDate = selectedDate
+                                              .add(const Duration(days: 30));
+                                          controller.updateToDate(newToDate);
+                                        }
+                                      }
+                                    }),
+                                FilterDateColumnWidget(
+                                  title: "To: ",
+                                  val: ref.watch(dateRangeProvider).to,
+                                  onTap: () async {
+                                    final selectedDate = await showDatePicker(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      firstDate:
+                                          fromDate.add(const Duration(days: 1)),
+                                      lastDate: DateTime.now()
+                                          .add(const Duration(days: 200)),
+                                      initialDate: toDate,
+                                    );
+
+                                    controller
+                                        .updateToDate(selectedDate ?? toDate);
+                                  },
+                                )
+                              ],
                             ),
-                          ),
-                        )
-                      : null,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: widget.isSpecificDate
-                        ? const FilterSpecificHeaderWidget()
-                        : const FilterRangeHeaderWidget(),
-                  ),
-                ),
+                    ),
+                  );
+                }),
                 SliverList(
                   delegate: SliverChildListDelegate([
-                    16.hGap,
+                    8.hGap,
+                    Divider(
+                      color: Colors.grey[100],
+                      thickness: 1,
+                    ),
+                    8.hGap,
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Column(
@@ -202,7 +262,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                           const Text(
                             "Expenses List",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -211,8 +271,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                             "Total Amount: Rs ${expenseAmount?.toCurrency}",
                             style: const TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              // color: Color(0xff666666),
+                              fontWeight: FontWeight.w600,
                               color: Colors.grey,
                             ),
                           ),
@@ -228,12 +287,14 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                             !sortedCategories.isNotNullAndNotEmpty
                         ? const Center(
                             child: Text(
-                            "No expenses yet",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 24,
+                              "No expenses yet",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                              ),
                             ),
-                          ))
+                          )
                         : ref.watch(filterScreentabProvider) ==
                                 SelectedTab.expense
                             ? ListView.builder(
@@ -288,9 +349,10 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                                 child: AnalyticsWidget(
                                   sortedCategories: sortedCategories,
                                 ),
-                              )
+                              ),
+                    120.hGap
                   ]),
-                )
+                ),
               ],
             ),
           );

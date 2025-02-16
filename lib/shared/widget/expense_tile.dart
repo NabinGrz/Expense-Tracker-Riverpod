@@ -178,14 +178,20 @@ class ExpenseTile extends ConsumerWidget {
             ),
             const Spacer(),
             Text(
-              "-\$ ${expenseData?.amount.toCurrency}",
+              "${expenseData?.amount.toCurrency}",
               style: const TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w600,
                 letterSpacing: -1,
-                // fontFamily: 'Inter'
-                // color: Color(0xffF95B51),
               ),
+            ),
+            2.wGap,
+            Image.asset(
+              expenseData?.isCash == true
+                  ? "assets/images/dollar.png"
+                  : "assets/images/bank.png",
+              height: 12,
+              width: 12,
             ),
           ],
         ),

@@ -6,6 +6,7 @@ import 'package:expense_tracker_flutter/features/expense/provider/home_provider.
 import 'package:expense_tracker_flutter/shared/provider/sort_by_provider.dart';
 import 'package:expense_tracker_flutter/shared/provider/tab_bar_provider.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_analytics_tab_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -149,8 +150,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
       body: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           const SliverHomeAppBar(),
+          CupertinoSliverRefreshControl(
+            onRefresh: () async {
+              HapticFeedback.lightImpact();
+              FirebaseQueryHelper.getSingleDocumentAsFuture(
+                  collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+              controller.sortedExpenseSubject.add(originalExpenseList);
+              searchController.clear();
+              FocusScope.of(context).unfocus();
+            },
+          ),
           SliverList(
             delegate: SliverChildListDelegate([
               BalanceCard(

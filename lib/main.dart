@@ -1,8 +1,6 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'features/dashboard/dashboard.dart';
@@ -26,8 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'Expense Tracker App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
-        fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
-        //.poppins().fontFamily,
+        fontFamily: 'SFPRO',
         appBarTheme: AppBarTheme(backgroundColor: AppColor.primary),
         useMaterial3: false,
       ),

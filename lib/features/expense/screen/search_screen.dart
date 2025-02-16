@@ -101,32 +101,86 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
               largeTitle: Text(
                 'All Expenses',
                 style: TextStyle(
-                  fontFamily: 'Manrope',
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
                   color: AppColor.primary,
                 ),
               ),
               trailing: PopupMenuButton(
-                // iconColor: Colors.white,.
+                icon: const Icon(Icons.list),
                 iconColor: AppColor.primary,
+                elevation: 2,
+                menuPadding: EdgeInsets.zero,
+                borderRadius: BorderRadius.circular(50),
                 itemBuilder: (context) {
                   return [
                     PopupMenuItem(
                       onTap: () => sortBy(true),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      child: const Text("Sort By Amount"),
+                          horizontal: 8, vertical: 0),
+                      child: const Text(
+                        "Sort By Amount",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     PopupMenuItem(
                       onTap: () => sortBy(false),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      child: const Text("Sort By Date"),
+                          horizontal: 8, vertical: 0),
+                      child: const Text(
+                        "Sort By Date",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ];
                 },
               ),
+              // const CupertinoPopupSurface(child: Text("Sort By Amount")),
+              // CupertinoContextMenu(
+              //     actions: const [Text("Sort By Amount")],
+              //     child: const Text("Sort By Amount")),
+              //     CupertinoContextMenu(
+              //   enableHapticFeedback: true,
+              //   actions: <Widget>[
+              //     CupertinoContextMenuAction(
+              //       onPressed: () {
+              //         Navigator.pop(context);
+              //       },
+              //       isDefaultAction: true,
+              //       trailingIcon: CupertinoIcons.doc_on_clipboard_fill,
+              //       child: const Text('Copy'),
+              //     ),
+              //     CupertinoContextMenuAction(
+              //       onPressed: () {
+              //         Navigator.pop(context);
+              //       },
+              //       trailingIcon: CupertinoIcons.share,
+              //       child: const Text('Share'),
+              //     ),
+              //     CupertinoContextMenuAction(
+              //       onPressed: () {
+              //         Navigator.pop(context);
+              //       },
+              //       trailingIcon: CupertinoIcons.heart,
+              //       child: const Text('Favorite'),
+              //     ),
+              //     CupertinoContextMenuAction(
+              //       onPressed: () {
+              //         Navigator.pop(context);
+              //       },
+              //       isDestructiveAction: true,
+              //       trailingIcon: CupertinoIcons.delete,
+              //       child: const Text('Delete'),
+              //     ),
+              //   ],
+              //   child: const Icon(Icons.list),
+              // ),
               bottom: _NavigationBarSearchField(
                 child: CupertinoSearchTextField(
                   controller: _searchController,

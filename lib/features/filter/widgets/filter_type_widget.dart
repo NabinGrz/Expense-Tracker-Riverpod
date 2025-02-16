@@ -11,7 +11,7 @@ CupertinoActionSheet showFilterTypeBottomSheet(BuildContext context) {
         child: const Text("Specific Date"),
         onPressed: () {
           Navigator.pop(context);
-          Navigator.push(context, CupertinoPageRoute(
+          Navigator.push(context, CupertinoSheetRoute(
             builder: (context) {
               return const FilterScreen(
                 isSpecificDate: true,
@@ -25,7 +25,7 @@ CupertinoActionSheet showFilterTypeBottomSheet(BuildContext context) {
         child: const Text("Date Range"),
         onPressed: () {
           Navigator.pop(context);
-          Navigator.push(context, CupertinoPageRoute(
+          Navigator.push(context, CupertinoSheetRoute(
             builder: (context) {
               return const FilterScreen(
                 isSpecificDate: false,

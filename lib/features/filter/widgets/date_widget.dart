@@ -37,7 +37,7 @@ class DateWidget extends StatelessWidget {
                   day,
                   style: const TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 6.wGap,
@@ -48,15 +48,16 @@ class DateWidget extends StatelessWidget {
                       weekDay,
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Color(0xff666666),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
                       month,
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Color(0xff666666),
-                        fontWeight: FontWeight.w800,
+                        color: Colors.black38,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ],
@@ -70,7 +71,8 @@ class DateWidget extends StatelessWidget {
                   "Total Spend",
                   style: TextStyle(
                     fontSize: 10,
-                    color: Color(0xff666666),
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
@@ -79,8 +81,8 @@ class DateWidget extends StatelessWidget {
                       ).sum().toCurrency}",
                   style: const TextStyle(
                     fontSize: 10,
-                    color: Color(0xff666666),
-                    fontWeight: FontWeight.bold,
+                    color: Colors.black38,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],

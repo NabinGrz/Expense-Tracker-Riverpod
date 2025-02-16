@@ -16,7 +16,7 @@ class AnalyticsWidget extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       crossAxisCount: 2,
-      childAspectRatio: 1.7,
+      childAspectRatio: 1.9,
       crossAxisSpacing: 6,
       mainAxisSpacing: 6,
       padding: EdgeInsets.zero,
@@ -62,8 +62,8 @@ class AnalyticsWidget extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Image.asset(
                       category.key.getIconPathByCategory,
-                      height: 55,
-                      width: 55,
+                      height: 52,
+                      width: 52,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -73,7 +73,7 @@ class AnalyticsWidget extends StatelessWidget {
                         "Rs: ${int.tryParse("${category.value['totalAmount']}")?.toCurrency} | ",
                         style: const TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),

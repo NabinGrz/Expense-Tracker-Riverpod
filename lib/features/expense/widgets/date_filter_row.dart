@@ -95,7 +95,7 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
             name,
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w700,
               color: dateFilter != selectedDateFilter ? null : Colors.white,
             ),
           ),

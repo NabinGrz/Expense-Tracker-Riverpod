@@ -15,7 +15,7 @@ class SliverHomeAppBar extends StatelessWidget {
       title: const Text(
         "Kharcha",
         style: TextStyle(
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
           fontSize: 24,
           color: Colors.white,
         ),
@@ -38,6 +38,7 @@ class SliverHomeAppBar extends StatelessWidget {
             //         actions: <Widget>[]));
             showCupertinoModalPopup(
               context: context,
+              // semanticsDismissible: true,
               builder: (BuildContext context) =>
                   showFilterTypeBottomSheet(context),
             );
