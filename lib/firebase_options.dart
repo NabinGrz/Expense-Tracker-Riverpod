@@ -24,7 +24,10 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for android - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
@@ -49,21 +52,12 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDBsBLEGHCIalNImiXtkeQEG8NbiTnlSbo',
-    appId: '1:674926899901:android:3a4e109055c48ea52afdd4',
-    messagingSenderId: '674926899901',
-    projectId: 'expensetracker-2e803',
-    storageBucket: 'expensetracker-2e803.appspot.com',
-  );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBG_9JkeJ4ctbdsWYckYE3ArlRQ6R93aQs',
-    appId: '1:674926899901:ios:08fa174125c3b15a2afdd4',
+    appId: '1:674926899901:ios:1d40a9bfed270a532afdd4',
     messagingSenderId: '674926899901',
     projectId: 'expensetracker-2e803',
-    storageBucket: 'expensetracker-2e803.appspot.com',
-    iosBundleId: 'com.example.expenseTrackerFlutter',
+    storageBucket: 'expensetracker-2e803.firebasestorage.app',
+    iosBundleId: 'com.expense.trackerFlutter',
   );
-
 }

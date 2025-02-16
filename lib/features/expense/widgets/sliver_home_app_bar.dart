@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SliverHomeAppBar extends StatelessWidget {
+  final void Function()? onPressed;
   const SliverHomeAppBar({
     super.key,
+    required this.onPressed,
   });
 
   @override
@@ -24,21 +26,19 @@ class SliverHomeAppBar extends StatelessWidget {
         IconButton(
           splashRadius: 20,
           onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   CupertinoSheetRoute(
-            //     builder: (context) => const FilterTypeBottomSheet(),
-            //   ),
-            // );
             // showCupertinoModalPopup(
-            //     context: context,
-            //     builder: (context) => const CupertinoActionSheet(
-            //         title: Text('Choose Options'),
-            //         message: Text('Your options are'),
-            //         actions: <Widget>[]));
+            //   context: context,
+            //   builder: (BuildContext context) =>
+            //       showFilterTypeBottomSheet(context),
+            // );
+          },
+          icon: const Icon(Icons.system_update_rounded),
+        ),
+        IconButton(
+          splashRadius: 20,
+          onPressed: () {
             showCupertinoModalPopup(
               context: context,
-              // semanticsDismissible: true,
               builder: (BuildContext context) =>
                   showFilterTypeBottomSheet(context),
             );

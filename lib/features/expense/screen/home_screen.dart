@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shorebird_code_push/shorebird_code_push.dart';
 
 import '../../../helper/expense_query_helper.dart';
 import '../../../helper/firebase_query_handler.dart';
@@ -34,6 +35,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final updater = ShorebirdUpdater();
   final searchController = TextEditingController();
   List<Expense> originalExpenseList = [];
   HomeNotifier get controller => ref.read(homeEntityProvider.notifier);
@@ -58,8 +60,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   void initState() {
+    updater.readCurrentPatch().then((currentPatch) {
+      if (currentPatch != null) {
+        print('The current patch number is: ${currentPatch.number}');
+      }
+    });
     _initialize();
+
     super.initState();
+  }
+
+  Future<void> _checkForUpdates() async {
+    // Check whether a new update is available.
+    final status = await updater.checkForUpdate();
+
+    if (status == UpdateStatus.outdated) {
+      try {
+        // Perform the update
+        await updater.update();
+      } on UpdateException catch (error) {
+        // Handle any errors that occur while updating.
+      }
+    }
   }
 
   void listenToChangesOnExpenses() {
@@ -152,7 +174,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          const SliverHomeAppBar(),
+          SliverHomeAppBar(onPressed: () async {
+            await _checkForUpdates();
+          }),
           CupertinoSliverRefreshControl(
             onRefresh: () async {
               HapticFeedback.lightImpact();
