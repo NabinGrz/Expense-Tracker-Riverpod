@@ -78,7 +78,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       try {
         // Perform the update
         await updater.update();
-      } on UpdateException catch (error) {
+      } on UpdateException {
         // Handle any errors that occur while updating.
       }
     }
