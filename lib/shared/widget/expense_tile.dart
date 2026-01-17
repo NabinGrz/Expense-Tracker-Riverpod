@@ -98,18 +98,20 @@ class ExpenseTile extends ConsumerWidget {
       },
 
       child: Ink(
-        // decoration: BoxDecoration(
-        //     color: const Color.fromARGB(255, 251, 251, 251),
-        //     borderRadius: BorderRadius.circular(8),
-        //     border:
-        //         Border.all(color: const Color.fromARGB(255, 246, 246, 246))),
+        decoration: BoxDecoration(
+            color: const Color(0xfff7f6f2),
+            borderRadius: BorderRadius.circular(14),
+            border:
+                Border.all(color: const Color.fromARGB(255, 246, 246, 246))),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         child: Row(
           children: [
             Container(
-              height: 34,
-              width: 34,
-              padding: const EdgeInsets.all(2),
+              height: 35,
+              width: 35,
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
+                shape: BoxShape.circle,
                 gradient: LinearGradient(
                   colors: [
                     expenseData?.category.getColorByCategory.withOpacity(0.5) ??
@@ -123,7 +125,7 @@ class ExpenseTile extends ConsumerWidget {
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                 ),
-                borderRadius: BorderRadius.circular(8),
+                // borderRadius: BorderRadius.circular(8),
               ),
               child: Image.asset(
                 expenseData?.category.getIconPathByCategory ?? "",
@@ -137,16 +139,17 @@ class ExpenseTile extends ConsumerWidget {
                 Text(
                   "${expenseData?.name.capitalize()}",
                   style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.4),
                 ),
                 2.hGap,
                 Text(
                   "${expenseData?.category}",
                   style: const TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     color: Color(0xff666666),
+                    letterSpacing: 1.1,
                   ),
                 ),
                 2.hGap,
@@ -178,14 +181,14 @@ class ExpenseTile extends ConsumerWidget {
             ),
             const Spacer(),
             Text(
-              "${expenseData?.amount.toCurrency}",
+              "-Rs ${expenseData?.amount.toCurrency}",
               style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                letterSpacing: -1,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.1,
               ),
             ),
-            2.wGap,
+            3.wGap,
             Image.asset(
               expenseData?.isCash == true
                   ? "assets/images/dollar.png"

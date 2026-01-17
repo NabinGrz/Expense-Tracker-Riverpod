@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "674926899901",
     "project_id": "expensetracker-2e803",
-    "storage_bucket": "expensetracker-2e803.appspot.com"
+    "storage_bucket": "expensetracker-2e803.firebasestorage.app"
   },
   "client": [
     {
@@ -12,7 +12,12 @@
           "package_name": "com.example.expense_tracker_flutter"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "674926899901-r18bj77ju6uhaul5m45ej41pn4g68g9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDBsBLEGHCIalNImiXtkeQEG8NbiTnlSbo"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674926899901-r18bj77ju6uhaul5m45ej41pn4g68g9e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     },
@@ -31,7 +41,12 @@
           "package_name": "com.expense_tracker.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "674926899901-r18bj77ju6uhaul5m45ej41pn4g68g9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDBsBLEGHCIalNImiXtkeQEG8NbiTnlSbo"
@@ -39,7 +54,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674926899901-r18bj77ju6uhaul5m45ej41pn4g68g9e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

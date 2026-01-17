@@ -23,17 +23,17 @@ class SliverHomeAppBar extends StatelessWidget {
         ),
       ),
       actions: [
-        IconButton(
-          splashRadius: 20,
-          onPressed: () {
-            // showCupertinoModalPopup(
-            //   context: context,
-            //   builder: (BuildContext context) =>
-            //       showFilterTypeBottomSheet(context),
-            // );
-          },
-          icon: const Icon(Icons.system_update_rounded),
-        ),
+        // IconButton(
+        //   splashRadius: 20,
+        //   onPressed: () {
+        //     // showCupertinoModalPopup(
+        //     //   context: context,
+        //     //   builder: (BuildContext context) =>
+        //     //       showFilterTypeBottomSheet(context),
+        //     // );
+        //   },
+        //   icon: const Icon(Icons.system_update_rounded),
+        // ),
         IconButton(
           splashRadius: 20,
           onPressed: () {

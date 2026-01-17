@@ -22,20 +22,25 @@ class _DashboardState extends ConsumerState<Dashboard> {
       body:
           currentIndex == 0 ? const HomeScreen() : const SearchExpenseScreen(),
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 20,
         currentIndex: currentIndex,
         unselectedItemColor: CupertinoColors.systemGrey,
         onTap: (value) {
           ref.read(bottomNavBarProvider.notifier).state = value;
         },
+        backgroundColor: const Color(0xfff7f6f2),
+        enableFeedback: true,
         items: const [
           BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.home,
+                size: 25,
               ),
               label: "Home"),
           BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.search,
+                size: 25,
               ),
               label: "Search"),
         ],

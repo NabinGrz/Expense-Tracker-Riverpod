@@ -67,6 +67,103 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
       final controller = ref.read(expenseProvider.notifier);
       final watch = ref.watch(expenseProvider);
 
+      // return Material(
+      //   color: Colors.transparent,
+      //   child: Container(
+      //     padding: const EdgeInsets.all(24),
+      //     decoration: const BoxDecoration(
+      //       color: Color(0xfff7f6f2),
+      //       borderRadius: BorderRadius.only(
+      //         topLeft: Radius.circular(20),
+      //         topRight: Radius.circular(20),
+      //       ),
+      //     ),
+      //     child: Column(
+      //       crossAxisAlignment: CrossAxisAlignment.start,
+      //       mainAxisSize: MainAxisSize.min,
+      //       children: [
+      //         const Text("Add Expense"),
+      //         const Text("Amount"),
+      //         const Text("Rs 0"),
+      //         const Text("What for?",
+      //             style: TextStyle(
+      //               color: Color(0xffeeece8),
+      //               fontSize: 14,
+      //             )),
+      //         TextFormField(
+      //           autofocus: true,
+      //           controller: expenseNameController,
+      //           keyboardType: TextInputType.name,
+      //           onChanged: (value) {
+      //             // controller.nameError.add(null);
+      //           },
+      //           style: const TextStyle(fontSize: 14),
+      //           decoration: InputDecoration(
+      //             contentPadding:
+      //                 const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      //             hintText: "Enter expense name...",
+      //             hintStyle: const TextStyle(
+      //               color: Color(0xff888888),
+      //               fontSize: 12,
+      //             ),
+      //             border: OutlineInputBorder(
+      //               borderRadius: BorderRadius.circular(8),
+      //             ),
+      //           ),
+      //         ),
+      //         const Text("Category",
+      //             style: TextStyle(
+      //               color: Color(0xffeeece8),
+      //               fontSize: 12,
+      //             )),
+      //         SingleChildScrollView(
+      //           scrollDirection: Axis.horizontal,
+      //           child: StreamBuilder(
+      //               stream: ExpenseQueryHelper.getExpenseCategory(),
+      //               builder: (context, snapshot) {
+      //                 final categories = snapshot.data?.docs.first
+      //                     .data()['expense_type'] as List?;
+      //                 return Row(
+      //                   spacing: 12,
+      //                   children: categories
+      //                           ?.map(
+      //                             (e) => Container(
+      //                               padding: const EdgeInsets.symmetric(
+      //                                   horizontal: 4, vertical: 12),
+      //                               decoration: BoxDecoration(
+      //                                 color: const Color(0xffe0e0e0),
+      //                                 borderRadius: BorderRadius.circular(22),
+      //                               ),
+      //                               width: 50,
+      //                               child: Column(
+      //                                 mainAxisSize: MainAxisSize.min,
+      //                                 children: [
+      //                                   Image.asset(
+      //                                     e.toString().getIconPathByCategory,
+      //                                     fit: BoxFit.contain,
+      //                                     height: 30,
+      //                                     width: 30,
+      //                                   ),
+      //                                   8.hGap,
+      //                                   Text(
+      //                                     e,
+      //                                     overflow: TextOverflow.ellipsis,
+      //                                     style: const TextStyle(fontSize: 12),
+      //                                   ),
+      //                                 ],
+      //                               ),
+      //                             ),
+      //                           )
+      //                           .toList() ??
+      //                       [],
+      //                 );
+      //               }),
+      //         )
+      //       ],
+      //     ),
+      //   ),
+      // );
+
       return AlertDialog(
         content: SingleChildScrollView(
           child: Column(

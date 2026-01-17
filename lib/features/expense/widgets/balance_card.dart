@@ -79,7 +79,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Remaining Balance",
+                "Remaining this month",
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white,

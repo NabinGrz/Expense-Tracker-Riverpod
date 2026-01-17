@@ -1,0 +1,2 @@
+/Users/nabingurung/Flutter/Flutter Projects/expense_tracker_flutter/android/app/.cxx/Debug/6f396r4d/x86/CMakeFiles/edit_cache.dir
+/Users/nabingurung/Flutter/Flutter Projects/expense_tracker_flutter/android/app/.cxx/Debug/6f396r4d/x86/CMakeFiles/rebuild_cache.dir
