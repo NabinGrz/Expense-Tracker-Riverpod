@@ -21,9 +21,9 @@ import '../entity/home_entity.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/create_expense_dialog.dart';
 import '../widgets/date_filter_row.dart';
+import '../widgets/home_expenses_list.dart';
 import '../widgets/search_text_field.dart';
 import '../widgets/sliver_home_app_bar.dart';
-import '../widgets/home_expenses_list.dart';
 
 final bottomNavBarProvider = StateProvider((ref) => 0);
 
@@ -34,12 +34,17 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final updater = ShorebirdUpdater();
   final searchController = TextEditingController();
   List<Expense> originalExpenseList = [];
   HomeNotifier get controller => ref.read(homeEntityProvider.notifier);
   HomeEntity get homeEntity => ref.watch(homeEntityProvider);
+
   void _initialize() {
     ExpenseQueryHelper.getExpenseAsFuture()?.then(
       (value) {

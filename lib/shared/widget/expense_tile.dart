@@ -15,11 +15,15 @@ class ExpenseTile extends ConsumerWidget {
   const ExpenseTile({
     super.key,
     required this.expenseData,
-    required this.isFilter,
+    this.isFilter = false,
+    this.isHome = false,
+    this.showDate = true,
   });
 
   final Expense? expenseData;
-  final bool isFilter;
+  final bool? isFilter;
+  final bool? isHome;
+  final bool? showDate;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -103,12 +107,14 @@ class ExpenseTile extends ConsumerWidget {
             borderRadius: BorderRadius.circular(14),
             border:
                 Border.all(color: const Color.fromARGB(255, 246, 246, 246))),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        padding: isHome == true
+            ? const EdgeInsets.symmetric(horizontal: 10, vertical: 8)
+            : const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         child: Row(
           children: [
             Container(
-              height: 35,
-              width: 35,
+              height: 38,
+              width: 38,
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -153,10 +159,11 @@ class ExpenseTile extends ConsumerWidget {
                   ),
                 ),
                 2.hGap,
-                if (!DateTime.parse(expenseData!.createAt)
-                        .isSameDateAs(DateTime.now()) &&
-                    !DateTime.parse(expenseData!.createAt).isYesterday() &&
-                    !isFilter) ...{
+                // if (!DateTime.parse(expenseData!.createAt)
+                //         .isSameDateAs(DateTime.now()) &&
+                //     !DateTime.parse(expenseData!.createAt).isYesterday() &&
+                //     !isFilter) ...{
+                if (showDate == true) ...{
                   4.hGap,
                   Row(
                     children: [

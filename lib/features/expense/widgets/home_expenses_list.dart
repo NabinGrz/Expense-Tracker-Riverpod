@@ -1,3 +1,4 @@
+import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:flutter/material.dart';
@@ -58,9 +59,19 @@ class _HomeExpenseListState extends ConsumerState<HomeExpenseList> {
                     separatorBuilder: (context, index) => 12.hGap,
                     itemBuilder: (context, index) {
                       final expenseData = homeEntity.expenses?[index];
+                      // if (!DateTime.parse(expenseData!.createAt)
+                      //         .isSameDateAs(DateTime.now()) &&
+                      //     !DateTime.parse(expenseData!.createAt).isYesterday() &&
+                      //     !isFilter) ...{
+                      bool isToday = DateTime.parse(expenseData!.createAt)
+                          .isSameDateAs(DateTime.now());
+                      bool isYesterday =
+                          DateTime.parse(expenseData.createAt).isYesterday();
+                      // return Text("$isToday - $isYesterday");
                       return ExpenseTile(
                         expenseData: expenseData,
-                        isFilter: false,
+                        showDate: isToday != true && isYesterday != true,
+                        isHome: true,
                       );
                     },
                   )

@@ -25,23 +25,36 @@ class SortByWidget extends ConsumerWidget {
           horizontal: 14,
         ),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: const Color(0xffDDDDDD),
-            )),
+          borderRadius: BorderRadius.circular(12),
+          color: const Color(0xffedede6),
+          // border: Border.all(
+          //   color: const Color(0xffDDDDDD),
+          // ),
+        ),
         child: Row(
           children: [
-            SvgPicture.asset("assets/images/sort.svg"),
+            SvgPicture.asset(
+              "assets/images/sort.svg",
+              color: const Color(0xff202122),
+            ),
             12.wGap,
             Expanded(
               child: DropdownButtonHideUnderline(
                 child: DropdownButtonFormField(
+                  // icon: const Icon(Icons.arrow_drop_down_rounded),
+                  // dropdownColor: Colors.red,
+                  // focusColor: Colors.blue,
                   hint: selectedSort == "None" ? const Text("Sort By") : null,
-                  value: selectedSort == "None" ? null : selectedSort,
+                  initialValue: selectedSort == "None" ? null : selectedSort,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                   ),
-                  icon: SvgPicture.asset("assets/images/down_arrow.svg"),
+                  // icon: SvgPicture.asset("assets/images/down_arrow.svg"),
+                  // icon: const Icon(
+                  //   Icons.arrow_downward,
+                  //   color: Colors.black,
+                  // ),
+
                   items: SortBy.values.map(
                     (e) {
                       return DropdownMenuItem(

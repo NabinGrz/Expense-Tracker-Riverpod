@@ -15,7 +15,11 @@ class SearchExpenseScreen extends ConsumerStatefulWidget {
   _SearchExpenseScreenState createState() => _SearchExpenseScreenState();
 }
 
-class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
+class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
 
@@ -109,7 +113,7 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
               trailing: PopupMenuButton(
                 icon: const Icon(Icons.list),
                 iconColor: AppColor.primary,
-                elevation: 2,
+                elevation: 1,
                 menuPadding: EdgeInsets.zero,
                 borderRadius: BorderRadius.circular(50),
                 itemBuilder: (context) {
@@ -118,11 +122,19 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
                       onTap: () => sortBy(true),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 0),
-                      child: const Text(
-                        "Sort By Amount",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                      child: Container(
+                        // padding: const EdgeInsets.symmetric(
+                        //     horizontal: 12, vertical: 6),
+                        // decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(4),
+                        //     color: AppColor.primary),
+                        // width: double.infinity,
+                        child: const Text(
+                          "Sort By Amount",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -214,7 +226,6 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen> {
                       child: ExpenseTile(
                         key: Key("$index"),
                         expenseData: expense,
-                        isFilter: false,
                       ),
                     );
                   } else {
