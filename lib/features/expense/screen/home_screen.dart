@@ -38,7 +38,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   bool get wantKeepAlive => true;
 
-  // final updater = ShorebirdUpdater();
   final searchController = TextEditingController();
   List<Expense> originalExpenseList = [];
   HomeNotifier get controller => ref.read(homeEntityProvider.notifier);
@@ -60,18 +59,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   void initState() {
-    // updater.readCurrentPatch().then((currentPatch) {
-    //   if (currentPatch != null) {
-    //     print('The current patch number is: ${currentPatch.number}');
-    //   }
-    // });
     _initialize();
-
     super.initState();
   }
 
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   Future<void> _checkForUpdates() async {
-    // // Check whether a new update is available.
+    // Check whether a new update is available.
     // final status = await updater.checkForUpdate();
 
     // if (status == UpdateStatus.outdated) {
@@ -81,7 +80,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     //   } on UpdateException {
     //     // Handle any errors that occur while updating.
     //   }
-    // }
   }
 
   void listenToChangesOnExpenses() {
@@ -92,42 +90,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         return expense;
       }).toList();
       originalExpenseList = List.from(data);
-      controller.sortedExpenseSubject.add([]);
       controller.sortedExpenseSubject.add(data);
     });
   }
 
   void listenToSorting() {
     ref.listen(homeSortByProvider, (previous, next) {
-      controller.sortedExpenseSubject.add(List.from(originalExpenseList));
-      final listedExpense = controller.sortedExpenseSubject.valueOrNull;
+      final listedExpense = List<Expense>.from(originalExpenseList);
       switch (next) {
         case SortBy.none:
           controller.sortedExpenseSubject.add(originalExpenseList);
           break;
         case SortBy.hightolow:
-          ExpenseUtils.sortBy(listedExpense ?? [], SortBy.hightolow);
-          controller.sortedExpenseSubject.add(listedExpense ?? []);
+          ExpenseUtils.sortBy(listedExpense, SortBy.hightolow);
+          controller.sortedExpenseSubject.add(listedExpense);
           break;
         case SortBy.lowtohigh:
-          ExpenseUtils.sortBy(listedExpense ?? [], SortBy.lowtohigh);
-          controller.sortedExpenseSubject.add(listedExpense ?? []);
+          ExpenseUtils.sortBy(listedExpense, SortBy.lowtohigh);
+          controller.sortedExpenseSubject.add(listedExpense);
           break;
         case SortBy.highTolowDate:
-          ExpenseUtils.sortBy(listedExpense ?? [], SortBy.highTolowDate);
-          controller.sortedExpenseSubject.add(listedExpense ?? []);
+          ExpenseUtils.sortBy(listedExpense, SortBy.highTolowDate);
+          controller.sortedExpenseSubject.add(listedExpense);
           break;
         case SortBy.lowTohighDate:
-          ExpenseUtils.sortBy(listedExpense ?? [], SortBy.lowTohighDate);
-          controller.sortedExpenseSubject.add(listedExpense ?? []);
+          ExpenseUtils.sortBy(listedExpense, SortBy.lowTohighDate);
+          controller.sortedExpenseSubject.add(listedExpense);
           break;
         case SortBy.ascending:
-          ExpenseUtils.sortBy(listedExpense ?? [], SortBy.ascending);
-          controller.sortedExpenseSubject.add(listedExpense ?? []);
+          ExpenseUtils.sortBy(listedExpense, SortBy.ascending);
+          controller.sortedExpenseSubject.add(listedExpense);
           break;
         case SortBy.descending:
-          ExpenseUtils.sortBy(listedExpense ?? [], SortBy.descending);
-          controller.sortedExpenseSubject.add(listedExpense ?? []);
+          ExpenseUtils.sortBy(listedExpense, SortBy.descending);
+          controller.sortedExpenseSubject.add(listedExpense);
           break;
         default:
       }
@@ -152,15 +148,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           HapticFeedback.selectionClick();
           showDialog(
             context: context,
-            builder: (context) {
-              return const CreateUpdateDialog(isUpdate: false, docId: "");
-            },
+            builder: (context) =>
+                const CreateUpdateDialog(isUpdate: false, docId: ""),
           );
         },
         child: const Icon(Icons.add),
       ),
       body: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         slivers: [
           SliverHomeAppBar(
             onPressed: () async {
@@ -170,13 +167,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           CupertinoSliverRefreshControl(
             onRefresh: () async {
               HapticFeedback.lightImpact();
-              FirebaseQueryHelper.getSingleDocumentAsFuture(
+              await FirebaseQueryHelper.getSingleDocumentAsFuture(
                 collectionPath: "balance",
                 docID: "G0sKt8y5dvwNsTv63m2f",
               );
-              controller.sortedExpenseSubject.add(originalExpenseList);
-              searchController.clear();
-              FocusScope.of(context).unfocus();
+              if (mounted) {
+                controller.sortedExpenseSubject.add(originalExpenseList);
+                searchController.clear();
+                FocusScope.of(context).unfocus();
+              }
             },
           ),
           SliverList(
@@ -190,13 +189,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               StreamBuilder(
                 stream: controller.sortedExpenseSubject,
                 builder: (context, snapshot) {
+                  final dateFilter = ref.watch(
+                    homeEntityProvider.select((value) => value.dateFilter),
+                  );
                   List<Expense>? expenses = [];
                   expenses = controller.dateWiseExpenses(
                     expenses,
                     snapshot,
-                    ref.watch(
-                      homeEntityProvider.select((value) => value.dateFilter),
-                    ),
+                    dateFilter,
                   );
                   return (expenses?.isEmpty != true)
                       ? Padding(

@@ -85,11 +85,9 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
   SearchNotifier get watchSearchExpenses => ref.watch(searchExpenseProvider);
   @override
   Widget build(BuildContext context) {
-    // return CupertinoPageScaffold();
     return CupertinoPageScaffold(
       child: RefreshIndicator.adaptive(
         color: Colors.white,
-        // color: AppColor.primary,
         onRefresh: () async {
           await _loadExpenses();
           if (context.mounted) {
@@ -124,19 +122,11 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                         horizontal: 8,
                         vertical: 0,
                       ),
-                      child: Container(
-                        // padding: const EdgeInsets.symmetric(
-                        //     horizontal: 12, vertical: 6),
-                        // decoration: BoxDecoration(
-                        //     borderRadius: BorderRadius.circular(4),
-                        //     color: AppColor.primary),
-                        // width: double.infinity,
-                        child: const Text(
-                          "Sort By Amount",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      child: const Text(
+                        "Sort By Amount",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -157,46 +147,6 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                   ];
                 },
               ),
-              // const CupertinoPopupSurface(child: Text("Sort By Amount")),
-              // CupertinoContextMenu(
-              //     actions: const [Text("Sort By Amount")],
-              //     child: const Text("Sort By Amount")),
-              //     CupertinoContextMenu(
-              //   enableHapticFeedback: true,
-              //   actions: <Widget>[
-              //     CupertinoContextMenuAction(
-              //       onPressed: () {
-              //         Navigator.pop(context);
-              //       },
-              //       isDefaultAction: true,
-              //       trailingIcon: CupertinoIcons.doc_on_clipboard_fill,
-              //       child: const Text('Copy'),
-              //     ),
-              //     CupertinoContextMenuAction(
-              //       onPressed: () {
-              //         Navigator.pop(context);
-              //       },
-              //       trailingIcon: CupertinoIcons.share,
-              //       child: const Text('Share'),
-              //     ),
-              //     CupertinoContextMenuAction(
-              //       onPressed: () {
-              //         Navigator.pop(context);
-              //       },
-              //       trailingIcon: CupertinoIcons.heart,
-              //       child: const Text('Favorite'),
-              //     ),
-              //     CupertinoContextMenuAction(
-              //       onPressed: () {
-              //         Navigator.pop(context);
-              //       },
-              //       isDestructiveAction: true,
-              //       trailingIcon: CupertinoIcons.delete,
-              //       child: const Text('Delete'),
-              //     ),
-              //   ],
-              //   child: const Icon(Icons.list),
-              // ),
               bottom: _NavigationBarSearchField(
                 child: CupertinoSearchTextField(
                   controller: _searchController,
@@ -253,11 +203,17 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
 
   void sortBy(bool isAmount) {
     watchSearchExpenses.filteredDocuments.sort((a, b) {
-      var aData = Expense.fromMap(a.data() as Map<String, dynamic>);
-      var bData = Expense.fromMap(b.data() as Map<String, dynamic>);
-      return isAmount
-          ? aData.amount.compareTo(bData.amount)
-          : aData.createAt.compareTo(bData.createAt);
+      final aData = a.data() as Map<String, dynamic>;
+      final bData = b.data() as Map<String, dynamic>;
+      if (isAmount) {
+        final aAmount = aData['amount'] as num;
+        final bAmount = bData['amount'] as num;
+        return aAmount.compareTo(bAmount);
+      } else {
+        final aDate = aData['createAt'] as String;
+        final bDate = bData['createAt'] as String;
+        return aDate.compareTo(bDate);
+      }
     });
     searchProviderNotifier.updateSortedExpenses(
       watchSearchExpenses.filteredDocuments,

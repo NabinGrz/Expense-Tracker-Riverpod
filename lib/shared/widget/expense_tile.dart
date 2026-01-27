@@ -135,12 +135,16 @@ class ExpenseTile extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "${expenseData?.name.capitalize()}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.4,
+                SizedBox(
+                  width: MediaQuery.sizeOf(context).width * 0.4,
+                  child: Text(
+                    "${expenseData?.name.capitalize()}",
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.4,
+                    ),
                   ),
                 ),
                 // 2.hGap,
