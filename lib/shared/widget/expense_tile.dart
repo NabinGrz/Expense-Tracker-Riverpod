@@ -30,7 +30,7 @@ class ExpenseTile extends ConsumerWidget {
     return InkWell(
       key: ValueKey(expenseData?.id),
       borderRadius: BorderRadius.circular(8),
-      splashColor: AppColor.primary.withOpacity(0.3),
+      splashColor: AppColor.primary.withValues(alpha: .3),
       // highlightColor: AppColor.primary.withOpacity(0.4),
       splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
       // splashColor: Colors.blue.withOpacity(0.3),
@@ -66,12 +66,7 @@ class ExpenseTile extends ConsumerWidget {
                       children: [
                         const Icon(Icons.update_outlined),
                         4.wGap,
-                        const Text(
-                          "Update",
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
+                        const Text("Update", style: TextStyle(fontSize: 16)),
                       ],
                     ),
                   ),
@@ -85,12 +80,7 @@ class ExpenseTile extends ConsumerWidget {
                       children: [
                         const Icon(Icons.delete_outline_rounded),
                         4.wGap,
-                        const Text(
-                          "Delete",
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
+                        const Text("Delete", style: TextStyle(fontSize: 16)),
                       ],
                     ),
                   ),
@@ -103,19 +93,19 @@ class ExpenseTile extends ConsumerWidget {
 
       child: Ink(
         decoration: BoxDecoration(
-            color: const Color(0xfff7f6f2),
-            borderRadius: BorderRadius.circular(14),
-            border:
-                Border.all(color: const Color.fromARGB(255, 246, 246, 246))),
+          color: const Color(0xfff7f6f2),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: const Color.fromARGB(255, 246, 246, 246)),
+        ),
         padding: isHome == true
             ? const EdgeInsets.symmetric(horizontal: 10, vertical: 8)
             : const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         child: Row(
           children: [
             Container(
-              height: 38,
-              width: 38,
-              padding: const EdgeInsets.all(8),
+              // height: 40,
+              // width: 40,
+              padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
@@ -124,8 +114,9 @@ class ExpenseTile extends ConsumerWidget {
                         Colors.red,
                     expenseData?.category.getColorByCategory.withOpacity(0.7) ??
                         Colors.red,
-                    expenseData?.category.getColorByCategory
-                            .withOpacity(0.95) ??
+                    expenseData?.category.getColorByCategory.withOpacity(
+                          0.95,
+                        ) ??
                         Colors.red,
                   ],
                   begin: Alignment.topRight,
@@ -136,6 +127,8 @@ class ExpenseTile extends ConsumerWidget {
               child: Image.asset(
                 expenseData?.category.getIconPathByCategory ?? "",
                 fit: BoxFit.contain,
+                height: 32,
+                width: 32,
               ),
             ),
             12.wGap,
@@ -145,11 +138,12 @@ class ExpenseTile extends ConsumerWidget {
                 Text(
                   "${expenseData?.name.capitalize()}",
                   style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1.4),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.4,
+                  ),
                 ),
-                2.hGap,
+                // 2.hGap,
                 Text(
                   "${expenseData?.category}",
                   style: const TextStyle(
@@ -158,7 +152,7 @@ class ExpenseTile extends ConsumerWidget {
                     letterSpacing: 1.1,
                   ),
                 ),
-                2.hGap,
+                1.hGap,
                 // if (!DateTime.parse(expenseData!.createAt)
                 //         .isSameDateAs(DateTime.now()) &&
                 //     !DateTime.parse(expenseData!.createAt).isYesterday() &&
@@ -174,15 +168,16 @@ class ExpenseTile extends ConsumerWidget {
                       ),
                       4.wGap,
                       Text(
-                        DateTime.parse(expenseData!.createAt)
-                            .toFormattedDateString(),
+                        DateTime.parse(
+                          expenseData!.createAt,
+                        ).toFormattedDateString(),
                         style: const TextStyle(
-                          fontSize: 10,
+                          fontSize: 12,
                           color: Color(0xff666666),
                         ),
                       ),
                     ],
-                  )
+                  ),
                 },
               ],
             ),

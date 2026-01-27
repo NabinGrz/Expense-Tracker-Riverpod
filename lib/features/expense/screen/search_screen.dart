@@ -106,7 +106,7 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                 'All Expenses',
                 style: TextStyle(
                   fontSize: 24,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: .w700,
                   color: AppColor.primary,
                 ),
               ),
@@ -121,7 +121,9 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                     PopupMenuItem(
                       onTap: () => sortBy(true),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 0),
+                        horizontal: 8,
+                        vertical: 0,
+                      ),
                       child: Container(
                         // padding: const EdgeInsets.symmetric(
                         //     horizontal: 12, vertical: 6),
@@ -141,7 +143,9 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                     PopupMenuItem(
                       onTap: () => sortBy(false),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 0),
+                        horizontal: 8,
+                        vertical: 0,
+                      ),
                       child: const Text(
                         "Sort By Date",
                         style: TextStyle(
@@ -208,39 +212,38 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
               // bottomMode: NavigationBarBottomMode.always,
             ),
             SliverToBoxAdapter(
-                child: watchSearchExpenses.isLoading
-                    ? const LinearProgressIndicator()
-                    : const SizedBox.shrink()),
+              child: watchSearchExpenses.isLoading
+                  ? const LinearProgressIndicator()
+                  : const SizedBox.shrink(),
+            ),
             SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  if (index < watchSearchExpenses.filteredDocuments.length) {
-                    final mapData = watchSearchExpenses.filteredDocuments[index]
-                        .data() as Map<String, dynamic>;
-                    mapData['docId'] =
-                        watchSearchExpenses.filteredDocuments[index].id;
-                    final expense = Expense.fromMap(mapData);
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 4.0),
-                      child: ExpenseTile(
-                        key: Key("$index"),
-                        expenseData: expense,
-                      ),
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-                childCount: watchSearchExpenses.filteredDocuments.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                if (index < watchSearchExpenses.filteredDocuments.length) {
+                  final mapData =
+                      watchSearchExpenses.filteredDocuments[index].data()
+                          as Map<String, dynamic>;
+                  mapData['docId'] =
+                      watchSearchExpenses.filteredDocuments[index].id;
+                  final expense = Expense.fromMap(mapData);
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 4.0,
+                    ),
+                    child: ExpenseTile(
+                      key: Key("$index"),
+                      expenseData: expense,
+                    ),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              }, childCount: watchSearchExpenses.filteredDocuments.length),
             ),
             if (!watchSearchExpenses.hasMoreData &&
                 watchSearchExpenses.filteredDocuments.isEmpty)
               const SliverToBoxAdapter(
-                child: Center(
-                  child: Text('No expenses found.'),
-                ),
+                child: Center(child: Text('No expenses found.')),
               ),
           ],
         ),
@@ -256,8 +259,9 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
           ? aData.amount.compareTo(bData.amount)
           : aData.createAt.compareTo(bData.createAt);
     });
-    searchProviderNotifier
-        .updateSortedExpenses(watchSearchExpenses.filteredDocuments);
+    searchProviderNotifier.updateSortedExpenses(
+      watchSearchExpenses.filteredDocuments,
+    );
   }
 }
 

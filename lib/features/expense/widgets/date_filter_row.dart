@@ -29,9 +29,10 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
       parent: animationController,
       curve: Curves.fastOutSlowIn,
     );
-    animation =
-        Tween<Offset>(begin: const Offset(0, -1), end: const Offset(0, 0))
-            .animate(curvedAnimation);
+    animation = Tween<Offset>(
+      begin: const Offset(0, -1),
+      end: const Offset(0, 0),
+    ).animate(curvedAnimation);
     opacityAnimation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
     super.initState();
     animationController.forward();
@@ -50,9 +51,7 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
       child: FadeTransition(
         opacity: opacityAnimation,
         child: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xffF4F6F6),
-          ),
+          decoration: const BoxDecoration(color: Color(0xffF4F6F6)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -68,39 +67,40 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
   }
 
   Widget filterBox(String name, {required DateFilter selectedDateFilter}) {
-    return Consumer(builder: (context, ref, _) {
-      final dateFilter = ref.watch(homeEntityProvider).dateFilter;
-      return InkWell(
-        onTap: () {
-          HapticFeedback.mediumImpact();
-          ref.read(homeEntityProvider.notifier).selectDate(selectedDateFilter);
-          ref.read(homeSortByProvider.notifier).selectSortBy(SortBy.none);
-        },
-        child: Container(
-          padding: dateFilter != selectedDateFilter
-              ? const EdgeInsetsDirectional.symmetric(
-                  horizontal: 10,
-                  vertical: 14,
-                )
-              : const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 14,
-                ),
-          decoration: dateFilter != selectedDateFilter
-              ? null
-              : BoxDecoration(
-                  color: AppColor.primary,
-                ),
-          child: Text(
-            name,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: dateFilter != selectedDateFilter ? null : Colors.white,
+    return Consumer(
+      builder: (context, ref, _) {
+        final dateFilter = ref.watch(
+          homeEntityProvider.select((value) => value.dateFilter),
+        );
+        return InkWell(
+          onTap: () {
+            HapticFeedback.mediumImpact();
+            ref
+                .read(homeEntityProvider.notifier)
+                .selectDate(selectedDateFilter);
+            ref.read(homeSortByProvider.notifier).selectSortBy(SortBy.none);
+          },
+          child: Container(
+            padding: dateFilter != selectedDateFilter
+                ? const EdgeInsetsDirectional.symmetric(
+                    horizontal: 10,
+                    vertical: 14,
+                  )
+                : const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            decoration: dateFilter != selectedDateFilter
+                ? null
+                : BoxDecoration(color: AppColor.primary),
+            child: Text(
+              name,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: dateFilter != selectedDateFilter ? null : Colors.white,
+              ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
