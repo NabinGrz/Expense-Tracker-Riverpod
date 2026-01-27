@@ -164,6 +164,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               await _checkForUpdates();
             },
           ),
+          // SliverToBoxAdapter(child: Text(NepaliDateTime.now().toString())),
           CupertinoSliverRefreshControl(
             onRefresh: () async {
               HapticFeedback.lightImpact();

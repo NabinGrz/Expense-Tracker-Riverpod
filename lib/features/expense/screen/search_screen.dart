@@ -109,7 +109,7 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                 ),
               ),
               trailing: PopupMenuButton(
-                icon: const Icon(Icons.list),
+                icon: const Icon(Icons.sort),
                 iconColor: AppColor.primary,
                 elevation: 1,
                 menuPadding: EdgeInsets.zero,
@@ -125,8 +125,9 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                       child: const Text(
                         "Sort By Amount",
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
                         ),
                       ),
                     ),
@@ -139,8 +140,9 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                       child: const Text(
                         "Sort By Date",
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
                         ),
                       ),
                     ),

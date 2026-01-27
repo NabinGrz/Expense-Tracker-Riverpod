@@ -49,6 +49,8 @@ dependencies:
   haptic_feedback: ^0.5.1+1
   shorebird_code_push: ^2.0.3
   floating: ^6.0.0
+  # nepali_date_picker: ^6.0.2
+  nepali_utils: ^3.0.8
 
 dev_dependencies:
   flutter_test:
