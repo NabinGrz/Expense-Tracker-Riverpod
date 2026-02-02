@@ -1,6 +1,5 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/constants/firebase_constants.dart';
-import 'package:expense_tracker_flutter/constants/nepali_month.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
@@ -16,6 +15,7 @@ import 'package:nepali_utils/nepali_utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../models/expense_model.dart';
+import '../../../utils/expense_utils.dart';
 
 class BalanceCard extends ConsumerStatefulWidget {
   final BehaviorSubject<List<Expense>> sortedExpenseSubject;
@@ -214,35 +214,56 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                     child: SvgPicture.asset("assets/images/up_arrow.svg"),
                   ),
                   8.wGap,
-                  Text(
-                    "${englishMonths[DateTime.now().month]}'s Expense",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Color(0xffD0E5E4),
-                      fontWeight: FontWeight.w500,
-                    ),
+                  StreamBuilder(
+                    stream: widget.sortedExpenseSubject,
+                    builder: (context, snapshot) {
+                      final cycle = ExpenseUtils.getNepaliBillingCycle();
+                      final total =
+                          snapshot.data
+                              ?.where((element) {
+                                final expenseDateEnglish = DateTime.parse(
+                                  element.createAt,
+                                );
+                                final expenseDateNepali = expenseDateEnglish
+                                    .toNepaliDateTime();
+                                return expenseDateNepali.compareTo(
+                                          cycle.start,
+                                        ) >=
+                                        0 &&
+                                    expenseDateNepali.compareTo(cycle.end) < 0;
+                              })
+                              .map((e) => e.amount)
+                              .sum() ??
+                          0;
+
+                      return Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${NepaliDateFormat('MMMM').format(cycle.start)}'s Expense",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Color(0xffD0E5E4),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              "Rs ${total.toCurrency}",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
               8.hGap,
-              StreamBuilder(
-                stream: widget.sortedExpenseSubject,
-                builder: (context, snapshot) {
-                  List<Expense>? expenses = snapshot.data?.where((element) {
-                    final expenseDate = DateTime.parse(element.createAt);
-                    return expenseDate.month == DateTime.now().month &&
-                        expenseDate.year == DateTime.now().year;
-                  }).toList();
-                  return Text(
-                    "Rs ${expenses?.map((e) => e.amount).sum().toCurrency ?? 0}",
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  );
-                },
-              ),
             ],
           ),
         );

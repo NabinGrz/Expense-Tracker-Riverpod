@@ -7,6 +7,7 @@ import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/helper/expense_query_helper.dart';
 import 'package:expense_tracker_flutter/models/expense_model.dart';
+import 'package:expense_tracker_flutter/utils/expense_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:nepali_utils/nepali_utils.dart';
 
@@ -21,7 +22,7 @@ class RestaurantAlertBanner extends StatelessWidget {
         if (!snapshot.hasData) return const SizedBox.shrink();
 
         final expenses = _parseExpenses(snapshot.data!);
-        final cycle = _getBillingCycle();
+        final cycle = ExpenseUtils.getNepaliBillingCycle();
         final totalSpend = _calculateTotalSpend(expenses, cycle);
 
         // Threshold set to 4000 as per user preference
@@ -42,23 +43,7 @@ class RestaurantAlertBanner extends StatelessWidget {
     }).toList();
   }
 
-  _DateRange _getBillingCycle() {
-    final now = NepaliDateTime.now();
-    // Cycle starts on the 7th of the relevant month
-    if (now.day >= 7) {
-      return _DateRange(
-        start: NepaliDateTime(now.year, now.month, 7),
-        end: NepaliDateTime(now.year, now.month + 1, 7),
-      );
-    } else {
-      return _DateRange(
-        start: NepaliDateTime(now.year, now.month - 1, 7),
-        end: NepaliDateTime(now.year, now.month, 7),
-      );
-    }
-  }
-
-  int _calculateTotalSpend(List<Expense> expenses, _DateRange cycle) {
+  int _calculateTotalSpend(List<Expense> expenses, DateRange cycle) {
     return expenses
         .where((element) {
           final expenseDateEnglish = DateTime.parse(element.createAt);
@@ -134,10 +119,4 @@ class _BannerUI extends StatelessWidget {
       ),
     );
   }
-}
-
-class _DateRange {
-  final NepaliDateTime start;
-  final NepaliDateTime end;
-  _DateRange({required this.start, required this.end});
 }
