@@ -25,18 +25,18 @@ class ExpenseUtils {
     });
   }
 
-  static DateRange getNepaliBillingCycle() {
+  static DateRange getNepaliBillingCycle({int startDay = 7}) {
     final now = NepaliDateTime.now();
-    // Cycle starts on the 7th of the relevant month
-    if (now.day >= 7) {
+    // Cycle starts on the [startDay] of the relevant month
+    if (now.day >= startDay) {
       return DateRange(
-        start: NepaliDateTime(now.year, now.month, 7),
-        end: NepaliDateTime(now.year, now.month + 1, 7),
+        start: NepaliDateTime(now.year, now.month, startDay),
+        end: NepaliDateTime(now.year, now.month + 1, startDay),
       );
     } else {
       return DateRange(
-        start: NepaliDateTime(now.year, now.month - 1, 7),
-        end: NepaliDateTime(now.year, now.month, 7),
+        start: NepaliDateTime(now.year, now.month - 1, startDay),
+        end: NepaliDateTime(now.year, now.month, startDay),
       );
     }
   }
@@ -46,4 +46,6 @@ class DateRange {
   final NepaliDateTime start;
   final NepaliDateTime end;
   DateRange({required this.start, required this.end});
+
+  NepaliDateTime get displayEnd => end.subtract(const Duration(days: 1));
 }

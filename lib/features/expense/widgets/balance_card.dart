@@ -4,9 +4,9 @@ import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/expense/widgets/balance_update_dialog.dart';
+import 'package:expense_tracker_flutter/features/settings/controller/settings_controller.dart';
 import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -217,7 +217,11 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                   StreamBuilder(
                     stream: widget.sortedExpenseSubject,
                     builder: (context, snapshot) {
-                      final cycle = ExpenseUtils.getNepaliBillingCycle();
+                      final billingStartDay =
+                          ref.watch(settingsControllerProvider).value ?? 7;
+                      final cycle = ExpenseUtils.getNepaliBillingCycle(
+                        startDay: billingStartDay,
+                      );
                       final total =
                           snapshot.data
                               ?.where((element) {

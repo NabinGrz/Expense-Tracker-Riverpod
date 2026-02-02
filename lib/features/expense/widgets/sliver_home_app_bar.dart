@@ -1,4 +1,5 @@
 import 'package:expense_tracker_flutter/features/filter/widgets/filter_type_widget.dart';
+import 'package:expense_tracker_flutter/features/settings/screen/settings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,15 @@ class SliverHomeAppBar extends StatelessWidget {
         ),
       ),
       actions: [
-        // IconButton(
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            );
+          },
+          icon: const Icon(Icons.settings),
+        ),
         //   splashRadius: 20,
         //   onPressed: () async {
         //     //!! Delete old data from firebase

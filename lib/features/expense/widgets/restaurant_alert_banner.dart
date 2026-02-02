@@ -5,24 +5,30 @@ import 'package:expense_tracker_flutter/constants/app_strings.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
+import 'package:expense_tracker_flutter/features/settings/controller/settings_controller.dart';
 import 'package:expense_tracker_flutter/helper/expense_query_helper.dart';
 import 'package:expense_tracker_flutter/models/expense_model.dart';
 import 'package:expense_tracker_flutter/utils/expense_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nepali_utils/nepali_utils.dart';
 
-class RestaurantAlertBanner extends StatelessWidget {
+class RestaurantAlertBanner extends ConsumerWidget {
   const RestaurantAlertBanner({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: ExpenseQueryHelper.getExpense(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const SizedBox.shrink();
 
+        final billingStartDay =
+            ref.watch(settingsControllerProvider).value ?? 7;
         final expenses = _parseExpenses(snapshot.data!);
-        final cycle = ExpenseUtils.getNepaliBillingCycle();
+        final cycle = ExpenseUtils.getNepaliBillingCycle(
+          startDay: billingStartDay,
+        );
         final totalSpend = _calculateTotalSpend(expenses, cycle);
 
         // Threshold set to 4000 as per user preference
@@ -31,7 +37,7 @@ class RestaurantAlertBanner extends StatelessWidget {
         return _BannerUI(
           totalSpend: totalSpend,
           startDate: cycle.start,
-          endDate: cycle.end,
+          endDate: cycle.displayEnd,
         );
       },
     );
