@@ -22,6 +22,7 @@ import '../widgets/balance_card.dart';
 import '../widgets/create_expense_dialog.dart';
 import '../widgets/date_filter_row.dart';
 import '../widgets/home_expenses_list.dart';
+import '../widgets/restaurant_alert_banner.dart';
 import '../widgets/search_text_field.dart';
 import '../widgets/sliver_home_app_bar.dart';
 
@@ -186,6 +187,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               BalanceCard(
                 sortedExpenseSubject: controller.sortedExpenseSubject,
               ),
+              const RestaurantAlertBanner(),
               30.hGap,
               const DateFilterRow(),
               16.hGap,
