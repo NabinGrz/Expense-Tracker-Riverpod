@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker_flutter/constants/firebase_constants.dart';
 import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
 import 'package:expense_tracker_flutter/models/expense_model.dart';
@@ -9,33 +10,43 @@ class ExpenseQueryHelper {
   ExpenseQueryHelper._();
 
   static Stream<QuerySnapshot<Map<String, dynamic>>>? getExpense() =>
-      FirebaseQueryHelper.getCollectionAsStream(collectionPath: "expenses");
+      FirebaseQueryHelper.getCollectionAsStream(
+        collectionPath: FirebaseConstants.expenseCollection,
+      );
   static Stream<QuerySnapshot<Map<String, dynamic>>>? getPaginatedExpense(
-          int limit) =>
-      FirebaseQueryHelper.getPaginatedCollectionAsStream(
-          collectionPath: "expenses", limit: limit);
+    int limit,
+  ) => FirebaseQueryHelper.getPaginatedCollectionAsStream(
+    collectionPath: FirebaseConstants.expenseCollection,
+    limit: limit,
+  );
 
   static Future<QuerySnapshot<Map<String, dynamic>>>? getExpenseAsFuture() =>
-      FirebaseQueryHelper.getCollectionAsFuture(collectionPath: "expenses");
+      FirebaseQueryHelper.getCollectionAsFuture(
+        collectionPath: FirebaseConstants.expenseCollection,
+      );
   static Future<QuerySnapshot<Map<String, dynamic>>>?
-      getPaginatedExpenseAsFuture({
+  getPaginatedExpenseAsFuture({
     required String collectionPath,
     required int limit,
     DocumentSnapshot? lastDocument,
-  }) =>
-          FirebaseQueryHelper.getPaginatedCollectionAsFuture(
-              collectionPath: collectionPath,
-              limit: limit,
-              lastDocument: lastDocument);
+  }) => FirebaseQueryHelper.getPaginatedCollectionAsFuture(
+    collectionPath: collectionPath,
+    limit: limit,
+    lastDocument: lastDocument,
+  );
 
   static Stream<QuerySnapshot<Map<String, dynamic>>>? getExpenseCategory() =>
       FirebaseQueryHelper.getCollectionAsStream(
-          collectionPath: "expense-categories");
+        collectionPath: FirebaseConstants.expenseCategoryCollection,
+      );
 
   static Future<void> createExpense(
-      Expense expense, String cashAmount, String bankAmount) async {
+    Expense expense,
+    String cashAmount,
+    String bankAmount,
+  ) async {
     await FirebaseQueryHelper.firebaseFireStore
-        .collection("expenses")
+        .collection(FirebaseConstants.expenseCollection)
         .add(expense.toMap());
 
     final data = expense.isCash
@@ -43,28 +54,40 @@ class ExpenseQueryHelper {
         : {"bank": "${int.parse(bankAmount) - expense.amount}"};
 
     FirebaseQueryHelper.updateDocumentOfCollection(
-        data: data, collectionID: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+      data: data,
+      collectionID: FirebaseConstants.balanceCollection,
+      docID: FirebaseConstants.balanceDocID,
+    );
   }
 
-  static void updateExpense(Map<String, dynamic> newData, String id,
-      String cashAmount, String bankAmount, int? previousExpenseAmount) async {
-    final ref =
-        FirebaseQueryHelper.firebaseFireStore.collection("expenses").doc(id);
+  static void updateExpense(
+    Map<String, dynamic> newData,
+    String id,
+    String cashAmount,
+    String bankAmount,
+    int? previousExpenseAmount,
+  ) async {
+    final ref = FirebaseQueryHelper.firebaseFireStore
+        .collection(FirebaseConstants.expenseCollection)
+        .doc(id);
     await ref.update(newData);
 
     final amount = newData['amount'] as int;
     final data = newData['isCash']
         ? {
             "cash":
-                "${(int.parse(cashAmount) + (previousExpenseAmount ?? 0) - amount)}"
+                "${(int.parse(cashAmount) + (previousExpenseAmount ?? 0) - amount)}",
           }
         : {
             "bank":
-                "${(int.parse(bankAmount) + (previousExpenseAmount ?? 0) - amount)}"
+                "${(int.parse(bankAmount) + (previousExpenseAmount ?? 0) - amount)}",
           };
 
     FirebaseQueryHelper.updateDocumentOfCollection(
-        data: data, collectionID: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+      data: data,
+      collectionID: FirebaseConstants.balanceCollection,
+      docID: FirebaseConstants.balanceDocID,
+    );
   }
 
   static void updateExpenseAmounWhenTypeChange({
@@ -76,8 +99,9 @@ class ExpenseQueryHelper {
     required String cashAmount,
     required String bankAmount,
   }) async {
-    final ref =
-        FirebaseQueryHelper.firebaseFireStore.collection("expenses").doc(id);
+    final ref = FirebaseQueryHelper.firebaseFireStore
+        .collection(FirebaseConstants.expenseCollection)
+        .doc(id);
     await ref.update(newData);
 
     int oA = int.tryParse(oldAmount) ?? 0;
@@ -92,71 +116,68 @@ class ExpenseQueryHelper {
           "cash": "${existingCashAmount - nA}",
         };
         FirebaseQueryHelper.updateDocumentOfCollection(
-            data: data, collectionID: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+          data: data,
+          collectionID: FirebaseConstants.balanceCollection,
+          docID: FirebaseConstants.balanceDocID,
+        );
       } else {
         final data = {
           "cash": "${existingCashAmount + oA}",
           "bank": "${existingBankAmount - nA}",
         };
         FirebaseQueryHelper.updateDocumentOfCollection(
-            data: data, collectionID: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+          data: data,
+          collectionID: FirebaseConstants.balanceCollection,
+          docID: FirebaseConstants.balanceDocID,
+        );
       }
     }
   }
 
   static void deleteExpense(String id) async {
-    final ref =
-        FirebaseQueryHelper.firebaseFireStore.collection("expenses").doc(id);
+    final ref = FirebaseQueryHelper.firebaseFireStore
+        .collection(FirebaseConstants.expenseCollection)
+        .doc(id);
     await ref.delete();
   }
 
   static Stream<List<Expense>> getSelectedDateRangeExpenses(
-      DateTime startDate, DateTime endDate) {
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     final expenses = FirebaseQueryHelper.firebaseFireStore
-        .collection("expenses")
+        .collection(FirebaseConstants.expenseCollection)
         .snapshots()
-        .map(
-      (event) {
-        final filteredExpense = event.docs.where(
-          (element) {
+        .map((event) {
+          final filteredExpense = event.docs.where((element) {
             final expense = Expense.fromJson(jsonEncode(element.data()));
             final expenseDate = DateTime.parse(expense.createAt);
             return expenseDate.isDateInRange(startDate, endDate);
-          },
-        ).toList();
+          }).toList();
 
-        return filteredExpense.map(
-          (element) {
+          return filteredExpense.map((element) {
             return Expense.fromJson(jsonEncode(element.data()));
-          },
-        ).toList();
-      },
-    );
+          }).toList();
+        });
 
     return expenses;
   }
 
   static Stream<List<Expense>> getSelectedDateExpenses(DateTime date) {
     final expenses = FirebaseQueryHelper.firebaseFireStore
-        .collection("expenses")
+        .collection(FirebaseConstants.expenseCollection)
         .snapshots()
-        .map(
-      (event) {
-        final filteredExpense = event.docs.where(
-          (element) {
+        .map((event) {
+          final filteredExpense = event.docs.where((element) {
             final expense = Expense.fromJson(jsonEncode(element.data()));
             final expenseDate = DateTime.parse(expense.createAt);
             return expenseDate.isSameDateAs(date);
-          },
-        ).toList();
+          }).toList();
 
-        return filteredExpense.map(
-          (element) {
+          return filteredExpense.map((element) {
             return Expense.fromJson(jsonEncode(element.data()));
-          },
-        ).toList();
-      },
-    );
+          }).toList();
+        });
 
     return expenses;
   }

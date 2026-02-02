@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:expense_tracker_flutter/constants/firebase_constants.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/expense/provider/home_provider.dart';
@@ -132,7 +133,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   //  HapticFeedback.lightImpact();
   //         FirebaseQueryHelper.getSingleDocumentAsFuture(
-  //             collectionPath: "balance", docID: "G0sKt8y5dvwNsTv63m2f");
+  //             collectionPath: FirebaseConstants.balanceCollection,
+  //             docID: FirebaseConstants.balanceDocID);
   //         controller.sortedExpenseSubject.add(originalExpenseList);
   //         searchController.clear();
   //         FocusScope.of(context).unfocus();
@@ -169,8 +171,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             onRefresh: () async {
               HapticFeedback.lightImpact();
               await FirebaseQueryHelper.getSingleDocumentAsFuture(
-                collectionPath: "balance",
-                docID: "G0sKt8y5dvwNsTv63m2f",
+                collectionPath: FirebaseConstants.balanceCollection,
+                docID: FirebaseConstants.balanceDocID,
               );
               if (mounted) {
                 controller.sortedExpenseSubject.add(originalExpenseList);

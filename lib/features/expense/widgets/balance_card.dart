@@ -1,4 +1,5 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
+import 'package:expense_tracker_flutter/constants/firebase_constants.dart';
 import 'package:expense_tracker_flutter/constants/nepali_month.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
@@ -58,8 +59,8 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseQueryHelper.getSingleDocumentAsStream(
-        collectionPath: "balance",
-        docID: "G0sKt8y5dvwNsTv63m2f",
+        collectionPath: FirebaseConstants.balanceCollection,
+        docID: FirebaseConstants.balanceDocID,
       ),
       builder: (context, snapshot) {
         final balance = snapshot.data?.data();
@@ -136,7 +137,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                                 builder: (context) {
                                   return BalanceUpdateDialog(
                                     isCash: true,
-                                    docId: "G0sKt8y5dvwNsTv63m2f",
+                                    docId: FirebaseConstants.balanceDocID,
                                     cashAmount: balance?['cash'],
                                     bankAmount: balance?['bank'],
                                   );
@@ -180,7 +181,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                                 builder: (context) {
                                   return BalanceUpdateDialog(
                                     isCash: false,
-                                    docId: "G0sKt8y5dvwNsTv63m2f",
+                                    docId: FirebaseConstants.balanceDocID,
                                     cashAmount: balance?['cash'],
                                     bankAmount: balance?['bank'],
                                   );

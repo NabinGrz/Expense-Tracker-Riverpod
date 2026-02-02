@@ -1,4 +1,5 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
+import 'package:expense_tracker_flutter/constants/firebase_constants.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/extension/string_extension.dart';
 import 'package:expense_tracker_flutter/helper/expense_query_helper.dart';
@@ -398,8 +399,8 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                   alignment: Alignment.center,
                   child: StreamBuilder(
                     stream: FirebaseQueryHelper.getSingleDocumentAsStream(
-                      collectionPath: "balance",
-                      docID: "G0sKt8y5dvwNsTv63m2f",
+                      collectionPath: FirebaseConstants.balanceCollection,
+                      docID: FirebaseConstants.balanceDocID,
                     ),
                     builder: (context, snapshot) {
                       final balance = snapshot.data?.data();

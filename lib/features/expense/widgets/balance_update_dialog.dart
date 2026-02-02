@@ -3,6 +3,7 @@ import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_color.dart';
+import '../../../constants/firebase_constants.dart';
 
 class BalanceUpdateDialog extends StatefulWidget {
   final String docId;
@@ -44,31 +45,28 @@ class _BalanceUpdateDialogState extends State<BalanceUpdateDialog> {
     return AlertDialog(
       title: Text(
         "Update ${widget.isCash ? "Cash" : "Bank"} Amount",
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Amount",
-            style: TextStyle(fontSize: 12),
-          ),
+          const Text("Amount", style: TextStyle(fontSize: 12)),
           8.hGap,
           TextFormField(
             autofocus: true,
-            controller:
-                widget.isCash ? cashAmountController : bankAmountController,
+            controller: widget.isCash
+                ? cashAmountController
+                : bankAmountController,
             keyboardType: TextInputType.number,
             onChanged: (value) {
               // controller.nameError.add(null);
             },
             decoration: InputDecoration(
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 12,
+              ),
               hintText: widget.isCash
                   ? "Enter cash amount..."
                   : "Enter bank amount...",
@@ -97,18 +95,20 @@ class _BalanceUpdateDialogState extends State<BalanceUpdateDialog> {
                   if (cashAmountController.text.isNotEmpty &&
                       cashAmountController.text != "0") {
                     FirebaseQueryHelper.updateDocumentOfCollection(
-                        data: {"cash": cashAmountController.text},
-                        collectionID: "balance",
-                        docID: widget.docId);
+                      data: {"cash": cashAmountController.text},
+                      collectionID: FirebaseConstants.balanceCollection,
+                      docID: widget.docId,
+                    );
                     Navigator.pop(context);
                   }
                 } else {
                   if (bankAmountController.text.isNotEmpty &&
                       bankAmountController.text != "0") {
                     FirebaseQueryHelper.updateDocumentOfCollection(
-                        data: {"bank": bankAmountController.text},
-                        collectionID: "balance",
-                        docID: widget.docId);
+                      data: {"bank": bankAmountController.text},
+                      collectionID: FirebaseConstants.balanceCollection,
+                      docID: widget.docId,
+                    );
                     Navigator.pop(context);
                   }
                 }
