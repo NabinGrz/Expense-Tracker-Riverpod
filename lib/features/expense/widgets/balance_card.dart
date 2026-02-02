@@ -56,50 +56,56 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 12, right: 12, top: 20),
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        // color: AppColor.primary,
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColor.primary, AppColor.test],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        image: const DecorationImage(
-          image: sp.Svg("assets/images/header_background.svg"),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xff849D9B).withOpacity(0.78),
-            spreadRadius: -7,
-            offset: const Offset(0, 10),
-            blurRadius: 13.4,
-          ),
-        ],
+    return StreamBuilder(
+      stream: FirebaseQueryHelper.getSingleDocumentAsStream(
+        collectionPath: "balance",
+        docID: "G0sKt8y5dvwNsTv63m2f",
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Remaining this month",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-              fontWeight: FontWeight.w400,
+      builder: (context, snapshot) {
+        final balance = snapshot.data?.data();
+        final cash = int.tryParse(balance?['cash'] ?? "") ?? 0;
+        final bank = int.tryParse(balance?['bank'] ?? "") ?? 0;
+        final totalBalance = cash + bank;
+        final isLowBalance = totalBalance <= 20000;
+
+        return Container(
+          margin: const EdgeInsets.only(left: 12, right: 12, top: 20),
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: isLowBalance
+                  ? [const Color(0xffD32F2F), const Color(0xffEF5350)]
+                  : [AppColor.primary, AppColor.test],
             ),
+            borderRadius: BorderRadius.circular(20),
+            image: const DecorationImage(
+              image: sp.Svg("assets/images/header_background.svg"),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xff849D9B).withOpacity(0.78),
+                spreadRadius: -7,
+                offset: const Offset(0, 10),
+                blurRadius: 13.4,
+              ),
+            ],
           ),
-          10.hGap,
-          StreamBuilder(
-            stream: FirebaseQueryHelper.getSingleDocumentAsStream(
-              collectionPath: "balance",
-              docID: "G0sKt8y5dvwNsTv63m2f",
-            ),
-            builder: (context, snapshot) {
-              final balance = snapshot.data?.data();
-              return Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                isLowBalance ? "⚠️ Low Balance" : "Remaining this month",
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              10.hGap,
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -115,7 +121,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "Rs ${int.tryParse(balance?['cash'] ?? "")?.toCurrency ?? 0}",
+                            "Rs ${cash.toCurrency}",
                             style: const TextStyle(
                               fontSize: 20,
                               color: Colors.white,
@@ -158,7 +164,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "Rs ${int.tryParse(balance?['bank'] ?? "")?.toCurrency ?? 0}",
+                            "Rs ${bank.toCurrency}",
                             overflow: TextOverflow.clip,
                             style: const TextStyle(
                               fontSize: 20,
@@ -192,54 +198,54 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                     ],
                   ),
                 ],
-              );
-            },
-          ),
-          25.hGap,
-          //f6f6f6
-          const Divider(color: Color(0xffe5e7eb), thickness: 1),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.15),
-                ),
-                child: SvgPicture.asset("assets/images/up_arrow.svg"),
               ),
-              8.wGap,
-              Text(
-                "${englishMonths[DateTime.now().month]}'s Expense",
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Color(0xffD0E5E4),
-                  fontWeight: FontWeight.w500,
-                ),
+              25.hGap,
+              //f6f6f6
+              const Divider(color: Color(0xffe5e7eb), thickness: 1),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withOpacity(0.15),
+                    ),
+                    child: SvgPicture.asset("assets/images/up_arrow.svg"),
+                  ),
+                  8.wGap,
+                  Text(
+                    "${englishMonths[DateTime.now().month]}'s Expense",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Color(0xffD0E5E4),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              8.hGap,
+              StreamBuilder(
+                stream: widget.sortedExpenseSubject,
+                builder: (context, snapshot) {
+                  List<Expense>? expenses = snapshot.data?.where((element) {
+                    final expenseDate = DateTime.parse(element.createAt);
+                    return expenseDate.month == DateTime.now().month &&
+                        expenseDate.year == DateTime.now().year;
+                  }).toList();
+                  return Text(
+                    "Rs ${expenses?.map((e) => e.amount).sum().toCurrency ?? 0}",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  );
+                },
               ),
             ],
           ),
-          8.hGap,
-          StreamBuilder(
-            stream: widget.sortedExpenseSubject,
-            builder: (context, snapshot) {
-              List<Expense>? expenses = snapshot.data?.where((element) {
-                final expenseDate = DateTime.parse(element.createAt);
-                return expenseDate.month == DateTime.now().month &&
-                    expenseDate.year == DateTime.now().year;
-              }).toList();
-              return Text(
-                "Rs ${expenses?.map((e) => e.amount).sum().toCurrency ?? 0}",
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                ),
-              );
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
