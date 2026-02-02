@@ -7,6 +7,7 @@ import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/helper/expense_query_helper.dart';
 import 'package:expense_tracker_flutter/models/expense_model.dart';
 import 'package:flutter/material.dart';
+import 'package:nepali_utils/nepali_utils.dart';
 
 class RestaurantAlertBanner extends StatelessWidget {
   const RestaurantAlertBanner({super.key});
@@ -23,31 +24,47 @@ class RestaurantAlertBanner extends StatelessWidget {
           return expense;
         }).toList();
 
-        // Filter for current month and restaurant category
+        // Nepali Date Logic: 7th of current month to 7th of next month
+        final now = NepaliDateTime.now();
+        NepaliDateTime startDate;
+        NepaliDateTime endDate;
+
+        if (now.day >= 7) {
+          // Current month 7th to next month 7th
+          startDate = NepaliDateTime(now.year, now.month, 7);
+          // Auto-handles year wrap if month is 12
+          endDate = NepaliDateTime(now.year, now.month + 1, 7);
+        } else {
+          // Previous month 7th to current month 7th
+          startDate = NepaliDateTime(now.year, now.month - 1, 7);
+          endDate = NepaliDateTime(now.year, now.month, 7);
+        }
+
         final currentMonthExpenses = expenses.where((element) {
-          final expenseDate = DateTime.parse(element.createAt);
-          final currentMonth = DateTime.now().month;
-          final currentYear = DateTime.now().year;
-          // Check if expense is in current month/year
-          final isCurrentMonth =
-              expenseDate.month == currentMonth &&
-              expenseDate.year == currentYear;
-          // Check category strictly
+          final expenseDateEnglish = DateTime.parse(element.createAt);
+          final expenseDateNepali = expenseDateEnglish.toNepaliDateTime();
+
           final isRestaurant =
               element.category.toLowerCase() == AppString.categoryRestaurant;
-          return isCurrentMonth && isRestaurant;
+
+          // Check if date is >= startDate AND < endDate
+          // Using compareTo: a.compareTo(b) < 0 means a < b
+          final isAfterStart = expenseDateNepali.compareTo(startDate) >= 0;
+          final isBeforeEnd = expenseDateNepali.compareTo(endDate) < 0;
+
+          return isRestaurant && isAfterStart && isBeforeEnd;
         }).toList();
 
         final totalRestaurantSpend = currentMonthExpenses
             .map((e) => e.amount)
             .sum();
 
-        if (totalRestaurantSpend <= 10000) {
+        if (totalRestaurantSpend <= 4000) {
           return const SizedBox.shrink();
         }
 
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          margin: const EdgeInsets.fromLTRB(12, 16, 12, 16),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: const Color(0xffFFEBEE), // Light Red background
@@ -72,7 +89,7 @@ class RestaurantAlertBanner extends StatelessWidget {
                     ),
                     4.hGap,
                     Text(
-                      "You've spent Rs ${totalRestaurantSpend.toCurrency} on food. Time to cook at home!",
+                      "You've spent Rs ${totalRestaurantSpend.toCurrency} between ${NepaliDateFormat("MMMM d").format(startDate)} - ${NepaliDateFormat("MMMM d").format(endDate)}.",
                       style: const TextStyle(
                         color: Color(0xffD32F2F),
                         fontSize: 12,
