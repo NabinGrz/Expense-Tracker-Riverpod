@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../constants/app_color.dart';
 import '../../../helper/expense_query_helper.dart';
 import '../../../models/expense_model.dart';
+import '../../../shared/widget/custom_empty_state.dart';
 import '../../../shared/widget/expense_tile.dart';
 import '../provider/search_provider.dart';
 
@@ -259,7 +260,11 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
             if (!watchSearchExpenses.hasMoreData &&
                 watchSearchExpenses.filteredDocuments.isEmpty)
               const SliverToBoxAdapter(
-                child: Center(child: Text('No expenses found.')),
+                child: CustomEmptyState(
+                  icon: CupertinoIcons.search,
+                  title: "No expenses found",
+                  subtitle: "Try adjusting your search query",
+                ),
               ),
           ],
         ),

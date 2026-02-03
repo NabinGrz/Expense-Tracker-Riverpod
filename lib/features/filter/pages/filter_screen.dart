@@ -8,12 +8,14 @@ import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/expense/widgets/analytics_widget.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_analytics_tab_bar.dart';
 import 'package:expense_tracker_flutter/shared/widget/expense_tile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../helper/expense_query_helper.dart';
 import '../../../models/expense_model.dart';
 import '../../../shared/provider/tab_bar_provider.dart';
+import '../../../shared/widget/custom_empty_state.dart';
 import '../provider/filter_provider.dart';
 import '../widgets/date_widget.dart';
 import '../widgets/filter_date_column_widget.dart';
@@ -371,14 +373,12 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                   20.hGap,
                   !sortedDates.isNotNullAndNotEmpty ||
                           !sortedCategories.isNotNullAndNotEmpty
-                      ? const Center(
-                          child: Text(
-                            "No expenses yet",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18,
-                            ),
+                      ? const Padding(
+                          padding: EdgeInsets.only(top: 40),
+                          child: CustomEmptyState(
+                            icon: CupertinoIcons.doc_text_search,
+                            title: "No expenses found",
+                            subtitle: "Try adjusting your filters",
                           ),
                         )
                       : ref.watch(filterScreentabProvider) ==

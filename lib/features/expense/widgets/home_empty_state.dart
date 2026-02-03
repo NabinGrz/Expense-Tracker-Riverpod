@@ -1,3 +1,4 @@
+import 'package:expense_tracker_flutter/shared/widget/custom_empty_state.dart';
 import 'package:flutter/material.dart';
 
 class HomeEmptyState extends StatelessWidget {
@@ -5,22 +6,10 @@ class HomeEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset("assets/images/empty_expenses.webp", height: 150),
-          Text(
-            "Oops...There are no expenses",
-            style: TextStyle(
-              color: isDark ? Colors.grey[400] : Colors.grey,
-              fontWeight: FontWeight.w100,
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
+    return const CustomEmptyState(
+      imagePath: "assets/images/empty_expenses.webp",
+      title: "Oops...There are no expenses",
+      subtitle: "Tap + to add your first expense",
     );
   }
 }
