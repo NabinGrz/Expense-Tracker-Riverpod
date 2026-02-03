@@ -87,15 +87,25 @@ class _BannerUI extends StatelessWidget {
   });
 
   @override
+  @override
   Widget build(BuildContext context) {
     final formattedStart = NepaliDateFormat("MMMM d").format(startDate);
     final formattedEnd = NepaliDateFormat("MMMM d").format(endDate);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final bgColor = isDark ? const Color(0xff2C0B0E) : const Color(0xffFFEBEE);
+    final textColor = isDark
+        ? const Color(0xffEF9A9A)
+        : const Color(0xffD32F2F);
+    final iconColor = isDark
+        ? const Color(0xffEF5350)
+        : const Color(0xffD32F2F);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xffFFEBEE), // Light Red background
+        color: bgColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -107,7 +117,7 @@ class _BannerUI extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.warning_amber_rounded, color: Color(0xffD32F2F)),
+          Icon(Icons.warning_amber_rounded, color: iconColor),
           12.wGap,
           Expanded(
             child: Column(
@@ -115,8 +125,8 @@ class _BannerUI extends StatelessWidget {
               children: [
                 Text(
                   "Restaurant Budget of Rs ${limit.toCurrency} Exceeded!",
-                  style: const TextStyle(
-                    color: Color(0xffD32F2F),
+                  style: TextStyle(
+                    color: textColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -124,10 +134,7 @@ class _BannerUI extends StatelessWidget {
                 4.hGap,
                 Text(
                   "You've spent Rs ${totalSpend.toCurrency} between $formattedStart - $formattedEnd.",
-                  style: const TextStyle(
-                    color: Color(0xffD32F2F),
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: textColor, fontSize: 12),
                 ),
               ],
             ),

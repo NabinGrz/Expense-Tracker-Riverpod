@@ -46,19 +46,38 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SlideTransition(
       position: animation,
       child: FadeTransition(
         opacity: opacityAnimation,
         child: Container(
-          decoration: const BoxDecoration(color: Color(0xffF4F6F6)),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xff121212) : const Color(0xffF4F6F6),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              filterBox("Today", selectedDateFilter: DateFilter.today),
-              filterBox("Yesterday", selectedDateFilter: DateFilter.yesterday),
-              filterBox("2 Weeks", selectedDateFilter: DateFilter.twoweeks),
-              filterBox("Monthly", selectedDateFilter: DateFilter.monthly),
+              filterBox(
+                "Today",
+                selectedDateFilter: DateFilter.today,
+                isDark: isDark,
+              ),
+              filterBox(
+                "Yesterday",
+                selectedDateFilter: DateFilter.yesterday,
+                isDark: isDark,
+              ),
+              filterBox(
+                "2 Weeks",
+                selectedDateFilter: DateFilter.twoweeks,
+                isDark: isDark,
+              ),
+              filterBox(
+                "Monthly",
+                selectedDateFilter: DateFilter.monthly,
+                isDark: isDark,
+              ),
             ],
           ),
         ),
@@ -66,7 +85,11 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
     );
   }
 
-  Widget filterBox(String name, {required DateFilter selectedDateFilter}) {
+  Widget filterBox(
+    String name, {
+    required DateFilter selectedDateFilter,
+    required bool isDark,
+  }) {
     return Consumer(
       builder: (context, ref, _) {
         final dateFilter = ref.watch(
@@ -95,7 +118,9 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: dateFilter != selectedDateFilter ? null : Colors.white,
+                color: dateFilter != selectedDateFilter
+                    ? (isDark ? Colors.grey[400] : Colors.black87)
+                    : Colors.white,
               ),
             ),
           ),

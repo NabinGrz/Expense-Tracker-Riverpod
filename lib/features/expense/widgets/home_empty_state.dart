@@ -5,15 +5,16 @@ class HomeEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Image.asset("assets/images/empty_expenses.webp", height: 150),
-          const Text(
+          Text(
             "Oops...There are no expenses",
             style: TextStyle(
-              color: Colors.grey,
+              color: isDark ? Colors.grey[400] : Colors.grey,
               fontWeight: FontWeight.w100,
               fontSize: 16,
             ),

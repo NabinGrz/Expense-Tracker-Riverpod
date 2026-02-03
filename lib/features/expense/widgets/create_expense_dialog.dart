@@ -209,9 +209,9 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                               fontSize: 14,
                             ),
                           ),
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.keyboard_arrow_down_rounded,
-                            color: Colors.grey,
+                            color: isDark ? Colors.grey[400] : Colors.grey,
                           ),
                           dropdownColor: theme.cardColor,
                           initialValue: watch.expenseEntity?.category,
@@ -274,7 +274,7 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                   decoration: BoxDecoration(
                     color: watch.expenseEntity?.isCash == true
                         ? AppColor.primary.withOpacity(0.1)
-                        : (isDark ? Colors.grey[800] : Colors.grey[100]),
+                        : (isDark ? const Color(0xff333333) : Colors.grey[100]),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: watch.expenseEntity?.isCash == true
@@ -340,7 +340,7 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
       style: TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.w700,
-        color: isDark ? Colors.grey[500] : Colors.grey[600],
+        color: isDark ? Colors.grey[400] : Colors.grey[600],
         letterSpacing: 1.1,
       ),
     );

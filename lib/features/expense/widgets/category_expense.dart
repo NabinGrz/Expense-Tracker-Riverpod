@@ -36,16 +36,12 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
   List<Expense> get sortedExpenseData => watchController.sortedExpenseData;
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        controller.updateOriginalExpense(widget.expenseData);
-        widget.expenseData.sort(
-          (a, b) => b.amount.compareTo(a.amount),
-        );
-        controller.updateSortByDate(false);
-        controller.updateSortedExpense(widget.expenseData);
-      },
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.updateOriginalExpense(widget.expenseData);
+      widget.expenseData.sort((a, b) => b.amount.compareTo(a.amount));
+      controller.updateSortByDate(false);
+      controller.updateSortedExpense(widget.expenseData);
+    });
 
     super.initState();
   }
@@ -53,17 +49,17 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      // color: Colors.white,
       color: Colors.transparent,
       child: Container(
         width: double.infinity,
         height: MediaQuery.sizeOf(context).height * 0.55,
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            )),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -71,11 +67,7 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
             children: [
               10.hGap,
               Padding(
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  top: 16,
-                ),
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -97,9 +89,11 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                     const Spacer(),
                     Text(
                       "Total Amount: Rs ${widget.totalAmount}",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[400]
+                            : Colors.grey,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -129,22 +123,14 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                     children: [
                       Text(
                         "Sort By ${watchController.isSortByDate ? "Amount" : "Date"}",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      const Icon(
-                        CupertinoIcons.sort_up,
-                        size: 18,
-                      )
+                      const Icon(CupertinoIcons.sort_up, size: 18),
                     ],
                   ),
                 ),
               ),
-              const Divider(
-                height: 1,
-                thickness: 0.5,
-              ),
+              const Divider(height: 1, thickness: 0.5),
               10.hGap,
               if (widget.name == "Petrol")
                 PetrolCategoryDetail(expenseData: sortedExpenseData),
@@ -169,9 +155,7 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                         children: [
                           Text(
                             expense.name.capitalize(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.w700),
                           ),
                           4.hGap,
                           Row(
@@ -183,8 +167,9 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                               ),
                               4.wGap,
                               Text(
-                                DateTime.parse(expense.createAt)
-                                    .toFormattedDateString(),
+                                DateTime.parse(
+                                  expense.createAt,
+                                ).toFormattedDateString(),
                                 style: const TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
@@ -192,7 +177,7 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                                 ),
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                       Row(
@@ -214,7 +199,7 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
                             width: 10,
                           ),
                         ],
-                      )
+                      ),
                     ],
                   );
                 },
@@ -229,10 +214,7 @@ class _CategoryExpensesState extends ConsumerState<CategoryExpenses> {
 }
 
 class PetrolCategoryDetail extends StatelessWidget {
-  const PetrolCategoryDetail({
-    super.key,
-    required this.expenseData,
-  });
+  const PetrolCategoryDetail({super.key, required this.expenseData});
 
   final List<Expense> expenseData;
 
@@ -256,12 +238,8 @@ class PetrolCategoryDetail extends StatelessWidget {
                   ? Row(
                       children: [
                         Text(
-                          "${expenseData.where((e) => !e.name.toLowerCase().contains("bike")).map(
-                                (e) => DateTime.parse(e.createAt),
-                              ).toList().daysDifferenceBetweenFirstAndLast()} D",
-                          style: const TextStyle(
-                            fontSize: 20,
-                          ),
+                          "${expenseData.where((e) => !e.name.toLowerCase().contains("bike")).map((e) => DateTime.parse(e.createAt)).toList().daysDifferenceBetweenFirstAndLast()} D",
+                          style: const TextStyle(fontSize: 20),
                         ),
                         4.wGap,
                         Column(
@@ -269,21 +247,17 @@ class PetrolCategoryDetail extends StatelessWidget {
                           children: [
                             const Text(
                               "Scooter",
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
+                              style: TextStyle(fontSize: 14),
                             ),
                             Text(
-                              "Rs: ${expenseData.where((e) => !e.name.toLowerCase().contains("bike")).map(
-                                    (e) => e.amount,
-                                  ).toList().sum().toCurrency}",
+                              "Rs: ${expenseData.where((e) => !e.name.toLowerCase().contains("bike")).map((e) => e.amount).toList().sum().toCurrency}",
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     )
                   : const SizedBox.shrink(),
@@ -293,34 +267,23 @@ class PetrolCategoryDetail extends StatelessWidget {
                   ? Row(
                       children: [
                         Text(
-                          "${expenseData.where((e) => e.name.toLowerCase().contains("bike")).map(
-                                (e) => DateTime.parse(e.createAt),
-                              ).toList().daysDifferenceBetweenFirstAndLast()} D",
-                          style: const TextStyle(
-                            fontSize: 20,
-                          ),
+                          "${expenseData.where((e) => e.name.toLowerCase().contains("bike")).map((e) => DateTime.parse(e.createAt)).toList().daysDifferenceBetweenFirstAndLast()} D",
+                          style: const TextStyle(fontSize: 20),
                         ),
                         4.wGap,
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Bike",
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
+                            const Text("Bike", style: TextStyle(fontSize: 14)),
                             Text(
-                              "Rs: ${expenseData.where((e) => e.name.toLowerCase().contains("bike")).map(
-                                    (e) => e.amount,
-                                  ).toList().sum().toCurrency}",
+                              "Rs: ${expenseData.where((e) => e.name.toLowerCase().contains("bike")).map((e) => e.amount).toList().sum().toCurrency}",
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     )
                   : const SizedBox.shrink(),
@@ -331,29 +294,16 @@ class PetrolCategoryDetail extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.calendar_month,
-              color: AppColor.primary,
-            ),
+            Icon(Icons.calendar_month, color: AppColor.primary),
             4.wGap,
             Text(
-              "${expenseData.map(
-                    (e) => DateTime.parse(e.createAt),
-                  ).toList().firstDate()?.toFormattedDateString()}",
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
+              "${expenseData.map((e) => DateTime.parse(e.createAt)).toList().firstDate()?.toFormattedDateString()}",
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             const Icon(Icons.arrow_right),
             Text(
-              "${expenseData.map(
-                    (e) => DateTime.parse(e.createAt),
-                  ).toList().lastDate()?.toFormattedDateString()}",
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
+              "${expenseData.map((e) => DateTime.parse(e.createAt)).toList().lastDate()?.toFormattedDateString()}",
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
           ],
         ),

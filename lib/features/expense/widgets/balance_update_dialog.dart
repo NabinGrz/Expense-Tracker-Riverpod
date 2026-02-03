@@ -42,6 +42,7 @@ class _BalanceUpdateDialogState extends State<BalanceUpdateDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return CustomInputDialog(
       title: "Update ${widget.isCash ? "Cash" : "Bank"} Amount",
       primaryButtonText: "Update",
@@ -73,9 +74,9 @@ class _BalanceUpdateDialogState extends State<BalanceUpdateDialog> {
         children: [
           Text(
             widget.isCash ? "Total Cash on Hand" : "Total Bank Balance",
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: Colors.grey,
+              color: isDark ? Colors.grey[400] : Colors.grey,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -86,11 +87,15 @@ class _BalanceUpdateDialogState extends State<BalanceUpdateDialog> {
                 ? cashAmountController
                 : bankAmountController,
             keyboardType: TextInputType.number,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
             decoration: CustomInputDecoration.inputDecoration(
               hintText: widget.isCash ? "E.g. 5000" : "E.g. 150000",
               prefixIcon: const Icon(Icons.currency_rupee, size: 20),
-              isDark: Theme.of(context).brightness == Brightness.dark,
+              isDark: isDark,
             ),
           ),
         ],

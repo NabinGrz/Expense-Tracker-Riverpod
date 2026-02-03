@@ -20,9 +20,7 @@ class SettingsScreen extends ConsumerWidget {
         title: Text(
           "Settings",
           style: TextStyle(
-            color:
-                theme.appBarTheme.foregroundColor ??
-                (isDark ? Colors.white : Colors.black87),
+            color: isDark ? Colors.white : Colors.black87,
             fontWeight: FontWeight.bold,
             fontSize: 24,
           ),
@@ -30,10 +28,7 @@ class SettingsScreen extends ConsumerWidget {
         centerTitle: false,
         backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        iconTheme: IconThemeData(
-          color:
-              theme.iconTheme.color ?? (isDark ? Colors.white : Colors.black87),
-        ),
+        iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
       ),
       body: settingsState.when(
         data: (state) => ListView(
@@ -308,9 +303,12 @@ class SettingsScreen extends ConsumerWidget {
                 controller: controller,
                 keyboardType: TextInputType.number,
                 autofocus: true,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black87,
                 ),
                 decoration: CustomInputDecoration.inputDecoration(
                   hintText: "E.g. 5000",

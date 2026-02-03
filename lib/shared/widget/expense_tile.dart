@@ -26,14 +26,16 @@ class ExpenseTile extends ConsumerWidget {
   final bool? showDate;
 
   @override
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return InkWell(
       key: ValueKey(expenseData?.id),
       borderRadius: BorderRadius.circular(8),
       splashColor: AppColor.primary.withValues(alpha: .3),
-      // highlightColor: AppColor.primary.withOpacity(0.4),
       splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
-      // splashColor: Colors.blue.withOpacity(0.3),
       highlightColor: Colors.transparent,
       onTap: () {}, // Required to show ripple
       onLongPress: () {
@@ -42,7 +44,7 @@ class ExpenseTile extends ConsumerWidget {
           context: context,
           builder: (context) {
             return Dialog(
-              backgroundColor: Colors.white,
+              backgroundColor: theme.cardColor,
               surfaceTintColor: Colors.transparent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24),
@@ -53,12 +55,12 @@ class ExpenseTile extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Manage Expense",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
                     16.hGap,
@@ -95,12 +97,14 @@ class ExpenseTile extends ConsumerWidget {
                               size: 20,
                             ),
                             12.wGap,
-                            const Text(
+                            Text(
                               "Update Expense",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black87,
+                                color: isDark
+                                    ? Colors.blue[200]
+                                    : Colors.black87,
                               ),
                             ),
                           ],
@@ -153,11 +157,11 @@ class ExpenseTile extends ConsumerWidget {
 
       child: Ink(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -169,8 +173,6 @@ class ExpenseTile extends ConsumerWidget {
         child: Row(
           children: [
             Container(
-              // height: 40,
-              // width: 40,
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -188,7 +190,6 @@ class ExpenseTile extends ConsumerWidget {
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                 ),
-                // borderRadius: BorderRadius.circular(8),
               ),
               child: Image.asset(
                 expenseData?.category.getIconPathByCategory ?? "",
@@ -206,44 +207,44 @@ class ExpenseTile extends ConsumerWidget {
                   child: Text(
                     "${expenseData?.name.capitalize()}",
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.4,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                   ),
                 ),
-                // 2.hGap,
                 Text(
                   "${expenseData?.category}",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: Color(0xff666666),
+                    color: isDark ? Colors.grey[400] : const Color(0xff666666),
                     letterSpacing: 1.1,
                   ),
                 ),
                 1.hGap,
-                // if (!DateTime.parse(expenseData!.createAt)
-                //         .isSameDateAs(DateTime.now()) &&
-                //     !DateTime.parse(expenseData!.createAt).isYesterday() &&
-                //     !isFilter) ...{
                 if (showDate == true) ...{
                   4.hGap,
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.date_range,
                         size: 12,
-                        color: Color(0xff666666),
+                        color: isDark
+                            ? Colors.grey[400]
+                            : const Color(0xff666666),
                       ),
                       4.wGap,
                       Text(
                         DateTime.parse(
                           expenseData!.createAt,
                         ).toFormattedDateString(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xff666666),
+                          color: isDark
+                              ? Colors.grey[400]
+                              : const Color(0xff666666),
                         ),
                       ),
                     ],
@@ -254,10 +255,11 @@ class ExpenseTile extends ConsumerWidget {
             const Spacer(),
             Text(
               "-Rs ${expenseData?.amount.toCurrency}",
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 1.1,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             3.wGap,
