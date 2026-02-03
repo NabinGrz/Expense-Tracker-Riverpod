@@ -23,19 +23,22 @@ class RestaurantAlertBanner extends ConsumerWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const SizedBox.shrink();
 
-        final billingStartDay =
-            ref.watch(settingsControllerProvider).value ?? 7;
+        final settingsState = ref.watch(settingsControllerProvider).value;
+        final billingStartDay = settingsState?.billingStartDay ?? 7;
+        final restaurantLimit = settingsState?.restaurantLimit ?? 4000;
+
         final expenses = _parseExpenses(snapshot.data!);
         final cycle = ExpenseUtils.getNepaliBillingCycle(
           startDay: billingStartDay,
         );
         final totalSpend = _calculateTotalSpend(expenses, cycle);
 
-        // Threshold set to 4000 as per user preference
-        if (totalSpend <= 4000) return const SizedBox.shrink();
+        // Threshold based on user preference
+        if (totalSpend <= restaurantLimit) return const SizedBox.shrink();
 
         return _BannerUI(
           totalSpend: totalSpend,
+          limit: restaurantLimit,
           startDate: cycle.start,
           endDate: cycle.displayEnd,
         );
@@ -72,11 +75,13 @@ class RestaurantAlertBanner extends ConsumerWidget {
 
 class _BannerUI extends StatelessWidget {
   final int totalSpend;
+  final int limit;
   final NepaliDateTime startDate;
   final NepaliDateTime endDate;
 
   const _BannerUI({
     required this.totalSpend,
+    required this.limit,
     required this.startDate,
     required this.endDate,
   });
@@ -102,9 +107,9 @@ class _BannerUI extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Restaurant Budget Exceeded!",
-                  style: TextStyle(
+                Text(
+                  "Restaurant Budget of Rs ${limit.toCurrency} Exceeded!",
+                  style: const TextStyle(
                     color: Color(0xffD32F2F),
                     fontWeight: FontWeight.bold,
                     fontSize: 14,

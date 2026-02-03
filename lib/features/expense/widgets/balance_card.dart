@@ -218,7 +218,11 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                     stream: widget.sortedExpenseSubject,
                     builder: (context, snapshot) {
                       final billingStartDay =
-                          ref.watch(settingsControllerProvider).value ?? 7;
+                          ref
+                              .watch(settingsControllerProvider)
+                              .value
+                              ?.billingStartDay ??
+                          7;
                       final cycle = ExpenseUtils.getNepaliBillingCycle(
                         startDay: billingStartDay,
                       );
