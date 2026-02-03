@@ -62,6 +62,9 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return StatefulBuilder(
       builder: (context, setState) {
         final controller = ref.read(expenseProvider.notifier);
@@ -115,6 +118,7 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                   style: const TextStyle(fontWeight: FontWeight.w600),
                   decoration: CustomInputDecoration.inputDecoration(
                     hintText: "What was this for?",
+                    isDark: isDark,
                   ),
                   onChanged: (value) => controller.nameError.add(null),
                 ),
@@ -144,6 +148,7 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                   decoration: CustomInputDecoration.inputDecoration(
                     hintText: "Amount (Rs)",
                     prefixIcon: const Icon(Icons.currency_rupee, size: 20),
+                    isDark: isDark,
                   ),
                   onChanged: (value) => controller.amountError.add(null),
                 ),
@@ -178,8 +183,14 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                       height: 50,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xffE5E7EB)),
-                        color: const Color(0xffF9FAFB),
+                        border: Border.all(
+                          color: isDark
+                              ? Colors.grey[700]!
+                              : const Color(0xffE5E7EB),
+                        ),
+                        color: isDark
+                            ? const Color(0xff333333)
+                            : const Color(0xffF9FAFB),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButtonFormField(
@@ -189,10 +200,12 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                               horizontal: 16,
                             ),
                           ),
-                          hint: const Text(
+                          hint: Text(
                             "Select Category",
                             style: TextStyle(
-                              color: Color(0xff9CA3AF),
+                              color: isDark
+                                  ? Colors.grey[500]
+                                  : const Color(0xff9CA3AF),
                               fontSize: 14,
                             ),
                           ),
@@ -200,6 +213,7 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                             Icons.keyboard_arrow_down_rounded,
                             color: Colors.grey,
                           ),
+                          dropdownColor: theme.cardColor,
                           initialValue: watch.expenseEntity?.category,
                           items: categories?.map((e) {
                             return DropdownMenuItem(
@@ -214,10 +228,12 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                                   12.wGap,
                                   Text(
                                     e,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
+                                      color: isDark
+                                          ? Colors.white
+                                          : Colors.black87,
                                     ),
                                   ),
                                 ],
@@ -258,7 +274,7 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                   decoration: BoxDecoration(
                     color: watch.expenseEntity?.isCash == true
                         ? AppColor.primary.withOpacity(0.1)
-                        : Colors.grey[100],
+                        : (isDark ? Colors.grey[800] : Colors.grey[100]),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: watch.expenseEntity?.isCash == true
@@ -288,7 +304,9 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                               fontWeight: FontWeight.w600,
                               color: watch.expenseEntity?.isCash == true
                                   ? AppColor.primary
-                                  : Colors.grey[700],
+                                  : (isDark
+                                        ? Colors.grey[400]
+                                        : Colors.grey[700]),
                             ),
                           ),
                         ],
@@ -314,12 +332,15 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
   }
 
   Widget _buildLabel(String text) {
+    // Theme.of(context) would be correct but this is a helper method.
+    // Assuming context is not available here or mixin, but wait, it's a State class.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Text(
       text.toUpperCase(),
       style: TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.w700,
-        color: Colors.grey[600],
+        color: isDark ? Colors.grey[500] : Colors.grey[600],
         letterSpacing: 1.1,
       ),
     );

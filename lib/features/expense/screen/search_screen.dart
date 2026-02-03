@@ -85,9 +85,13 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
 
   SearchNotifier get watchSearchExpenses => ref.watch(searchExpenseProvider);
   @override
+  @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return CupertinoPageScaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: theme.scaffoldBackgroundColor,
       child: RefreshIndicator.adaptive(
         color: AppColor.primary,
         onRefresh: () async {
@@ -101,9 +105,13 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
           controller: _scrollController,
           slivers: [
             CupertinoSliverNavigationBar(
-              backgroundColor: const Color(0xFFFAFAFA),
+              backgroundColor: theme.scaffoldBackgroundColor,
               border: Border(
-                bottom: BorderSide(color: Colors.grey.withOpacity(0.1)),
+                bottom: BorderSide(
+                  color: isDark
+                      ? Colors.grey[800]!
+                      : Colors.grey.withOpacity(0.1),
+                ),
               ),
               automaticBackgroundVisibility: false,
               largeTitle: Text(
@@ -111,16 +119,18 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: .w700,
-                  color: AppColor.primary,
+                  color: isDark ? Colors.white : AppColor.primary,
                 ),
               ),
               trailing: PopupMenuButton(
-                icon: const Icon(Icons.sort_rounded),
-                iconColor: AppColor.primary,
+                icon: Icon(
+                  Icons.sort_rounded,
+                  color: isDark ? Colors.white : AppColor.primary,
+                ),
                 elevation: 4,
                 shadowColor: Colors.black.withOpacity(0.1),
-                surfaceTintColor: Colors.white,
-                color: Colors.white,
+                surfaceTintColor: theme.cardColor,
+                color: theme.cardColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -139,14 +149,15 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                           Icon(
                             Icons.monetization_on_outlined,
                             size: 20,
-                            color: Colors.grey[700],
+                            color: isDark ? Colors.grey[300] : Colors.grey[700],
                           ),
                           12.wGap,
-                          const Text(
+                          Text(
                             "Sort By Amount",
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
+                              color: isDark ? Colors.white : Colors.black87,
                             ),
                           ),
                         ],
@@ -163,14 +174,15 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                           Icon(
                             Icons.calendar_today_outlined,
                             size: 20,
-                            color: Colors.grey[700],
+                            color: isDark ? Colors.grey[300] : Colors.grey[700],
                           ),
                           12.wGap,
-                          const Text(
+                          Text(
                             "Sort By Date",
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
+                              color: isDark ? Colors.white : Colors.black87,
                             ),
                           ),
                         ],
@@ -182,11 +194,11 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
               bottom: _NavigationBarSearchField(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark ? Colors.grey[800] : Colors.white,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -197,11 +209,11 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                     controller: _searchController,
                     placeholder: 'Search expenses...',
                     placeholderStyle: TextStyle(
-                      color: Colors.grey[400],
+                      color: isDark ? Colors.grey[500] : Colors.grey[400],
                       fontSize: 15,
                     ),
-                    style: const TextStyle(
-                      color: Colors.black87,
+                    style: TextStyle(
+                      color: isDark ? Colors.white : Colors.black87,
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),

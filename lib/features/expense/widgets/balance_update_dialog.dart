@@ -90,6 +90,7 @@ class _BalanceUpdateDialogState extends State<BalanceUpdateDialog> {
             decoration: CustomInputDecoration.inputDecoration(
               hintText: widget.isCash ? "E.g. 5000" : "E.g. 150000",
               prefixIcon: const Icon(Icons.currency_rupee, size: 20),
+              isDark: Theme.of(context).brightness == Brightness.dark,
             ),
           ),
         ],

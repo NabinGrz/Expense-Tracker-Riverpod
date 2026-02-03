@@ -11,29 +11,94 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsState = ref.watch(settingsControllerProvider);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xffF3F4F6),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "Settings",
           style: TextStyle(
-            color: Colors.black87,
+            color:
+                theme.appBarTheme.foregroundColor ??
+                (isDark ? Colors.white : Colors.black87),
             fontWeight: FontWeight.bold,
             fontSize: 24,
           ),
         ),
         centerTitle: false,
-        backgroundColor: const Color(0xffF3F4F6),
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black87),
+        iconTheme: IconThemeData(
+          color:
+              theme.iconTheme.color ?? (isDark ? Colors.white : Colors.black87),
+        ),
       ),
       body: settingsState.when(
         data: (state) => ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            _buildSectionHeader("Billing Preferences"),
+            _buildSectionHeader(context, "Appearance"),
             _buildSettingCard(
+              context,
+              title: "App Theme",
+              subtitle: "Select your preferred theme",
+              icon: Icons.brightness_6_rounded,
+              iconColor: Colors.purpleAccent,
+              trailing: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.grey[800] : Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                  ),
+                ),
+                child: DropdownButton<ThemeMode>(
+                  value: state.themeMode,
+                  underline: const SizedBox(),
+                  isDense: true,
+                  dropdownColor: theme.cardColor,
+                  icon: Icon(
+                    Icons.arrow_drop_down_rounded,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                  items: const [
+                    DropdownMenuItem(
+                      value: ThemeMode.system,
+                      child: Text("System"),
+                    ),
+                    DropdownMenuItem(
+                      value: ThemeMode.light,
+                      child: Text("Light"),
+                    ),
+                    DropdownMenuItem(
+                      value: ThemeMode.dark,
+                      child: Text("Dark"),
+                    ),
+                  ],
+                  onChanged: (newMode) {
+                    if (newMode != null) {
+                      ref
+                          .read(settingsControllerProvider.notifier)
+                          .updateThemeMode(newMode);
+                    }
+                  },
+                ),
+              ),
+            ),
+            20.hGap,
+            _buildSectionHeader(context, "Billing Preferences"),
+            _buildSettingCard(
+              context,
               title: "Billing Cycle Start Day",
               subtitle:
                   "Starts on the ${state.billingStartDay}${_getDaySuffix(state.billingStartDay)} of each Nepali month",
@@ -45,15 +110,25 @@ class SettingsScreen extends ConsumerWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
+                  color: isDark ? Colors.grey[800] : Colors.grey[100],
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey[300]!),
+                  border: Border.all(
+                    color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                  ),
                 ),
                 child: DropdownButton<int>(
                   value: state.billingStartDay,
                   underline: const SizedBox(),
                   isDense: true,
-                  icon: const Icon(Icons.arrow_drop_down_rounded),
+                  dropdownColor: theme.cardColor,
+                  icon: Icon(
+                    Icons.arrow_drop_down_rounded,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                   items: List.generate(32, (index) => index + 1)
                       .map(
                         (day) => DropdownMenuItem(
@@ -76,14 +151,18 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
             20.hGap,
-            _buildSectionHeader("Budget Alerts"),
+            _buildSectionHeader(context, "Budget Alerts"),
             _buildSettingCard(
+              context,
               title: "Restaurant Budget Limit",
               subtitle: "Alert limit: Rs ${state.restaurantLimit.toCurrency}",
               icon: Icons.restaurant_rounded,
               iconColor: Colors.orangeAccent,
               trailing: IconButton(
-                icon: const Icon(Icons.edit_rounded, color: Colors.grey),
+                icon: Icon(
+                  Icons.edit_rounded,
+                  color: isDark ? Colors.grey[400] : Colors.grey,
+                ),
                 onPressed: () {
                   _showLimitEditDialog(context, ref, state.restaurantLimit);
                 },
@@ -99,7 +178,8 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(BuildContext context, String title) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12, left: 4),
       child: Text(
@@ -107,14 +187,15 @@ class SettingsScreen extends ConsumerWidget {
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w700,
-          color: Colors.grey[600],
+          color: isDark ? Colors.grey[400] : Colors.grey[600],
           letterSpacing: 1.2,
         ),
       ),
     );
   }
 
-  Widget _buildSettingCard({
+  Widget _buildSettingCard(
+    BuildContext context, {
     required String title,
     required String subtitle,
     required IconData icon,
@@ -122,13 +203,16 @@ class SettingsScreen extends ConsumerWidget {
     required Widget trailing,
     VoidCallback? onTap,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withOpacity(isDark ? 0.3 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -159,10 +243,10 @@ class SettingsScreen extends ConsumerWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: isDark ? Colors.white : Colors.black87,
                         ),
                       ),
                       4.hGap,
@@ -170,7 +254,7 @@ class SettingsScreen extends ConsumerWidget {
                         subtitle,
                         style: TextStyle(
                           fontSize: 13,
-                          color: Colors.grey[600],
+                          color: isDark ? Colors.grey[400] : Colors.grey[600],
                           height: 1.4,
                         ),
                       ),
@@ -231,6 +315,7 @@ class SettingsScreen extends ConsumerWidget {
                 decoration: CustomInputDecoration.inputDecoration(
                   hintText: "E.g. 5000",
                   prefixIcon: const Icon(Icons.currency_rupee, size: 20),
+                  isDark: Theme.of(context).brightness == Brightness.dark,
                 ),
               ),
             ],

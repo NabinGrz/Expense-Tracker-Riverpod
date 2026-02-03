@@ -20,9 +20,12 @@ class CustomInputDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      backgroundColor: Colors.white,
+      backgroundColor: theme.cardColor,
       elevation: 8,
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -32,10 +35,10 @@ class CustomInputDialog extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             20.hGap,
@@ -47,7 +50,9 @@ class CustomInputDialog extends StatelessWidget {
                 TextButton(
                   onPressed: () => Navigator.pop(context),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.grey[600],
+                    foregroundColor: isDark
+                        ? Colors.grey[400]
+                        : Colors.grey[600],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -98,17 +103,18 @@ class CustomInputDecoration {
   static InputDecoration inputDecoration({
     required String hintText,
     Widget? prefixIcon,
+    required bool isDark,
   }) {
     return InputDecoration(
       hintText: hintText,
-      hintStyle: const TextStyle(
-        color: Color(0xff9CA3AF),
+      hintStyle: TextStyle(
+        color: isDark ? Colors.grey[500] : const Color(0xff9CA3AF),
         fontSize: 14,
         fontWeight: FontWeight.w400,
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       filled: true,
-      fillColor: const Color(0xffF9FAFB),
+      fillColor: isDark ? const Color(0xff333333) : const Color(0xffF9FAFB),
       prefixIcon: prefixIcon,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
@@ -116,7 +122,10 @@ class CustomInputDecoration {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: Color(0xffE5E7EB), width: 1),
+        borderSide: BorderSide(
+          color: isDark ? Colors.grey[700]! : const Color(0xffE5E7EB),
+          width: 1,
+        ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),

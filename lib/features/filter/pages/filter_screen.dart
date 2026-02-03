@@ -123,6 +123,9 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
     return StreamBuilder<List<Expense>?>(
       stream: filteredExpensesSubject,
       builder: (context, snapshot) {
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
+
         final expenseAmount = snapshot.data?.map((e) => e.amount).sum();
         final groupedExpense = snapshot.data?.expensesByDate();
         final sortedDates = groupedExpense?.entries.toList()
@@ -140,9 +143,9 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
             return x.compareTo(y);
           });
         return Scaffold(
-          backgroundColor: const Color(0xFFFAFAFA),
+          backgroundColor: theme.scaffoldBackgroundColor,
           appBar: AppBar(
-            backgroundColor: const Color(0xFFFAFAFA),
+            backgroundColor: theme.scaffoldBackgroundColor,
             toolbarHeight: 0,
             elevation: 0,
             // title: Text(
@@ -166,11 +169,13 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                       margin: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: theme.cardColor,
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withOpacity(
+                              isDark ? 0.3 : 0.04,
+                            ),
                             blurRadius: 15,
                             offset: const Offset(0, 5),
                           ),
@@ -191,9 +196,13 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                                   builder: (context, child) {
                                     return Theme(
                                       data: Theme.of(context).copyWith(
-                                        colorScheme: ColorScheme.light(
-                                          primary: AppColor.primary,
-                                        ),
+                                        colorScheme: isDark
+                                            ? const ColorScheme.dark(
+                                                primary: Color(0xff80cbc4),
+                                              )
+                                            : ColorScheme.light(
+                                                primary: AppColor.primary,
+                                              ),
                                       ),
                                       child: child!,
                                     );
@@ -331,20 +340,21 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "Expenses List",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white : Colors.black87,
                           ),
                         ),
                         2.hGap,
                         Text(
                           "Total Amount: Rs ${expenseAmount?.toCurrency}",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: Colors.grey,
+                            color: isDark ? Colors.grey[400] : Colors.grey,
                           ),
                         ),
                         16.hGap,
