@@ -1,8 +1,8 @@
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
+import 'package:expense_tracker_flutter/shared/widgets/custom_input_dialog.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants/app_color.dart';
 import '../../../constants/firebase_constants.dart';
 
 class BalanceUpdateDialog extends StatefulWidget {
@@ -42,16 +42,43 @@ class _BalanceUpdateDialogState extends State<BalanceUpdateDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(
-        "Update ${widget.isCash ? "Cash" : "Bank"} Amount",
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      content: Column(
+    return CustomInputDialog(
+      title: "Update ${widget.isCash ? "Cash" : "Bank"} Amount",
+      primaryButtonText: "Update",
+      onPrimaryPressed: () {
+        if (widget.isCash) {
+          if (cashAmountController.text.isNotEmpty &&
+              cashAmountController.text != "0") {
+            FirebaseQueryHelper.updateDocumentOfCollection(
+              data: {"cash": cashAmountController.text},
+              collectionID: FirebaseConstants.balanceCollection,
+              docID: widget.docId,
+            );
+            Navigator.pop(context);
+          }
+        } else {
+          if (bankAmountController.text.isNotEmpty &&
+              bankAmountController.text != "0") {
+            FirebaseQueryHelper.updateDocumentOfCollection(
+              data: {"bank": bankAmountController.text},
+              collectionID: FirebaseConstants.balanceCollection,
+              docID: widget.docId,
+            );
+            Navigator.pop(context);
+          }
+        }
+      },
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
-          const Text("Amount", style: TextStyle(fontSize: 12)),
+          Text(
+            widget.isCash ? "Total Cash on Hand" : "Total Bank Balance",
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           8.hGap,
           TextFormField(
             autofocus: true,
@@ -59,67 +86,10 @@ class _BalanceUpdateDialogState extends State<BalanceUpdateDialog> {
                 ? cashAmountController
                 : bankAmountController,
             keyboardType: TextInputType.number,
-            onChanged: (value) {
-              // controller.nameError.add(null);
-            },
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 12,
-              ),
-              hintText: widget.isCash
-                  ? "Enter cash amount..."
-                  : "Enter bank amount...",
-              hintStyle: const TextStyle(
-                color: Color(0xff888888),
-                fontSize: 12,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-          20.hGap,
-          Align(
-            alignment: Alignment.center,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 40),
-                backgroundColor: AppColor.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50), // button's shape
-                ),
-              ),
-              onPressed: () {
-                if (widget.isCash) {
-                  if (cashAmountController.text.isNotEmpty &&
-                      cashAmountController.text != "0") {
-                    FirebaseQueryHelper.updateDocumentOfCollection(
-                      data: {"cash": cashAmountController.text},
-                      collectionID: FirebaseConstants.balanceCollection,
-                      docID: widget.docId,
-                    );
-                    Navigator.pop(context);
-                  }
-                } else {
-                  if (bankAmountController.text.isNotEmpty &&
-                      bankAmountController.text != "0") {
-                    FirebaseQueryHelper.updateDocumentOfCollection(
-                      data: {"bank": bankAmountController.text},
-                      collectionID: FirebaseConstants.balanceCollection,
-                      docID: widget.docId,
-                    );
-                    Navigator.pop(context);
-                  }
-                }
-              },
-              child: const Text(
-                "Update",
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white,
-                ),
-              ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            decoration: CustomInputDecoration.inputDecoration(
+              hintText: widget.isCash ? "E.g. 5000" : "E.g. 150000",
+              prefixIcon: const Icon(Icons.currency_rupee, size: 20),
             ),
           ),
         ],
