@@ -52,7 +52,14 @@ class AnalyticsWidget extends StatelessWidget {
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
               ),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: category.key.getColorByCategory.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,

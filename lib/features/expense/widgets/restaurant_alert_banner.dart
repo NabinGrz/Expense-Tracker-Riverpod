@@ -92,12 +92,18 @@ class _BannerUI extends StatelessWidget {
     final formattedEnd = NepaliDateFormat("MMMM d").format(endDate);
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(12, 16, 12, 16),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color(0xffFFEBEE), // Light Red background
-        border: Border.all(color: const Color(0xffEF5350)), // Red border
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xffD32F2F).withOpacity(0.15),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         children: [

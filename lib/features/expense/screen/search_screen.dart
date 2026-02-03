@@ -1,3 +1,4 @@
+import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -86,8 +87,9 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: const Color(0xFFFAFAFA),
       child: RefreshIndicator.adaptive(
-        color: Colors.white,
+        color: AppColor.primary,
         onRefresh: () async {
           await _loadExpenses();
           if (context.mounted) {
@@ -99,7 +101,11 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
           controller: _scrollController,
           slivers: [
             CupertinoSliverNavigationBar(
-              automaticBackgroundVisibility: true,
+              backgroundColor: const Color(0xFFFAFAFA),
+              border: Border(
+                bottom: BorderSide(color: Colors.grey.withOpacity(0.1)),
+              ),
+              automaticBackgroundVisibility: false,
               largeTitle: Text(
                 'All Expenses',
                 style: TextStyle(
@@ -109,56 +115,102 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                 ),
               ),
               trailing: PopupMenuButton(
-                icon: const Icon(Icons.sort),
+                icon: const Icon(Icons.sort_rounded),
                 iconColor: AppColor.primary,
-                elevation: 1,
+                elevation: 4,
+                shadowColor: Colors.black.withOpacity(0.1),
+                surfaceTintColor: Colors.white,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 menuPadding: EdgeInsets.zero,
-                borderRadius: BorderRadius.circular(50),
+                borderRadius: BorderRadius.circular(16),
                 itemBuilder: (context) {
                   return [
                     PopupMenuItem(
                       onTap: () => sortBy(true),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 0,
+                        horizontal: 16,
+                        vertical: 12,
                       ),
-                      child: const Text(
-                        "Sort By Amount",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
-                        ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.monetization_on_outlined,
+                            size: 20,
+                            color: Colors.grey[700],
+                          ),
+                          12.wGap,
+                          const Text(
+                            "Sort By Amount",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     PopupMenuItem(
                       onTap: () => sortBy(false),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 0,
+                        horizontal: 16,
+                        vertical: 12,
                       ),
-                      child: const Text(
-                        "Sort By Date",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
-                        ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.calendar_today_outlined,
+                            size: 20,
+                            color: Colors.grey[700],
+                          ),
+                          12.wGap,
+                          const Text(
+                            "Sort By Date",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ];
                 },
               ),
               bottom: _NavigationBarSearchField(
-                child: CupertinoSearchTextField(
-                  controller: _searchController,
-                  placeholder: 'Search expenses',
-                  style: const TextStyle(color: CupertinoColors.black),
-                  onSuffixTap: () {
-                    _searchController.clear();
-                    FocusScope.of(context).unfocus();
-                    _loadExpenses();
-                  },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: CupertinoSearchTextField(
+                    backgroundColor: Colors.transparent,
+                    controller: _searchController,
+                    placeholder: 'Search expenses...',
+                    placeholderStyle: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 15,
+                    ),
+                    style: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    onSuffixTap: () {
+                      _searchController.clear();
+                      FocusScope.of(context).unfocus();
+                      _loadExpenses();
+                    },
+                  ),
                 ),
               ),
               // bottomMode: NavigationBarBottomMode.always,

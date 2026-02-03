@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/extension/date_extension.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
@@ -139,10 +140,11 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
             return x.compareTo(y);
           });
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFFFAFAFA),
           appBar: AppBar(
+            backgroundColor: const Color(0xFFFAFAFA),
             toolbarHeight: 0,
-            elevation: 2,
+            elevation: 0,
             // title: Text(
             //     widget.isSpecificDate ? "Select Date" : "Select Date Range"),
           ),
@@ -160,11 +162,23 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                     dateRangeProvider.notifier,
                   );
                   return SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
                       child: widget.isSpecificDate
                           ? FilterDateColumnWidget(
-                              title: "Date: ",
+                              title: "Date",
                               val: ref.watch(selectedDateProvider),
                               onTap: () async {
                                 final selectedDate = await showDatePicker(
@@ -174,6 +188,16 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                                   ),
                                   lastDate: DateTime.now(),
                                   initialDate: ref.watch(selectedDateProvider),
+                                  builder: (context, child) {
+                                    return Theme(
+                                      data: Theme.of(context).copyWith(
+                                        colorScheme: ColorScheme.light(
+                                          primary: AppColor.primary,
+                                        ),
+                                      ),
+                                      child: child!,
+                                    );
+                                  },
                                 );
                                 ref
                                     .read(selectedDateProvider.notifier)
@@ -184,64 +208,112 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                             )
                           : Column(
                               children: [
-                                FilterDateColumnWidget(
-                                  title: "From: ",
-                                  val: ref.watch(
-                                    dateRangeProvider.select(
-                                      (value) => value.from,
-                                    ),
-                                  ),
-                                  onTap: () async {
-                                    final selectedDate = await showDatePicker(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      firstDate: DateTime.now().subtract(
-                                        const Duration(days: 200),
-                                      ),
-                                      lastDate: DateTime.now(),
-                                      initialDate: fromDate,
-                                    );
-                                    controller.updateFromDate(
-                                      selectedDate ?? fromDate,
-                                    );
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: FilterDateColumnWidget(
+                                        title: "From",
+                                        val: ref.watch(
+                                          dateRangeProvider.select(
+                                            (value) => value.from,
+                                          ),
+                                        ),
+                                        onTap: () async {
+                                          final selectedDate =
+                                              await showDatePicker(
+                                                barrierDismissible: false,
+                                                context: context,
+                                                firstDate: DateTime.now()
+                                                    .subtract(
+                                                      const Duration(days: 200),
+                                                    ),
+                                                lastDate: DateTime.now(),
+                                                initialDate: fromDate,
+                                                builder: (context, child) {
+                                                  return Theme(
+                                                    data: Theme.of(context)
+                                                        .copyWith(
+                                                          colorScheme:
+                                                              ColorScheme.light(
+                                                                primary: AppColor
+                                                                    .primary,
+                                                              ),
+                                                        ),
+                                                    child: child!,
+                                                  );
+                                                },
+                                              );
+                                          controller.updateFromDate(
+                                            selectedDate ?? fromDate,
+                                          );
 
-                                    if (selectedDate != null) {
-                                      if (selectedDate.isAfter(toDate) ||
-                                          selectedDate.isSameDateAs(
-                                            selectedDate,
-                                          )) {
-                                        final newToDate = selectedDate.add(
-                                          const Duration(days: 30),
-                                        );
-                                        controller.updateToDate(newToDate);
-                                      }
-                                    }
-                                  },
-                                ),
-                                FilterDateColumnWidget(
-                                  title: "To: ",
-                                  val: ref.watch(
-                                    dateRangeProvider.select(
-                                      (value) => value.to,
+                                          if (selectedDate != null) {
+                                            if (selectedDate.isAfter(toDate) ||
+                                                selectedDate.isSameDateAs(
+                                                  selectedDate,
+                                                )) {
+                                              final newToDate = selectedDate
+                                                  .add(
+                                                    const Duration(days: 30),
+                                                  );
+                                              controller.updateToDate(
+                                                newToDate,
+                                              );
+                                            }
+                                          }
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                  onTap: () async {
-                                    final selectedDate = await showDatePicker(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      firstDate: fromDate.add(
-                                        const Duration(days: 1),
+                                    Container(
+                                      height: 40,
+                                      width: 1,
+                                      color: Colors.grey[200],
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 16,
                                       ),
-                                      lastDate: DateTime.now().add(
-                                        const Duration(days: 200),
-                                      ),
-                                      initialDate: toDate,
-                                    );
+                                    ),
+                                    Expanded(
+                                      child: FilterDateColumnWidget(
+                                        title: "To",
+                                        val: ref.watch(
+                                          dateRangeProvider.select(
+                                            (value) => value.to,
+                                          ),
+                                        ),
+                                        onTap: () async {
+                                          final selectedDate =
+                                              await showDatePicker(
+                                                barrierDismissible: false,
+                                                context: context,
+                                                firstDate: fromDate.add(
+                                                  const Duration(days: 1),
+                                                ),
+                                                lastDate: DateTime.now().add(
+                                                  const Duration(days: 200),
+                                                ),
+                                                initialDate: toDate,
+                                                builder: (context, child) {
+                                                  return Theme(
+                                                    data: Theme.of(context)
+                                                        .copyWith(
+                                                          colorScheme:
+                                                              ColorScheme.light(
+                                                                primary: AppColor
+                                                                    .primary,
+                                                              ),
+                                                        ),
+                                                    child: child!,
+                                                  );
+                                                },
+                                              );
 
-                                    controller.updateToDate(
-                                      selectedDate ?? toDate,
-                                    );
-                                  },
+                                          controller.updateToDate(
+                                            selectedDate ?? toDate,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
