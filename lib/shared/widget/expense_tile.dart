@@ -263,12 +263,19 @@ class ExpenseTile extends ConsumerWidget {
               ),
             ),
             3.wGap,
-            Image.asset(
+            // Image.asset(
+            //   expenseData?.isCash == true
+            //       ? "assets/images/dollar.png"
+            //       : "assets/images/bank.png",
+            //   height: 12,
+            //   width. : 12,
+            // ),
+            Icon(
               expenseData?.isCash == true
-                  ? "assets/images/dollar.png"
-                  : "assets/images/bank.png",
-              height: 12,
-              width: 12,
+                  ? Icons.currency_rupee_rounded
+                  : Icons.account_balance_wallet_rounded,
+              size: 12,
+              color: isDark ? Colors.grey[400] : const Color(0xff666666),
             ),
           ],
         ),

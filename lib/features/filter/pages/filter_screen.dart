@@ -158,6 +158,42 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
             controller: _scrollController,
             // physics: const ClampingScrollPhysics(),
             slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.isSpecificDate
+                            ? "Select Date"
+                            : "Filter By Date",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => Navigator.pop(context),
+                        borderRadius: BorderRadius.circular(30),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isDark ? Colors.grey[800] : Colors.grey[200],
+                          ),
+                          child: Icon(
+                            Icons.close_rounded,
+                            size: 24,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               Consumer(
                 builder: (context, ref, _) {
                   DateRangeModel watchDateRange = ref.watch(dateRangeProvider);

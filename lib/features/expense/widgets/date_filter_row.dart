@@ -53,7 +53,7 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
         opacity: opacityAnimation,
         child: Container(
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xff121212) : const Color(0xffF4F6F6),
+            color: isDark ? Colors.transparent : const Color(0xffF4F6F6),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,8 +111,14 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
                   )
                 : const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: dateFilter != selectedDateFilter
-                ? null
-                : BoxDecoration(color: AppColor.primary),
+                ? BoxDecoration(
+                    color: isDark ? Colors.grey[800] : Colors.transparent,
+                    borderRadius: BorderRadius.circular(20),
+                  )
+                : BoxDecoration(
+                    color: AppColor.primary,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
             child: Text(
               name,
               style: TextStyle(

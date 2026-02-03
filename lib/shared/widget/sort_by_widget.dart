@@ -24,7 +24,7 @@ class SortByWidget extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: isDark ? const Color(0xff121212) : const Color(0xffedede6),
+          color: isDark ? Colors.grey[800] : const Color(0xffedede6),
         ),
         child: Row(
           children: [
