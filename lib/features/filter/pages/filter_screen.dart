@@ -228,30 +228,36 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                                           ),
                                         ),
                                         onTap: () async {
-                                          final selectedDate =
-                                              await showDatePicker(
-                                                barrierDismissible: false,
-                                                context: context,
-                                                firstDate: DateTime.now()
-                                                    .subtract(
-                                                      const Duration(days: 200),
-                                                    ),
-                                                lastDate: DateTime.now(),
-                                                initialDate: fromDate,
-                                                builder: (context, child) {
-                                                  return Theme(
-                                                    data: Theme.of(context)
-                                                        .copyWith(
-                                                          colorScheme:
-                                                              ColorScheme.light(
-                                                                primary: AppColor
-                                                                    .primary,
-                                                              ),
+                                          final selectedDate = await showDatePicker(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            firstDate: DateTime.now().subtract(
+                                              const Duration(days: 200),
+                                            ),
+                                            lastDate: DateTime.now(),
+                                            initialDate: fromDate,
+                                            builder: (context, child) {
+                                              return Theme(
+                                                data: Theme.of(context).copyWith(
+                                                  colorScheme:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? const ColorScheme.dark(
+                                                          primary: Color(
+                                                            0xff80cbc4,
+                                                          ),
+                                                        )
+                                                      : ColorScheme.light(
+                                                          primary:
+                                                              AppColor.primary,
                                                         ),
-                                                    child: child!,
-                                                  );
-                                                },
+                                                ),
+                                                child: child!,
                                               );
+                                            },
+                                          );
                                           controller.updateFromDate(
                                             selectedDate ?? fromDate,
                                           );
@@ -273,14 +279,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                                         },
                                       ),
                                     ),
-                                    Container(
-                                      height: 40,
-                                      width: 1,
-                                      color: Colors.grey[200],
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                      ),
-                                    ),
+                                    16.wGap,
                                     Expanded(
                                       child: FilterDateColumnWidget(
                                         title: "To",
@@ -290,31 +289,38 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                                           ),
                                         ),
                                         onTap: () async {
-                                          final selectedDate =
-                                              await showDatePicker(
-                                                barrierDismissible: false,
-                                                context: context,
-                                                firstDate: fromDate.add(
-                                                  const Duration(days: 1),
-                                                ),
-                                                lastDate: DateTime.now().add(
-                                                  const Duration(days: 200),
-                                                ),
-                                                initialDate: toDate,
-                                                builder: (context, child) {
-                                                  return Theme(
-                                                    data: Theme.of(context)
-                                                        .copyWith(
-                                                          colorScheme:
-                                                              ColorScheme.light(
-                                                                primary: AppColor
-                                                                    .primary,
-                                                              ),
+                                          final selectedDate = await showDatePicker(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            firstDate: fromDate.add(
+                                              const Duration(days: 1),
+                                            ),
+                                            lastDate: DateTime.now().add(
+                                              const Duration(days: 200),
+                                            ),
+                                            initialDate: toDate,
+                                            builder: (context, child) {
+                                              return Theme(
+                                                data: Theme.of(context).copyWith(
+                                                  colorScheme:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? const ColorScheme.dark(
+                                                          primary: Color(
+                                                            0xff80cbc4,
+                                                          ),
+                                                        )
+                                                      : ColorScheme.light(
+                                                          primary:
+                                                              AppColor.primary,
                                                         ),
-                                                    child: child!,
-                                                  );
-                                                },
+                                                ),
+                                                child: child!,
                                               );
+                                            },
+                                          );
 
                                           controller.updateToDate(
                                             selectedDate ?? toDate,
