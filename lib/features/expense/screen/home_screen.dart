@@ -126,7 +126,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     listenToSorting();
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFAFAFA),
       extendBody: true,
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -81,16 +81,17 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                   ? [const Color(0xffD32F2F), const Color(0xffEF5350)]
                   : [AppColor.primary, AppColor.test],
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(24),
             image: const DecorationImage(
               image: sp.Svg("assets/images/header_background.svg"),
+              opacity: 0.1, // Softer texture
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xff849D9B).withOpacity(0.78),
-                spreadRadius: -7,
+                color: const Color(0xff849D9B).withOpacity(0.4),
+                spreadRadius: -5,
                 offset: const Offset(0, 10),
-                blurRadius: 13.4,
+                blurRadius: 20,
               ),
             ],
           ),
@@ -124,9 +125,9 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                           Text(
                             "Rs ${cash.toCurrency}",
                             style: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 24,
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
                           4.wGap,
@@ -168,9 +169,9 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                             "Rs ${bank.toCurrency}",
                             overflow: TextOverflow.clip,
                             style: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 24,
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
                           4.wGap,

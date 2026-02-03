@@ -41,50 +41,110 @@ class ExpenseTile extends ConsumerWidget {
         showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
+            return Dialog(
               backgroundColor: Colors.white,
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return CreateUpdateDialog(
-                            isUpdate: true,
-                            expenseData: expenseData,
-                            isCashPreviously: expenseData?.isCash,
-                            docId: expenseData?.docId ?? "from expense tile",
-                          );
-                        },
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.update_outlined),
-                        4.wGap,
-                        const Text("Update", style: TextStyle(fontSize: 16)),
-                      ],
+              surfaceTintColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Manage Expense",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
                     ),
-                  ),
-                  25.hGap,
-                  InkWell(
-                    onTap: () {
-                      ExpenseQueryHelper.deleteExpense(expenseData!.docId!);
-                      Navigator.pop(context);
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.delete_outline_rounded),
-                        4.wGap,
-                        const Text("Delete", style: TextStyle(fontSize: 16)),
-                      ],
+                    16.hGap,
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return CreateUpdateDialog(
+                              isUpdate: true,
+                              expenseData: expenseData,
+                              isCashPreviously: expenseData?.isCash,
+                              docId: expenseData?.docId ?? "from expense tile",
+                            );
+                          },
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.edit_rounded,
+                              color: Colors.blueAccent,
+                              size: 20,
+                            ),
+                            12.wGap,
+                            const Text(
+                              "Update Expense",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                    12.hGap,
+                    InkWell(
+                      onTap: () {
+                        ExpenseQueryHelper.deleteExpense(expenseData!.docId!);
+                        Navigator.pop(context);
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.delete_rounded,
+                              color: Colors.redAccent,
+                              size: 20,
+                            ),
+                            12.wGap,
+                            const Text(
+                              "Delete Expense",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -93,13 +153,19 @@ class ExpenseTile extends ConsumerWidget {
 
       child: Ink(
         decoration: BoxDecoration(
-          color: const Color(0xfff7f6f2),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color.fromARGB(255, 246, 246, 246)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         padding: isHome == true
-            ? const EdgeInsets.symmetric(horizontal: 10, vertical: 8)
-            : const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+            : const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
             Container(
