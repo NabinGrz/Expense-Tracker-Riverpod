@@ -52,6 +52,7 @@ dependencies:
   # nepali_date_picker: ^6.0.2
   nepali_utils: ^3.0.8
   shared_preferences: ^2.5.4
+  google_fonts: ^8.0.0
 
 dev_dependencies:
   flutter_test:

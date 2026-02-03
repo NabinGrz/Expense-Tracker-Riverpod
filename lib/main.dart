@@ -1,6 +1,7 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'features/dashboard/dashboard.dart';
@@ -8,9 +9,7 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -24,7 +23,8 @@ class MyApp extends StatelessWidget {
       title: 'Expense Tracker App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
-        fontFamily: 'SFPRO',
+        textTheme: GoogleFonts.outfitTextTheme(),
+        fontFamily: GoogleFonts.outfit().fontFamily,
         appBarTheme: AppBarTheme(backgroundColor: AppColor.primary),
         useMaterial3: false,
       ),
