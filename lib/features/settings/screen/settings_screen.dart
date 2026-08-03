@@ -59,7 +59,7 @@ class SettingsScreen extends ConsumerWidget {
             _buildSettingCard(
               context,
               title: "App Theme",
-              subtitle: "Select your preferred theme",
+              subtitle: "Select your preferred theme mode",
               icon: Icons.brightness_6_rounded,
               iconColor: Colors.purpleAccent,
               trailing: Container(
@@ -109,6 +109,113 @@ class SettingsScreen extends ConsumerWidget {
                     }
                   },
                 ),
+              ),
+            ),
+            12.hGap,
+            // Accent Theme Color Picker
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: theme.cardColor,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.03),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColor.primary.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.palette_rounded,
+                          color: AppColor.primary,
+                          size: 24,
+                        ),
+                      ),
+                      16.wGap,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Accent Color",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.black87,
+                            ),
+                          ),
+                          4.hGap,
+                          Text(
+                            "Customize app highlight colors",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: isDark
+                                  ? Colors.grey[400]
+                                  : Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  14.hGap,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: AppColor.accentOptions.map((opt) {
+                      final color = opt['color'] as Color;
+                      final isSelected =
+                          state.accentColorValue == color.toARGB32();
+
+                      return GestureDetector(
+                        onTap: () {
+                          ref
+                              .read(settingsControllerProvider.notifier)
+                              .updateAccentColor(color.toARGB32());
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: color,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isSelected
+                                  ? (isDark ? Colors.white : Colors.black87)
+                                  : Colors.transparent,
+                              width: 2.5,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: color.withValues(alpha: 0.35),
+                                blurRadius: 6,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: isSelected
+                              ? const Icon(
+                                  Icons.check_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                )
+                              : null,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
               ),
             ),
             20.hGap,

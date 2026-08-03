@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/constants/firebase_constants.dart';
 import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +14,14 @@ class SettingsState {
   final int restaurantLimit;
   final ThemeMode themeMode;
   final Map<String, int> categoryLimits;
+  final int accentColorValue;
 
   SettingsState({
     required this.billingStartDay,
     required this.restaurantLimit,
     required this.themeMode,
     required this.categoryLimits,
+    required this.accentColorValue,
   });
 
   SettingsState copyWith({
@@ -26,12 +29,14 @@ class SettingsState {
     int? restaurantLimit,
     ThemeMode? themeMode,
     Map<String, int>? categoryLimits,
+    int? accentColorValue,
   }) {
     return SettingsState(
       billingStartDay: billingStartDay ?? this.billingStartDay,
       restaurantLimit: restaurantLimit ?? this.restaurantLimit,
       themeMode: themeMode ?? this.themeMode,
       categoryLimits: categoryLimits ?? this.categoryLimits,
+      accentColorValue: accentColorValue ?? this.accentColorValue,
     );
   }
 }
@@ -46,6 +51,7 @@ class SettingsController extends AsyncNotifier<SettingsState> {
   static const String _restaurantLimitKey = 'restaurant_limit';
   static const String _themeModeKey = 'theme_mode';
   static const String _categoryLimitsKey = 'category_limits';
+  static const String _accentColorKey = 'accent_color';
 
   StreamSubscription? _settingsSubscription;
 
@@ -55,6 +61,9 @@ class SettingsController extends AsyncNotifier<SettingsState> {
     final billingStartDay = prefs.getInt(_billingStartDayKey) ?? 7;
     final restaurantLimit = prefs.getInt(_restaurantLimitKey) ?? 4000;
     final themeModeIndex = prefs.getInt(_themeModeKey) ?? 0;
+    final accentColorVal = prefs.getInt(_accentColorKey) ?? 0xff428a78;
+
+    AppColor.primary = Color(accentColorVal);
 
     Map<String, int> initialCategoryLimits = {};
     final limitsJsonStr = prefs.getString(_categoryLimitsKey);
@@ -73,6 +82,7 @@ class SettingsController extends AsyncNotifier<SettingsState> {
       restaurantLimit: initialCategoryLimits['restaurant/cafe'] ?? restaurantLimit,
       themeMode: ThemeMode.values[themeModeIndex],
       categoryLimits: initialCategoryLimits,
+      accentColorValue: accentColorVal,
     );
 
     // Listen to real-time updates from Firebase Firestore
@@ -104,6 +114,13 @@ class SettingsController extends AsyncNotifier<SettingsState> {
               ? ThemeMode.values[rawThemeIndex]
               : (current?.themeMode ?? ThemeMode.system);
 
+          final accentColorVal =
+              (data['accent_color'] as num?)?.toInt() ??
+                  current?.accentColorValue ??
+                  0xff428a78;
+
+          AppColor.primary = Color(accentColorVal);
+
           Map<String, int> categoryLimits = {};
           if (data['category_limits'] != null) {
             final rawMap = data['category_limits'] as Map<String, dynamic>;
@@ -124,17 +141,42 @@ class SettingsController extends AsyncNotifier<SettingsState> {
             restaurantLimit: categoryLimits['restaurant/cafe'] ?? 4000,
             themeMode: themeMode,
             categoryLimits: categoryLimits,
+            accentColorValue: accentColorVal,
           );
 
           // Update local SharedPreferences cache
           final prefs = await SharedPreferences.getInstance();
           await prefs.setInt(_billingStartDayKey, billingStartDay);
           await prefs.setInt(_themeModeKey, themeMode.index);
+          await prefs.setInt(_accentColorKey, accentColorVal);
           await prefs.setString(_categoryLimitsKey, jsonEncode(categoryLimits));
 
           state = AsyncValue.data(newState);
         }
       });
+    }
+  }
+
+  Future<void> updateAccentColor(int colorValue) async {
+    try {
+      AppColor.primary = Color(colorValue);
+
+      final docRef = FirebaseQueryHelper.firebaseFireStore
+          .collection(FirebaseConstants.settingsCollection)
+          .doc(FirebaseConstants.settingsDocID);
+
+      await docRef.set({'accent_color': colorValue}, SetOptions(merge: true));
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_accentColorKey, colorValue);
+
+      if (state.value != null) {
+        state = AsyncValue.data(
+          state.value!.copyWith(accentColorValue: colorValue),
+        );
+      }
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
     }
   }
 

@@ -28,9 +28,11 @@ class MyApp extends ConsumerWidget {
       theme: ThemeData(
         brightness: Brightness.light,
         fontFamily: 'SFPRO',
+        primaryColor: AppColor.primary,
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColor.primary,
           brightness: Brightness.light,
+          primary: AppColor.primary,
         ),
         textTheme: const TextTheme().apply(
           fontFamily: 'SFPRO',
