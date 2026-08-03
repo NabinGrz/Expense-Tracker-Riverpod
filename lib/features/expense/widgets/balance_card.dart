@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/constants/firebase_constants.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
@@ -5,6 +7,7 @@ import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/features/expense/widgets/balance_update_dialog.dart';
 import 'package:expense_tracker_flutter/features/settings/controller/settings_controller.dart';
+import 'package:expense_tracker_flutter/helper/expense_query_helper.dart';
 import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -242,8 +245,17 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                   ),
                   8.wGap,
                   StreamBuilder(
-                    stream: widget.sortedExpenseSubject,
+                    stream: ExpenseQueryHelper.getExpense(),
                     builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Expanded(child: SizedBox());
+                      }
+                      final expenses = snapshot.data!.docs.map((doc) {
+                        final expense = Expense.fromJson(jsonEncode(doc.data()));
+                        expense.docId = doc.id;
+                        return expense;
+                      }).toList();
+
                       final billingStartDay =
                           ref
                               .watch(settingsControllerProvider)
@@ -254,8 +266,8 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                         startDay: billingStartDay,
                       );
                       final total =
-                          snapshot.data
-                              ?.where((element) {
+                          expenses
+                              .where((element) {
                                 final expenseDateEnglish = DateTime.parse(
                                   element.createAt,
                                 );
@@ -276,8 +288,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                                 return isWithinCycle && !isSaving;
                               })
                               .map((e) => e.amount)
-                              .sum() ??
-                          0;
+                              .sum();
 
                       return Expanded(
                         child: Row(

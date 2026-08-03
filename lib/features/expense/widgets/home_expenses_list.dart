@@ -36,13 +36,13 @@ class _HomeExpenseListState extends ConsumerState<HomeExpenseList> {
             return x.compareTo(y);
           });
 
-        return (homeEntity.expenses == null || homeEntity.expenses == [])
+        return (homeEntity.expenses == null || homeEntity.expenses?.isEmpty == true)
             ? const Padding(
                 padding: EdgeInsets.only(top: 40),
                 child: CustomEmptyState(
                   imagePath: "assets/images/empty_expenses.webp",
-                  title: "No expenses yet",
-                  subtitle: "Tap + to add your first expense",
+                  title: "No expenses found",
+                  subtitle: "Try searching with a different term",
                 ),
               )
             : ref.watch(hometabProvider) == SelectedTab.expense

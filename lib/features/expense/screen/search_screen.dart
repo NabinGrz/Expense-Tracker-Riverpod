@@ -91,9 +91,12 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return CupertinoPageScaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      child: RefreshIndicator.adaptive(
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      behavior: HitTestBehavior.translucent,
+      child: CupertinoPageScaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        child: RefreshIndicator.adaptive(
         color: AppColor.primary,
         onRefresh: () async {
           await _loadExpenses();
@@ -269,7 +272,8 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   void sortBy(bool isAmount) {

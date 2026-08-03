@@ -124,60 +124,65 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     listenToSorting();
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      extendBody: true,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          HapticFeedback.selectionClick();
-          showDialog(
-            context: context,
-            builder: (context) =>
-                const CreateUpdateDialog(isUpdate: false, docId: ""),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics(),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      behavior: HitTestBehavior.translucent,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        extendBody: true,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            HapticFeedback.selectionClick();
+            showDialog(
+              context: context,
+              builder: (context) =>
+                  const CreateUpdateDialog(isUpdate: false, docId: ""),
+            );
+          },
+          child: const Icon(Icons.add),
         ),
-        slivers: [
-          SliverHomeAppBar(onPressed: () {}),
-          // SliverToBoxAdapter(child: Text(NepaliDateTime.now().toString())),
-          CupertinoSliverRefreshControl(
-            onRefresh: () async {
-              HapticFeedback.lightImpact();
-              await FirebaseQueryHelper.getSingleDocumentAsFuture(
-                collectionPath: FirebaseConstants.balanceCollection,
-                docID: FirebaseConstants.balanceDocID,
-              );
-              if (mounted) {
-                controller.sortedExpenseSubject.add(originalExpenseList);
-                searchController.clear();
-                FocusScope.of(context).unfocus();
-              }
-            },
+        body: CustomScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              BalanceCard(
-                sortedExpenseSubject: controller.sortedExpenseSubject,
-              ),
-              const RestaurantAlertBanner(),
-              30.hGap,
-              const DateFilterRow(),
-              16.hGap,
-              HomeBodyContent(
-                controller: controller,
-                homeEntity: homeEntity,
-                searchController: searchController,
-                originalExpenseList: originalExpenseList,
-              ),
-            ]),
-          ),
-        ],
+          slivers: [
+            SliverHomeAppBar(onPressed: () {}),
+            // SliverToBoxAdapter(child: Text(NepaliDateTime.now().toString())),
+            CupertinoSliverRefreshControl(
+              onRefresh: () async {
+                HapticFeedback.lightImpact();
+                await FirebaseQueryHelper.getSingleDocumentAsFuture(
+                  collectionPath: FirebaseConstants.balanceCollection,
+                  docID: FirebaseConstants.balanceDocID,
+                );
+                if (mounted) {
+                  controller.sortedExpenseSubject.add(originalExpenseList);
+                  searchController.clear();
+                  FocusScope.of(context).unfocus();
+                }
+              },
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                BalanceCard(
+                  sortedExpenseSubject: controller.sortedExpenseSubject,
+                ),
+                const RestaurantAlertBanner(),
+                30.hGap,
+                const DateFilterRow(),
+                16.hGap,
+                HomeBodyContent(
+                  controller: controller,
+                  homeEntity: homeEntity,
+                  searchController: searchController,
+                  originalExpenseList: originalExpenseList,
+                ),
+              ]),
+            ),
+          ],
+        ),
       ),
     );
   }

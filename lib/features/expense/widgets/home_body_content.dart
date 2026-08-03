@@ -30,14 +30,20 @@ class HomeBodyContent extends ConsumerWidget {
         );
         List<Expense>? expenses = [];
         expenses = controller.dateWiseExpenses(expenses, snapshot, dateFilter);
-        return (expenses?.isEmpty != true)
-            ? HomeExpensesListContent(
-                homeEntity: homeEntity,
-                controller: controller,
-                searchController: searchController,
-                originalExpenseList: originalExpenseList,
-              )
-            : const HomeEmptyState();
+
+        final isSearching = searchController.text.trim().isNotEmpty;
+        final isOverallEmpty = (originalExpenseList.isEmpty) && (expenses?.isEmpty == true);
+
+        if (isOverallEmpty && !isSearching) {
+          return const HomeEmptyState();
+        }
+
+        return HomeExpensesListContent(
+          homeEntity: homeEntity,
+          controller: controller,
+          searchController: searchController,
+          originalExpenseList: originalExpenseList,
+        );
       },
     );
   }
