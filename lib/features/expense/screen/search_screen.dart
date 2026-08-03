@@ -382,21 +382,34 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                                                   : const Color(0xffE2E8F0)),
                                       ),
                                     ),
-                                    child: Text(
-                                      cat == 'All'
-                                          ? 'All'
-                                          : cat.capitalize(),
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: isSelected
-                                            ? FontWeight.bold
-                                            : FontWeight.w500,
-                                        color: isSelected
-                                            ? Colors.white
-                                            : (isDark
-                                                  ? const Color(0xffCBD5E1)
-                                                  : const Color(0xff475569)),
-                                      ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (cat != 'All') ...[
+                                          Image.asset(
+                                            cat.getIconPathByCategory,
+                                            height: 18,
+                                            width: 18,
+                                          ),
+                                          8.wGap,
+                                        ],
+                                        Text(
+                                          cat == 'All'
+                                              ? 'All'
+                                              : cat.capitalize(),
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: isSelected
+                                                ? FontWeight.bold
+                                                : FontWeight.w500,
+                                            color: isSelected
+                                                ? Colors.white
+                                                : (isDark
+                                                      ? const Color(0xffCBD5E1)
+                                                      : const Color(0xff475569)),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 );
