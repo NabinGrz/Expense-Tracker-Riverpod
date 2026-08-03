@@ -2,7 +2,6 @@ import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/features/settings/controller/settings_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'features/dashboard/dashboard.dart';
@@ -28,12 +27,16 @@ class MyApp extends ConsumerWidget {
       themeMode: themeMode,
       theme: ThemeData(
         brightness: Brightness.light,
+        fontFamily: 'SFPRO',
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColor.primary,
           brightness: Brightness.light,
         ),
-        textTheme: GoogleFonts.outfitTextTheme(ThemeData.light().textTheme),
-        fontFamily: GoogleFonts.outfit().fontFamily,
+        textTheme: const TextTheme().apply(
+          fontFamily: 'SFPRO',
+          bodyColor: const Color(0xff1E293B),
+          displayColor: const Color(0xff1E293B),
+        ),
         appBarTheme: AppBarTheme(
           backgroundColor: AppColor.primary,
           foregroundColor: Colors.white,
@@ -43,6 +46,7 @@ class MyApp extends ConsumerWidget {
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
+        fontFamily: 'SFPRO',
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColor.primary,
           brightness: Brightness.dark,
@@ -50,8 +54,11 @@ class MyApp extends ConsumerWidget {
           surface: AppColor.darkSurfaceCard,
           onSurface: AppColor.textLight,
         ).copyWith(secondary: AppColor.darkPrimary),
-        textTheme: GoogleFonts.outfitTextTheme(ThemeData.dark().textTheme),
-        fontFamily: GoogleFonts.outfit().fontFamily,
+        textTheme: const TextTheme().apply(
+          fontFamily: 'SFPRO',
+          bodyColor: Colors.white,
+          displayColor: Colors.white,
+        ),
         appBarTheme: AppBarTheme(
           backgroundColor: AppColor.darkSurfaceCard,
           foregroundColor: AppColor.textLight,
