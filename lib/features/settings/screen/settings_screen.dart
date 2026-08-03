@@ -5,6 +5,7 @@ import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/extension/string_extension.dart';
 import 'package:expense_tracker_flutter/features/savings/screen/savings_screen.dart';
 import 'package:expense_tracker_flutter/features/settings/controller/settings_controller.dart';
+import 'package:expense_tracker_flutter/features/settings/service/app_icon_service.dart';
 import 'package:expense_tracker_flutter/shared/widgets/custom_input_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -262,6 +263,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
             20.hGap,
+            _buildAppIconSection(context, ref),
+            20.hGap,
             _buildSectionHeader(context, "Billing Preferences"),
             _buildSettingCard(
               context,
@@ -409,6 +412,71 @@ class SettingsScreen extends ConsumerWidget {
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text("Error: $e")),
+      ),
+    );
+  }
+
+  Widget _buildAppIconSection(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColor.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.apps_rounded,
+                  color: AppColor.primary,
+                  size: 24,
+                ),
+              ),
+              16.wGap,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "App Icon",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                  4.hGap,
+                  Text(
+                    "Choose your home screen icon style",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          16.hGap,
+          _AppIconPicker(isDark: isDark),
+        ],
       ),
     );
   }
@@ -855,5 +923,127 @@ class SettingsScreen extends ConsumerWidget {
       default:
         return 'th';
     }
+  }
+}
+
+/// A self-contained stateful widget for the icon picker.
+/// Uses its own local state so parent doesn't need to manage selection.
+class _AppIconPicker extends StatefulWidget {
+  final bool isDark;
+  const _AppIconPicker({required this.isDark});
+
+  @override
+  State<_AppIconPicker> createState() => _AppIconPickerState();
+}
+
+class _AppIconPickerState extends State<_AppIconPicker> {
+  AppIconOption _selected = AppIconOption.defaultIcon;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final current = await AppIconService.getCurrentIcon();
+    if (mounted) setState(() { _selected = current; _loading = false; });
+  }
+
+  Future<void> _onSelect(AppIconOption option) async {
+    if (_selected == option) return;
+    setState(() => _selected = option);
+    final success = await AppIconService.switchIcon(option);
+    if (!success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Icon switching is not supported on this device.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      // revert on failure
+      final reverted = await AppIconService.getCurrentIcon();
+      if (mounted) setState(() => _selected = reverted);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) {
+      return const SizedBox(
+        height: 100,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    return Row(
+      children: AppIconOption.values.map((option) {
+        final isSelected = _selected == option;
+        return Expanded(
+          child: GestureDetector(
+            onTap: () => _onSelect(option),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              margin: const EdgeInsets.symmetric(horizontal: 5),
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: isSelected
+                      ? AppColor.primary
+                      : (widget.isDark
+                          ? Colors.grey[700]!
+                          : Colors.grey[200]!),
+                  width: isSelected ? 2.5 : 1.5,
+                ),
+                color: isSelected
+                    ? AppColor.primary.withValues(alpha: 0.08)
+                    : Colors.transparent,
+              ),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: Image.asset(
+                      option.previewAsset,
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  8.hGap,
+                  Text(
+                    option.label,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight:
+                          isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected
+                          ? AppColor.primary
+                          : (widget.isDark
+                              ? Colors.grey[300]
+                              : Colors.grey[700]),
+                    ),
+                  ),
+                  4.hGap,
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 200),
+                    opacity: isSelected ? 1.0 : 0.0,
+                    child: Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: AppColor.primary,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
   }
 }
