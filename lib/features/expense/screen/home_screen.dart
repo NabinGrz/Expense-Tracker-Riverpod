@@ -15,10 +15,10 @@ import '../../../models/expense_model.dart';
 import '../../../utils/expense_utils.dart';
 import '../entity/home_entity.dart';
 import '../widgets/balance_card.dart';
+import '../widgets/category_budget_banner.dart';
 import '../widgets/create_expense_dialog.dart';
 import '../widgets/date_filter_row.dart';
 import '../widgets/home_body_content.dart';
-import '../widgets/restaurant_alert_banner.dart';
 import '../widgets/sliver_home_app_bar.dart';
 
 final bottomNavBarProvider = StateProvider((ref) => 0);
@@ -169,7 +169,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 BalanceCard(
                   sortedExpenseSubject: controller.sortedExpenseSubject,
                 ),
-                const RestaurantAlertBanner(),
+                const CategoryBudgetBanner(),
                 20.hGap,
                 const DateFilterRow(),
                 20.hGap,

@@ -1,5 +1,8 @@
+import 'package:expense_tracker_flutter/constants/app_color.dart';
+import 'package:expense_tracker_flutter/constants/app_strings.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
+import 'package:expense_tracker_flutter/extension/string_extension.dart';
 import 'package:expense_tracker_flutter/features/savings/screen/savings_screen.dart';
 import 'package:expense_tracker_flutter/features/settings/controller/settings_controller.dart';
 import 'package:expense_tracker_flutter/shared/widgets/custom_input_dialog.dart';
@@ -8,6 +11,23 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
+
+  static const List<String> availableCategories = [
+    AppString.categoryFood,
+    AppString.categoryGrocery,
+    AppString.categoryRestaurant,
+    AppString.categoryKhaja,
+    AppString.categoryPetrol,
+    AppString.categoryPersonal,
+    AppString.categoryClothing,
+    AppString.categoryRent,
+    AppString.categoryTransport,
+    AppString.categoryUtils,
+    AppString.categoryElectricty,
+    AppString.categoryWater,
+    AppString.categoryMedicine,
+    AppString.categoryOther,
+  ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -169,25 +189,72 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             20.hGap,
-            _buildSectionHeader(context, "Budget Alerts"),
+            _buildSectionHeader(context, "Category Budget Limits"),
+            ...state.categoryLimits.entries.map((entry) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _buildSettingCard(
+                  context,
+                  title: "${entry.key.capitalize()} Limit",
+                  subtitle: "Alert limit: Rs ${entry.value.toCurrency}",
+                  icon: Icons.pie_chart_outline_rounded,
+                  iconColor: Colors.orangeAccent,
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.edit_rounded,
+                          size: 20,
+                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        ),
+                        onPressed: () {
+                          _showCategoryLimitDialog(
+                            context,
+                            ref,
+                            category: entry.key,
+                            currentLimit: entry.value,
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.delete_outline_rounded,
+                          size: 20,
+                          color: Colors.redAccent,
+                        ),
+                        onPressed: () {
+                          ref
+                              .read(settingsControllerProvider.notifier)
+                              .removeCategoryLimit(entry.key);
+                        },
+                      ),
+                    ],
+                  ),
+                  onTap: () => _showCategoryLimitDialog(
+                    context,
+                    ref,
+                    category: entry.key,
+                    currentLimit: entry.value,
+                  ),
+                ),
+              );
+            }),
             _buildSettingCard(
               context,
-              title: "Restaurant Budget Limit",
-              subtitle: "Alert limit: Rs ${state.restaurantLimit.toCurrency}",
-              icon: Icons.restaurant_rounded,
-              iconColor: Colors.orangeAccent,
-              trailing: IconButton(
-                icon: Icon(
-                  Icons.edit_rounded,
-                  color: isDark ? Colors.grey[400] : Colors.grey,
-                ),
-                onPressed: () {
-                  _showLimitEditDialog(context, ref, state.restaurantLimit);
-                },
+              title: "Add Category Budget",
+              subtitle: "Set a custom monthly limit for another category",
+              icon: Icons.add_circle_outline_rounded,
+              iconColor: AppColor.primary,
+              trailing: Icon(
+                Icons.add_rounded,
+                color: isDark ? Colors.white : AppColor.primary,
               ),
-              onTap: () =>
-                  _showLimitEditDialog(context, ref, state.restaurantLimit),
+              onTap: () {
+                _showAddCategoryLimitDialog(context, ref, state.categoryLimits);
+              },
             ),
+            40.hGap,
           ],
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -230,7 +297,7 @@ class SettingsScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.03),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -249,7 +316,7 @@ class SettingsScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: iconColor.withOpacity(0.1),
+                    color: iconColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(icon, color: iconColor, size: 24),
@@ -289,33 +356,34 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showLimitEditDialog(
+  void _showCategoryLimitDialog(
     BuildContext context,
-    WidgetRef ref,
-    int currentLimit,
-  ) {
+    WidgetRef ref, {
+    required String category,
+    required int currentLimit,
+  }) {
     final controller = TextEditingController(text: currentLimit.toString());
     showDialog(
       context: context,
       builder: (context) {
         return CustomInputDialog(
-          title: "Set Restaurant Limit",
+          title: "Set ${category.capitalize()} Limit",
           primaryButtonText: "Save",
           onPrimaryPressed: () {
             final newLimit = int.tryParse(controller.text);
-            if (newLimit != null) {
+            if (newLimit != null && newLimit > 0) {
               ref
                   .read(settingsControllerProvider.notifier)
-                  .updateRestaurantLimit(newLimit);
+                  .updateCategoryLimit(category, newLimit);
               Navigator.pop(context);
             }
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Monthly Alert Threshold",
-                style: TextStyle(
+              Text(
+                "Monthly Budget for ${category.capitalize()}",
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500,
@@ -341,6 +409,124 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  void _showAddCategoryLimitDialog(
+    BuildContext context,
+    WidgetRef ref,
+    Map<String, int> existingLimits,
+  ) {
+    final availableList = availableCategories
+        .where((cat) => !existingLimits.containsKey(cat))
+        .toList();
+
+    if (availableList.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("All categories already have budget limits!"),
+        ),
+      );
+      return;
+    }
+
+    String selectedCategory = availableList.first;
+    final controller = TextEditingController(text: "5000");
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            final isDark = Theme.of(context).brightness == Brightness.dark;
+            return CustomInputDialog(
+              title: "Add Category Budget",
+              primaryButtonText: "Add Limit",
+              onPrimaryPressed: () {
+                final newLimit = int.tryParse(controller.text);
+                if (newLimit != null && newLimit > 0) {
+                  ref
+                      .read(settingsControllerProvider.notifier)
+                      .updateCategoryLimit(selectedCategory, newLimit);
+                  Navigator.pop(context);
+                }
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Select Category",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  8.hGap,
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.grey[800] : const Color(0xffF1F5F9),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: selectedCategory,
+                        isExpanded: true,
+                        dropdownColor: isDark ? const Color(0xff1E293B) : Colors.white,
+                        items: availableList.map((cat) {
+                          return DropdownMenuItem(
+                            value: cat,
+                            child: Text(
+                              cat.capitalize(),
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: isDark ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (val) {
+                          if (val != null) {
+                            setState(() {
+                              selectedCategory = val;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  16.hGap,
+                  const Text(
+                    "Monthly Limit Amount",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  8.hGap,
+                  TextField(
+                    controller: controller,
+                    keyboardType: TextInputType.number,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                    decoration: CustomInputDecoration.inputDecoration(
+                      hintText: "E.g. 5000",
+                      prefixIcon: const Icon(Icons.currency_rupee, size: 20),
+                      isDark: isDark,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

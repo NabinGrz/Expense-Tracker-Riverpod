@@ -7,4 +7,6 @@ class FirebaseConstants {
   static const String expenseCategoryCollection = "expense-categories";
   static const String savingsCollection = "savings";
   static const String savingsDocID = "zQk5FbVD1l9bJr3oduy0";
+  static const String settingsCollection = "settings";
+  static const String settingsDocID = "app_settings";
 }
