@@ -19,31 +19,42 @@ class SearchNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void filterExpenses(String query) {
-    if (query.isEmpty) {
-      filteredDocuments = List.from(documents);
-    } else {
-      filteredDocuments = documents.where((doc) {
-        final expense = Expense.fromMap(doc.data() as Map<String, dynamic>);
-        return expense.name.toLowerCase().contains(query.toLowerCase());
-      }).toList();
-    }
+  String activeSearchQuery = '';
+  String activeCategory = 'All';
+
+  void _applyFilters() {
+    filteredDocuments = documents.where((doc) {
+      final expense = Expense.fromMap(doc.data() as Map<String, dynamic>);
+      final matchesQuery = activeSearchQuery.isEmpty ||
+          expense.name.toLowerCase().contains(activeSearchQuery.toLowerCase());
+      final matchesCategory = activeCategory == 'All' ||
+          expense.category.toLowerCase() == activeCategory.toLowerCase();
+      return matchesQuery && matchesCategory;
+    }).toList();
     notifyListeners();
+  }
+
+  void filterExpenses(String query) {
+    activeSearchQuery = query;
+    _applyFilters();
+  }
+
+  void filterByCategory(String category) {
+    activeCategory = category;
+    _applyFilters();
   }
 
   Future<void> fetchSearchResults(String query) async {
     isLoading = true;
+    activeSearchQuery = query;
     notifyListeners();
 
     final snapshot =
         await FirebaseFirestore.instance.collection('expenses').get();
 
-    List<DocumentSnapshot> filteredExpenses = snapshot.docs.where((doc) {
-      final name = doc['name'] as String;
-      return name.toLowerCase().contains(query);
-    }).toList();
     if (snapshot.docs.isNotEmpty) {
-      filteredDocuments = filteredExpenses;
+      documents = snapshot.docs;
+      _applyFilters();
       hasMoreData = false;
     } else {
       filteredDocuments = [];

@@ -359,13 +359,7 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                                     setState(() {
                                       _selectedCategory = cat;
                                     });
-                                    if (cat == 'All') {
-                                      searchProviderNotifier.filterExpenses(
-                                        _searchController.text,
-                                      );
-                                    } else {
-                                      searchProviderNotifier.filterExpenses(cat);
-                                    }
+                                    searchProviderNotifier.filterByCategory(cat);
                                   },
                                   child: AnimatedContainer(
                                     duration: const Duration(milliseconds: 200),
@@ -444,13 +438,19 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                 }
               }, childCount: watchSearchExpenses.filteredDocuments.length),
             ),
-            if (!watchSearchExpenses.hasMoreData &&
+            if (!watchSearchExpenses.isLoading &&
                 watchSearchExpenses.filteredDocuments.isEmpty)
-              const SliverToBoxAdapter(
-                child: CustomEmptyState(
-                  icon: CupertinoIcons.search,
-                  title: "No expenses found",
-                  subtitle: "Try adjusting your search query",
+              const SliverFillRemaining(
+                hasScrollBody: false,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 40),
+                  child: Center(
+                    child: CustomEmptyState(
+                      icon: CupertinoIcons.search,
+                      title: "No expenses found",
+                      subtitle: "Try adjusting your search query or filters",
+                    ),
+                  ),
                 ),
               ),
           ],
