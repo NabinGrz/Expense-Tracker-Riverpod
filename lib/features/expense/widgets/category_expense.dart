@@ -5,7 +5,6 @@ import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
 import 'package:expense_tracker_flutter/extension/string_extension.dart';
 import 'package:expense_tracker_flutter/features/expense/provider/category_expense_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

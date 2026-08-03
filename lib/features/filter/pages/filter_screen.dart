@@ -31,7 +31,6 @@ class FilterScreen extends ConsumerStatefulWidget {
 class _FilterScreenState extends ConsumerState<FilterScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _animation;
   final ScrollController _scrollController = ScrollController();
 
   List<Expense> expenses = [];
@@ -57,7 +56,6 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
       vsync: this,
     );
 
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
     ExpenseQueryHelper.getExpenseAsFuture()?.then((value) {
       expenses = value.docs
           .map((element) => Expense.fromJson(jsonEncode(element.data())))

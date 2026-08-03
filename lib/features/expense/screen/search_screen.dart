@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants/app_color.dart';
+import '../../../constants/firebase_constants.dart';
 import '../../../helper/expense_query_helper.dart';
 import '../../../models/expense_model.dart';
 import '../../../shared/widget/custom_empty_state.dart';
@@ -15,10 +16,11 @@ class SearchExpenseScreen extends ConsumerStatefulWidget {
   const SearchExpenseScreen({super.key});
 
   @override
-  _SearchExpenseScreenState createState() => _SearchExpenseScreenState();
+  ConsumerState<SearchExpenseScreen> createState() =>
+      SearchExpenseScreenState();
 }
 
-class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
+class SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
@@ -60,7 +62,7 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
       searchProviderNotifier.setLoading(true);
 
       final snapshot = await ExpenseQueryHelper.getPaginatedExpenseAsFuture(
-        collectionPath: 'expenses',
+        collectionPath: FirebaseConstants.expenseCollection,
         limit: 20,
         lastDocument: searchProviderNotifier.lastDocument,
       );
@@ -487,8 +489,8 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
         return aDate.compareTo(bDate);
       }
     });
-    searchProviderNotifier.updateSortedExpenses(
-      watchSearchExpenses.filteredDocuments,
+    searchProviderNotifier.sortFilteredDocuments(
+      List.from(watchSearchExpenses.filteredDocuments),
     );
   }
 }

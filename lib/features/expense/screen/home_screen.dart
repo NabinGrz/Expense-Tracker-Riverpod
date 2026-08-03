@@ -56,8 +56,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   void initState() {
-    _initialize();
     super.initState();
+    _initialize();
+    // listen to sort changes is called from build via ref.listen,
+    // which is the correct Riverpod pattern inside build/ConsumerState
   }
 
   @override
@@ -109,18 +111,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           ExpenseUtils.sortBy(listedExpense, SortBy.descending);
           controller.sortedExpenseSubject.add(listedExpense);
           break;
-        default:
       }
     });
   }
 
-  //  HapticFeedback.lightImpact();
-  //         FirebaseQueryHelper.getSingleDocumentAsFuture(
-  //             collectionPath: FirebaseConstants.balanceCollection,
-  //             docID: FirebaseConstants.balanceDocID);
-  //         controller.sortedExpenseSubject.add(originalExpenseList);
-  //         searchController.clear();
-  //         FocusScope.of(context).unfocus();
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -154,6 +148,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             CupertinoSliverRefreshControl(
               onRefresh: () async {
                 HapticFeedback.lightImpact();
+                final focusScope = FocusScope.of(context);
                 await FirebaseQueryHelper.getSingleDocumentAsFuture(
                   collectionPath: FirebaseConstants.balanceCollection,
                   docID: FirebaseConstants.balanceDocID,
@@ -161,7 +156,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 if (mounted) {
                   controller.sortedExpenseSubject.add(originalExpenseList);
                   searchController.clear();
-                  FocusScope.of(context).unfocus();
+                  focusScope.unfocus();
                 }
               },
             ),

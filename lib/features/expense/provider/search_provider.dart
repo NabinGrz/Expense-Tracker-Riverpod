@@ -1,34 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../models/expense_model.dart';
+import '../../../constants/firebase_constants.dart';
 
 final searchExpenseProvider = ChangeNotifierProvider((ref) => SearchNotifier());
 
 class SearchNotifier extends ChangeNotifier {
-  List<DocumentSnapshot> documents = [];
+  List<DocumentSnapshot> _documents = [];
   List<DocumentSnapshot> filteredDocuments = [];
-  List<DocumentSnapshot> sortedDocuments = [];
   DocumentSnapshot? lastDocument;
   bool isLoading = false;
   bool hasMoreData = true;
-
-  void setLoading(bool loading) {
-    isLoading = loading;
-    notifyListeners();
-  }
 
   String activeSearchQuery = '';
   String activeCategory = 'All';
 
   void _applyFilters() {
-    filteredDocuments = documents.where((doc) {
-      final expense = Expense.fromMap(doc.data() as Map<String, dynamic>);
-      final matchesQuery = activeSearchQuery.isEmpty ||
-          expense.name.toLowerCase().contains(activeSearchQuery.toLowerCase());
-      final matchesCategory = activeCategory == 'All' ||
-          expense.category.toLowerCase() == activeCategory.toLowerCase();
+    filteredDocuments = _documents.where((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      final name = (data['name'] as String? ?? '').toLowerCase();
+      final category = (data['category'] as String? ?? '').toLowerCase();
+
+      final matchesQuery =
+          activeSearchQuery.isEmpty || name.contains(activeSearchQuery.toLowerCase());
+      final matchesCategory =
+          activeCategory == 'All' || category == activeCategory.toLowerCase();
+
       return matchesQuery && matchesCategory;
     }).toList();
     notifyListeners();
@@ -44,29 +42,34 @@ class SearchNotifier extends ChangeNotifier {
     _applyFilters();
   }
 
+  void setLoading(bool loading) {
+    isLoading = loading;
+    notifyListeners();
+  }
+
+  void setHasMoreData(bool hasMore) {
+    hasMoreData = hasMore;
+    notifyListeners();
+  }
+
   Future<void> fetchSearchResults(String query) async {
     isLoading = true;
     activeSearchQuery = query;
     notifyListeners();
 
-    final snapshot =
-        await FirebaseFirestore.instance.collection('expenses').get();
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection(FirebaseConstants.expenseCollection)
+          .get();
 
-    if (snapshot.docs.isNotEmpty) {
-      documents = snapshot.docs;
+      _documents = snapshot.docs;
+      hasMoreData = false;
+    } catch (e) {
+      debugPrint('fetchSearchResults error: $e');
+    } finally {
+      isLoading = false;
       _applyFilters();
-      hasMoreData = false;
-    } else {
-      filteredDocuments = [];
-      hasMoreData = false;
     }
-    isLoading = false;
-    notifyListeners();
-  }
-
-  void updateSortedExpenses(List<DocumentSnapshot<Object?>> val) {
-    sortedDocuments = val;
-    notifyListeners();
   }
 
   void updateExpenses({
@@ -74,15 +77,24 @@ class SearchNotifier extends ChangeNotifier {
     DocumentSnapshot? newLastDocument,
     required bool hasMore,
   }) {
-    documents.addAll(newDocuments);
+    _documents = List.from(_documents)..addAll(newDocuments);
     lastDocument = newLastDocument;
     hasMoreData = hasMore;
-    filterExpenses('');
+    _applyFilters();
+  }
+
+  void sortFilteredDocuments(List<DocumentSnapshot> sorted) {
+    filteredDocuments = sorted;
     notifyListeners();
   }
 
-  void setHasMoreData(bool hasMore) {
-    hasMoreData = hasMore;
+  void reset() {
+    _documents = [];
+    filteredDocuments = [];
+    lastDocument = null;
+    hasMoreData = true;
+    activeSearchQuery = '';
+    activeCategory = 'All';
     notifyListeners();
   }
 }
