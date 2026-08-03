@@ -28,10 +28,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -51,11 +48,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBG_9JkeJ4ctbdsWYckYE3ArlRQ6R93aQs',
-    appId: '1:674926899901:ios:1d40a9bfed270a532afdd4',
+    appId: '1:674926899901:ios:a92882ef3f7424732afdd4',
     messagingSenderId: '674926899901',
     projectId: 'expensetracker-2e803',
     storageBucket: 'expensetracker-2e803.firebasestorage.app',
-    iosBundleId: 'com.expense.trackerFlutter',
+    iosBundleId: 'com.nabin.trackerFlutter',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -64,6 +61,15 @@ class DefaultFirebaseOptions {
     messagingSenderId: '674926899901',
     projectId: 'expensetracker-2e803',
     storageBucket: 'expensetracker-2e803.firebasestorage.app',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBG_9JkeJ4ctbdsWYckYE3ArlRQ6R93aQs',
+    appId: '1:674926899901:ios:1d40a9bfed270a532afdd4',
+    messagingSenderId: '674926899901',
+    projectId: 'expensetracker-2e803',
+    storageBucket: 'expensetracker-2e803.firebasestorage.app',
+    iosBundleId: 'com.expense.trackerFlutter',
   );
 
 }
