@@ -7,12 +7,13 @@ import 'package:expense_tracker_flutter/features/expense/widgets/balance_update_
 import 'package:expense_tracker_flutter/features/settings/controller/settings_controller.dart';
 import 'package:expense_tracker_flutter/helper/firebase_query_handler.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-// import 'package:nepali_date_picker/nepali_date_picker.dart';
 import 'package:nepali_utils/nepali_utils.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/expense_model.dart';
 import '../../../utils/expense_utils.dart';
@@ -29,29 +30,48 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
     with SingleTickerProviderStateMixin {
   NepaliDateTime nepaliNow = NepaliDateTime.now();
   DateTime englishNow = DateTime.now();
-  // int lastday = NepaliDateTime(now.year, now.month + 1, 0).day;
 
-  // late AnimationController animationController;
-  // late Animation<double> animation;
+  bool _isCashObscured = true;
+  bool _isBankObscured = true;
+
   @override
   void initState() {
-    // animationController = AnimationController(
-    //   vsync: this,
-    //   duration: const Duration(milliseconds: 500),
-    // );
-
-    // final curvedAnimation = CurvedAnimation(
-    //   parent: animationController,
-    //   curve: Curves.fastOutSlowIn,
-    // );
-    // animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
-    // animationController.forward();
     super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        _isCashObscured = prefs.getBool('is_cash_obscured') ?? true;
+        _isBankObscured = prefs.getBool('is_bank_obscured') ?? true;
+      });
+    }
+  }
+
+  Future<void> _toggleCashObscured() async {
+    HapticFeedback.selectionClick();
+    final newValue = !_isCashObscured;
+    setState(() {
+      _isCashObscured = newValue;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_cash_obscured', newValue);
+  }
+
+  Future<void> _toggleBankObscured() async {
+    HapticFeedback.selectionClick();
+    final newValue = !_isBankObscured;
+    setState(() {
+      _isBankObscured = newValue;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_bank_obscured', newValue);
   }
 
   @override
   void dispose() {
-    // animationController.dispose();
     super.dispose();
   }
 
@@ -122,12 +142,15 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            "Rs ${cash.toCurrency}",
-                            style: const TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
+                          InkWell(
+                            onTap: _toggleCashObscured,
+                            child: Text(
+                              _isCashObscured ? "Rs xxx" : "Rs ${cash.toCurrency}",
+                              style: const TextStyle(
+                                fontSize: 24,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
                           ),
                           4.wGap,
@@ -165,13 +188,16 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            "Rs ${bank.toCurrency}",
-                            overflow: TextOverflow.clip,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
+                          InkWell(
+                            onTap: _toggleBankObscured,
+                            child: Text(
+                              _isBankObscured ? "Rs xxx" : "Rs ${bank.toCurrency}",
+                              overflow: TextOverflow.clip,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
                           ),
                           4.wGap,

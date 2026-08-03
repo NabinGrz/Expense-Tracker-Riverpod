@@ -8,6 +8,7 @@ import 'package:expense_tracker_flutter/shared/widgets/custom_input_dialog.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SavingsScreen extends StatefulWidget {
   const SavingsScreen({super.key});
@@ -90,7 +91,32 @@ class _UpdateSavingsDialogState extends State<UpdateSavingsDialog> {
 }
 
 class _SavingsScreenState extends State<SavingsScreen> {
-  bool _isObscured = false;
+  bool _isObscured = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreference();
+  }
+
+  Future<void> _loadPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        _isObscured = prefs.getBool('is_savings_obscured') ?? true;
+      });
+    }
+  }
+
+  Future<void> _toggleObscured() async {
+    HapticFeedback.selectionClick();
+    final newValue = !_isObscured;
+    setState(() {
+      _isObscured = newValue;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_savings_obscured', newValue);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,12 +243,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           InkWell(
-                            onTap: () {
-                              HapticFeedback.selectionClick();
-                              setState(() {
-                                _isObscured = !_isObscured;
-                              });
-                            },
+                            onTap: _toggleObscured,
                             borderRadius: BorderRadius.circular(8),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 4),
@@ -232,7 +253,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                                 children: [
                                   Text(
                                     _isObscured
-                                        ? "Rs ••••••••"
+                                        ? "Rs xxx"
                                         : "Rs $formattedAmount",
                                     style: const TextStyle(
                                       fontSize: 32,
