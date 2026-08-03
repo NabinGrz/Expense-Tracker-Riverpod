@@ -63,6 +63,7 @@ class ExpenseAnalyticTabBar extends ConsumerWidget {
             borderRadius: BorderRadius.circular(10),
             onTap: () {
               HapticFeedback.selectionClick();
+              FocusManager.instance.primaryFocus?.unfocus();
               if (isFilter != true) {
                 ref.read(hometabProvider.notifier).selectTab(selectedTab);
                 ref.read(homeSortByProvider.notifier).selectSortBy(SortBy.none);

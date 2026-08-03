@@ -113,16 +113,16 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
               border: Border(
                 bottom: BorderSide(
                   color: isDark
-                      ? Colors.grey[800]!
-                      : Colors.grey.withOpacity(0.1),
+                      ? const Color(0xff334155)
+                      : Colors.black.withValues(alpha: 0.05),
                 ),
               ),
               automaticBackgroundVisibility: false,
               largeTitle: Text(
                 'All Expenses',
                 style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: .w700,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
                   color: isDark ? Colors.white : AppColor.primary,
                 ),
               ),
@@ -132,7 +132,7 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                   color: isDark ? Colors.white : AppColor.primary,
                 ),
                 elevation: 4,
-                shadowColor: Colors.black.withOpacity(0.1),
+                shadowColor: Colors.black.withValues(alpha: 0.1),
                 surfaceTintColor: theme.cardColor,
                 color: theme.cardColor,
                 shape: RoundedRectangleBorder(
@@ -195,41 +195,117 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
                   ];
                 },
               ),
-              bottom: _NavigationBarSearchField(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.grey[800] : Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                child: ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: _searchController,
+                  builder: (context, value, child) {
+                    final hasText = value.text.isNotEmpty;
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? const Color(0xff1E293B)
+                            : const Color(0xffF8FAFC),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: isDark
+                              ? (hasText
+                                  ? const Color(0xff3B82F6)
+                                  : const Color(0xff334155))
+                              : (hasText
+                                  ? const Color(0xff2563EB)
+                                  : const Color(0xffE2E8F0)),
+                          width: hasText ? 1.5 : 1.0,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black
+                                .withValues(alpha: isDark ? 0.25 : 0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: CupertinoSearchTextField(
-                    backgroundColor: Colors.transparent,
-                    controller: _searchController,
-                    placeholder: 'Search expenses...',
-                    placeholderStyle: TextStyle(
-                      color: isDark ? Colors.grey[500] : Colors.grey[400],
-                      fontSize: 15,
-                    ),
-                    style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    onSuffixTap: () {
-                      _searchController.clear();
-                      FocusScope.of(context).unfocus();
-                      _loadExpenses();
-                    },
-                  ),
+                      child: TextField(
+                        controller: _searchController,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white : const Color(0xff1E293B),
+                        ),
+                        decoration: InputDecoration(
+                          hintText: "Search expenses...",
+                          hintStyle: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: isDark
+                                ? const Color(0xff64748B)
+                                : const Color(0xff94A3B8),
+                          ),
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.only(left: 14, right: 10),
+                            child: Icon(
+                              Icons.search_rounded,
+                              size: 22,
+                              color: isDark
+                                  ? (hasText
+                                      ? const Color(0xff60A5FA)
+                                      : const Color(0xff64748B))
+                                  : (hasText
+                                      ? const Color(0xff2563EB)
+                                      : const Color(0xff94A3B8)),
+                            ),
+                          ),
+                          prefixIconConstraints: const BoxConstraints(
+                            minWidth: 40,
+                            minHeight: 40,
+                          ),
+                          suffixIcon: hasText
+                              ? InkWell(
+                                  onTap: () {
+                                    _searchController.clear();
+                                    FocusScope.of(context).unfocus();
+                                    _loadExpenses();
+                                  },
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 12),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: isDark
+                                            ? const Color(0xff334155)
+                                            : const Color(0xffE2E8F0),
+                                      ),
+                                      child: Icon(
+                                        Icons.close_rounded,
+                                        size: 14,
+                                        color: isDark
+                                            ? const Color(0xff94A3B8)
+                                            : const Color(0xff64748B),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : null,
+                          suffixIconConstraints: const BoxConstraints(
+                            minWidth: 36,
+                            minHeight: 36,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              // bottomMode: NavigationBarBottomMode.always,
             ),
             SliverToBoxAdapter(
               child: watchSearchExpenses.isLoading
@@ -294,28 +370,4 @@ class _SearchExpenseScreenState extends ConsumerState<SearchExpenseScreen>
       watchSearchExpenses.filteredDocuments,
     );
   }
-}
-
-class _NavigationBarSearchField extends StatelessWidget
-    implements PreferredSizeWidget {
-  final Widget child;
-  const _NavigationBarSearchField({required this.child});
-
-  static const double padding = 12.0;
-  static const double searchFieldHeight = 35.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: padding,
-        vertical: padding,
-      ),
-      child: SizedBox(height: searchFieldHeight, child: child),
-    );
-  }
-
-  @override
-  Size get preferredSize =>
-      const Size.fromHeight(searchFieldHeight + padding * 2);
 }

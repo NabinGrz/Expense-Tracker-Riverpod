@@ -40,6 +40,7 @@ class _DashboardState extends ConsumerState<Dashboard> {
         elevation: 20,
         currentIndex: currentIndex,
         onTap: (value) {
+          FocusManager.instance.primaryFocus?.unfocus();
           ref.read(bottomNavBarProvider.notifier).state = value;
         },
         backgroundColor: Theme.of(context).cardColor,
