@@ -235,11 +235,19 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                                 );
                                 final expenseDateNepali = expenseDateEnglish
                                     .toNepaliDateTime();
-                                return expenseDateNepali.compareTo(
+                                final isWithinCycle =
+                                    expenseDateNepali.compareTo(
                                           cycle.start,
                                         ) >=
                                         0 &&
                                     expenseDateNepali.compareTo(cycle.end) < 0;
+                                final category = element.category
+                                    .toLowerCase()
+                                    .trim();
+                                final isSaving =
+                                    category == 'saving' ||
+                                    category == 'savings';
+                                return isWithinCycle && !isSaving;
                               })
                               .map((e) => e.amount)
                               .sum() ??
