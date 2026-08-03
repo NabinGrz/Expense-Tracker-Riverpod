@@ -240,7 +240,7 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
                     color: isDark
                         ? const Color(0xff1E293B)
@@ -264,8 +264,8 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
                     children: [
                       // Category Avatar Icon
                       Container(
-                        width: 40,
-                        height: 40,
+                        width: 44,
+                        height: 44,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
@@ -275,78 +275,86 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
                         ),
                         child: Image.asset(
                           category.key.getIconPathByCategory,
-                          height: 22,
-                          width: 22,
+                          height: 24,
+                          width: 24,
                           fit: BoxFit.contain,
                         ),
                       ),
-                      12.wGap,
-                      // Info & Progress Bar
+                      14.wGap,
+                      // Category Name and transaction count
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  category.key.capitalize(),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: isDark
-                                        ? Colors.white
-                                        : const Color(0xff1E293B),
-                                  ),
-                                ),
-                                Text(
-                                  "$percentageStr%",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: isDark
-                                        ? Colors.grey[400]
-                                        : const Color(0xff64748B),
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              category.key.capitalize(),
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: isDark
+                                    ? Colors.white
+                                    : const Color(0xff1E293B),
+                              ),
                             ),
-                            6.hGap,
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(6),
-                              child: LinearProgressIndicator(
-                                value: percentageNum.clamp(0.0, 1.0),
-                                minHeight: 6,
-                                backgroundColor: isDark
-                                    ? const Color(0xff334155)
-                                    : const Color(0xffE2E8F0),
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  categoryColor,
-                                ),
+                            3.hGap,
+                            Text(
+                              "${expenses.length} transaction${expenses.length == 1 ? '' : 's'}",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: isDark
+                                    ? const Color(0xff94A3B8)
+                                    : const Color(0xff64748B),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      14.wGap,
-                      // Amount & Arrow
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                      // Percentage Badge and Amount
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            "Rs ${amount.toCurrency}",
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: categoryColor.withValues(
+                                alpha: isDark ? 0.2 : 0.1,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              "$percentageStr%",
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: isDark ? Colors.white : categoryColor,
+                              ),
                             ),
                           ),
-                          4.hGap,
-                          Icon(
-                            Icons.chevron_right_rounded,
-                            size: 16,
-                            color: isDark
-                                ? Colors.grey[500]
-                                : const Color(0xff94A3B8),
+                          12.wGap,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Rs ${amount.toCurrency}",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark ? Colors.white : const Color(0xff1E293B),
+                                ),
+                              ),
+                              2.hGap,
+                              Icon(
+                                Icons.chevron_right_rounded,
+                                size: 16,
+                                color: isDark
+                                    ? Colors.grey[500]
+                                    : const Color(0xff94A3B8),
+                              ),
+                            ],
                           ),
                         ],
                       ),
