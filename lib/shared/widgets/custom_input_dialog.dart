@@ -24,6 +24,7 @@ class CustomInputDialog extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       backgroundColor: theme.cardColor,
       elevation: 8,
@@ -41,9 +42,14 @@ class CustomInputDialog extends StatelessWidget {
                 color: isDark ? Colors.white : Colors.black87,
               ),
             ),
-            20.hGap,
-            child,
-            24.hGap,
+            16.hGap,
+            Flexible(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: child,
+              ),
+            ),
+            16.hGap,
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -71,7 +77,8 @@ class CustomInputDialog extends StatelessWidget {
                   onPressed: isPrimaryButtonEnabled ? onPrimaryPressed : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.primary,
-                    disabledBackgroundColor: AppColor.primary.withOpacity(0.5),
+                    disabledBackgroundColor:
+                        AppColor.primary.withValues(alpha: 0.5),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

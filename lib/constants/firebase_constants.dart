@@ -9,4 +9,5 @@ class FirebaseConstants {
   static const String savingsDocID = "zQk5FbVD1l9bJr3oduy0";
   static const String settingsCollection = "settings";
   static const String settingsDocID = "app_settings";
+  static const String savingsGoalsCollection = "savings_goals";
 }

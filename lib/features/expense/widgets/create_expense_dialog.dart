@@ -105,16 +105,17 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
               );
             }
           },
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
               children: [
                 _buildLabel("Expense Details"),
                 8.hGap,
                 TextFormField(
                   controller: expenseNameController,
-                  keyboardType: TextInputType.name,
+                  autocorrect: false,
+                  enableSuggestions: false,
+                  keyboardType: TextInputType.text,
                   style: const TextStyle(fontWeight: FontWeight.w600),
                   decoration: CustomInputDecoration.inputDecoration(
                     hintText: "What was this for?",
@@ -143,7 +144,11 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                 8.hGap,
                 TextFormField(
                   controller: expenseAmountController,
-                  keyboardType: TextInputType.number,
+                  autocorrect: false,
+                  enableSuggestions: false,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   style: const TextStyle(fontWeight: FontWeight.w600),
                   decoration: CustomInputDecoration.inputDecoration(
                     hintText: "Amount (Rs)",
@@ -236,7 +241,7 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                                   ),
                                   12.wGap,
                                   Text(
-                                    e,
+                                    e.capitalize(),
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -274,67 +279,124 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                     );
                   },
                 ),
-                20.hGap,
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: watch.expenseEntity?.isCash == true
-                        ? AppColor.primary.withOpacity(0.1)
-                        : (isDark ? const Color(0xff333333) : Colors.grey[100]),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: watch.expenseEntity?.isCash == true
-                          ? AppColor.primary
-                          : Colors.transparent,
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            watch.expenseEntity?.isCash == true
-                                ? Icons.account_balance_wallet
-                                : Icons.credit_card,
+                16.hGap,
+                _buildLabel("Payment Method"),
+                8.hGap,
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            controller.updateIsCash(true);
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
                             color: watch.expenseEntity?.isCash == true
-                                ? AppColor.primary
-                                : Colors.grey[600],
-                          ),
-                          12.wGap,
-                          Text(
-                            "Paid via Cash",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
+                                ? AppColor.primary.withValues(alpha: 0.12)
+                                : (isDark
+                                      ? const Color(0xff333333)
+                                      : const Color(0xffF9FAFB)),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
                               color: watch.expenseEntity?.isCash == true
                                   ? AppColor.primary
                                   : (isDark
-                                        ? Colors.grey[400]
-                                        : Colors.grey[700]),
+                                        ? Colors.grey[700]!
+                                        : const Color(0xffE5E7EB)),
+                              width: watch.expenseEntity?.isCash == true
+                                  ? 1.5
+                                  : 1.0,
                             ),
                           ),
-                        ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "assets/images/dollar.png",
+                                height: 18,
+                                width: 18,
+                              ),
+                              8.wGap,
+                              Text(
+                                "Cash",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: watch.expenseEntity?.isCash == true
+                                      ? AppColor.primary
+                                      : (isDark
+                                            ? Colors.grey[300]
+                                            : Colors.grey[800]),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      Switch.adaptive(
-                        activeColor: AppColor.primary,
-                        value: watch.expenseEntity?.isCash ?? false,
-                        onChanged: (val) {
+                    ),
+                    12.wGap,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
                           setState(() {
-                            controller.updateIsCash(val);
+                            controller.updateIsCash(false);
                           });
                         },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: watch.expenseEntity?.isCash == false
+                                ? AppColor.primary.withValues(alpha: 0.12)
+                                : (isDark
+                                      ? const Color(0xff333333)
+                                      : const Color(0xffF9FAFB)),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: watch.expenseEntity?.isCash == false
+                                  ? AppColor.primary
+                                  : (isDark
+                                        ? Colors.grey[700]!
+                                        : const Color(0xffE5E7EB)),
+                              width: watch.expenseEntity?.isCash == false
+                                  ? 1.5
+                                  : 1.0,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "assets/images/bank.png",
+                                height: 18,
+                                width: 18,
+                              ),
+                              8.wGap,
+                              Text(
+                                "Bank",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: watch.expenseEntity?.isCash == false
+                                      ? AppColor.primary
+                                      : (isDark
+                                            ? Colors.grey[300]
+                                            : Colors.grey[800]),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ),
         );
       },
     );
