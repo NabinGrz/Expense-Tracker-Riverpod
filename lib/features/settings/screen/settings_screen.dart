@@ -172,48 +172,91 @@ class SettingsScreen extends ConsumerWidget {
                   14.hGap,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: AppColor.accentOptions.map((opt) {
-                      final color = opt['color'] as Color;
-                      final isSelected =
-                          state.accentColorValue == color.toARGB32();
+                    children: [
+                      ...AppColor.accentOptions.map((opt) {
+                        final color = opt['color'] as Color;
+                        final isSelected =
+                            state.accentColorValue == color.toARGB32();
 
-                      return GestureDetector(
+                        return GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(settingsControllerProvider.notifier)
+                                .updateAccentColor(color.toARGB32());
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isSelected
+                                    ? (isDark ? Colors.white : Colors.black87)
+                                    : Colors.transparent,
+                                width: 2.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: color.withValues(alpha: 0.35),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: isSelected
+                                ? const Icon(
+                                    Icons.check_rounded,
+                                    color: Colors.white,
+                                    size: 18,
+                                  )
+                                : null,
+                          ),
+                        );
+                      }),
+                      // Rainbow Custom Color Picker Button
+                      GestureDetector(
                         onTap: () {
-                          ref
-                              .read(settingsControllerProvider.notifier)
-                              .updateAccentColor(color.toARGB32());
+                          _showCustomColorPickerDialog(
+                            context,
+                            ref,
+                            state.accentColorValue,
+                          );
                         },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 40,
-                          height: 40,
+                        child: Container(
+                          width: 38,
+                          height: 38,
                           decoration: BoxDecoration(
-                            color: color,
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isSelected
-                                  ? (isDark ? Colors.white : Colors.black87)
-                                  : Colors.transparent,
-                              width: 2.5,
+                            gradient: const SweepGradient(
+                              colors: [
+                                Colors.red,
+                                Colors.amber,
+                                Colors.green,
+                                Colors.cyan,
+                                Colors.blue,
+                                Colors.purple,
+                                Colors.red,
+                              ],
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: color.withValues(alpha: 0.35),
+                                color: Colors.black
+                                    .withValues(alpha: isDark ? 0.4 : 0.15),
                                 blurRadius: 6,
                                 offset: const Offset(0, 3),
                               ),
                             ],
                           ),
-                          child: isSelected
-                              ? const Icon(
-                                  Icons.check_rounded,
-                                  color: Colors.white,
-                                  size: 20,
-                                )
-                              : null,
+                          child: const Icon(
+                            Icons.tune_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
                         ),
-                      );
-                    }).toList(),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -629,6 +672,165 @@ class SettingsScreen extends ConsumerWidget {
                       prefixIcon: const Icon(Icons.currency_rupee, size: 20),
                       isDark: isDark,
                     ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showCustomColorPickerDialog(
+    BuildContext context,
+    WidgetRef ref,
+    int currentColorValue,
+  ) {
+    Color selectedColor = Color(currentColorValue);
+    final hexController = TextEditingController(
+      text: selectedColor.toARGB32().toRadixString(16).substring(2).toUpperCase(),
+    );
+
+    final List<Color> swatchPalette = [
+      const Color(0xff428a78), // Teal Emerald
+      const Color(0xff2563EB), // Sapphire Blue
+      const Color(0xff7C3AED), // Amethyst Purple
+      const Color(0xffE11D48), // Ruby Rose
+      const Color(0xffD97706), // Sunset Amber
+      const Color(0xff475569), // Midnight Slate
+      const Color(0xff059669), // Mint Green
+      const Color(0xff0891B2), // Cyan
+      const Color(0xff4F46E5), // Indigo
+      const Color(0xffC026D3), // Magenta
+      const Color(0xffDC2626), // Crimson Red
+      const Color(0xffEA580C), // Bright Orange
+      const Color(0xffCA8A04), // Warm Yellow
+      const Color(0xff65A30D), // Lime
+      const Color(0xff16A34A), // Emerald Green
+      const Color(0xff0284C7), // Sky Blue
+    ];
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return CustomInputDialog(
+              title: "Custom Accent Color",
+              primaryButtonText: "Apply Accent",
+              onPrimaryPressed: () {
+                ref
+                    .read(settingsControllerProvider.notifier)
+                    .updateAccentColor(selectedColor.toARGB32());
+                Navigator.pop(context);
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: selectedColor,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: selectedColor.withValues(alpha: 0.4),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                      ),
+                      14.wGap,
+                      Expanded(
+                        child: TextField(
+                          controller: hexController,
+                          maxLength: 6,
+                          autocorrect: false,
+                          enableSuggestions: false,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: isDark ? Colors.white : Colors.black87,
+                            letterSpacing: 1.5,
+                          ),
+                          decoration: CustomInputDecoration.inputDecoration(
+                            hintText: "HEX (e.g. FF5722)",
+                            prefixIcon: const Icon(Icons.numbers_rounded, size: 20),
+                            isDark: isDark,
+                          ).copyWith(counterText: ""),
+                          onChanged: (val) {
+                            if (val.length == 6) {
+                              try {
+                                final colorInt = int.parse("FF$val", radix: 16);
+                                setState(() {
+                                  selectedColor = Color(colorInt);
+                                });
+                              } catch (_) {}
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  16.hGap,
+                  Text(
+                    "PRESET SWATCHES",
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                  12.hGap,
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: swatchPalette.map((color) {
+                      final isSelected = selectedColor.toARGB32() == color.toARGB32();
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedColor = color;
+                            hexController.text = color
+                                .toARGB32()
+                                .toRadixString(16)
+                                .substring(2)
+                                .toUpperCase();
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 150),
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: color,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isSelected
+                                  ? (isDark ? Colors.white : Colors.black87)
+                                  : Colors.transparent,
+                              width: 2.5,
+                            ),
+                          ),
+                          child: isSelected
+                              ? const Icon(
+                                  Icons.check_rounded,
+                                  color: Colors.white,
+                                  size: 18,
+                                )
+                              : null,
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ],
               ),
