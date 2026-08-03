@@ -34,4 +34,6 @@ class AppString {
   static const String categorySoap = "soap";
   static const String categoryRestaurant = "restaurant/cafe";
   static const String categoryKhanepaniBill = "khanepani bill";
+  static const String categorySaving = "saving";
+  static const String categorySavings = "savings";
 }

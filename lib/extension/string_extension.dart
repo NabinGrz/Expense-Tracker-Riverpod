@@ -78,6 +78,9 @@ extension ImagePathExtension on String {
         return "assets/images/restaurant.webp";
       case AppString.categoryKhanepaniBill:
         return "assets/images/khanepanibill.webp";
+      case AppString.categorySaving:
+      case AppString.categorySavings:
+        return "assets/images/dollar.png";
       default:
         return "assets/images/bill.png";
     }
@@ -141,6 +144,9 @@ extension ImagePathExtension on String {
         return Colors.yellow;
       case AppString.categorySubinExpense:
         return Colors.red;
+      case AppString.categorySaving:
+      case AppString.categorySavings:
+        return Colors.teal;
       default:
         return Colors.orange;
     }

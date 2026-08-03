@@ -174,9 +174,18 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                 StreamBuilder(
                   stream: ExpenseQueryHelper.getExpenseCategory(),
                   builder: (context, snapshot) {
-                    final categories =
+                    final rawCategories =
                         snapshot.data?.docs.first.data()['expense_type']
                             as List?;
+                    final categoriesList =
+                        rawCategories != null
+                            ? List<String>.from(
+                              rawCategories.map((e) => e.toString()),
+                            )
+                            : <String>[];
+                    if (!categoriesList.contains('saving')) {
+                      categoriesList.add('saving');
+                    }
 
                     // Improved Category Selector
                     return Container(
@@ -215,7 +224,7 @@ class _CreateUpdateDialogState extends ConsumerState<CreateUpdateDialog> {
                           ),
                           dropdownColor: theme.cardColor,
                           initialValue: watch.expenseEntity?.category,
-                          items: categories?.map((e) {
+                          items: categoriesList.map((e) {
                             return DropdownMenuItem(
                               value: e,
                               child: Row(

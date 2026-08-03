@@ -1,5 +1,6 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/features/expense/screen/search_screen.dart';
+import 'package:expense_tracker_flutter/features/savings/screen/savings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,12 +19,23 @@ class Dashboard extends ConsumerStatefulWidget {
 class _DashboardState extends ConsumerState<Dashboard> {
   int get currentIndex => ref.watch(bottomNavBarProvider);
 
+  Widget _getBody() {
+    switch (currentIndex) {
+      case 0:
+        return const HomeScreen();
+      case 1:
+        return const SearchExpenseScreen();
+      case 2:
+        return const SavingsScreen();
+      default:
+        return const HomeScreen();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: currentIndex == 0
-          ? const HomeScreen()
-          : const SearchExpenseScreen(),
+      body: _getBody(),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 20,
         currentIndex: currentIndex,
@@ -44,6 +56,10 @@ class _DashboardState extends ConsumerState<Dashboard> {
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.search, size: 25),
             label: "Search",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.savings_rounded, size: 25),
+            label: "Savings",
           ),
         ],
       ),

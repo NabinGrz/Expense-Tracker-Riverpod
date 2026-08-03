@@ -1,5 +1,6 @@
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
 import 'package:expense_tracker_flutter/extension/sizebox_extension.dart';
+import 'package:expense_tracker_flutter/features/savings/screen/savings_screen.dart';
 import 'package:expense_tracker_flutter/features/settings/controller/settings_controller.dart';
 import 'package:expense_tracker_flutter/shared/widgets/custom_input_dialog.dart';
 import 'package:flutter/material.dart';
@@ -144,6 +145,28 @@ class SettingsScreen extends ConsumerWidget {
                   },
                 ),
               ),
+            ),
+            20.hGap,
+            _buildSectionHeader(context, "Savings & Goals"),
+            _buildSettingCard(
+              context,
+              title: "Total Savings Overview",
+              subtitle: "Manage and deposit to accumulated savings",
+              icon: Icons.savings_rounded,
+              iconColor: Colors.teal,
+              trailing: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 16,
+                color: isDark ? Colors.grey[400] : Colors.grey,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SavingsScreen(),
+                  ),
+                );
+              },
             ),
             20.hGap,
             _buildSectionHeader(context, "Budget Alerts"),
