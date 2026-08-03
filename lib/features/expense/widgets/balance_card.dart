@@ -72,10 +72,6 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
     await prefs.setBool('is_bank_obscured', newValue);
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +242,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withValues(alpha: 0.15),
                     ),
                     child: SvgPicture.asset("assets/images/up_arrow.svg"),
                   ),

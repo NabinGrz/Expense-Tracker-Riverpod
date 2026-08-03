@@ -123,6 +123,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   //         FocusScope.of(context).unfocus();
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     listenToSorting();
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

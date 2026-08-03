@@ -211,8 +211,8 @@ class _FilterScreenState extends ConsumerState<FilterScreen>
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(
-                              isDark ? 0.3 : 0.04,
+                            color: Colors.black.withValues(
+                              alpha: isDark ? 0.3 : 0.04,
                             ),
                             blurRadius: 15,
                             offset: const Offset(0, 5),

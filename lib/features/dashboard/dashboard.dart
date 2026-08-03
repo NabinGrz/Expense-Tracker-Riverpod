@@ -36,33 +36,79 @@ class _DashboardState extends ConsumerState<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _getBody(),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 20,
-        currentIndex: currentIndex,
-        onTap: (value) {
-          FocusManager.instance.primaryFocus?.unfocus();
-          ref.read(bottomNavBarProvider.notifier).state = value;
-        },
-        backgroundColor: Theme.of(context).cardColor,
-        selectedItemColor: AppColor.primary,
-        unselectedItemColor: Theme.of(context).brightness == Brightness.dark
-            ? Colors.grey[400]
-            : CupertinoColors.systemGrey,
-        enableFeedback: true,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home, size: 25),
-            label: "Home",
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(
+                alpha: Theme.of(context).brightness == Brightness.dark
+                    ? 0.3
+                    : 0.05,
+              ),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          elevation: 0,
+          currentIndex: currentIndex,
+          onTap: (value) {
+            FocusManager.instance.primaryFocus?.unfocus();
+            ref.read(bottomNavBarProvider.notifier).state = value;
+          },
+          backgroundColor: Colors.transparent,
+          selectedItemColor: AppColor.primary,
+          unselectedItemColor: Theme.of(context).brightness == Brightness.dark
+              ? Colors.grey[500]
+              : const Color(0xff94A3B8),
+          selectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 12,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.search, size: 25),
-            label: "Search",
+          unselectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 11,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.savings_rounded, size: 25),
-            label: "Savings",
-          ),
-        ],
+          type: BottomNavigationBarType.fixed,
+          enableFeedback: true,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: EdgeInsets.only(bottom: 4),
+                child: Icon(CupertinoIcons.home, size: 24),
+              ),
+              activeIcon: Padding(
+                padding: EdgeInsets.only(bottom: 4),
+                child: Icon(CupertinoIcons.house_fill, size: 24),
+              ),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: EdgeInsets.only(bottom: 4),
+                child: Icon(CupertinoIcons.search, size: 24),
+              ),
+              activeIcon: Padding(
+                padding: EdgeInsets.only(bottom: 4),
+                child: Icon(CupertinoIcons.search, size: 26),
+              ),
+              label: "Search",
+            ),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: EdgeInsets.only(bottom: 4),
+                child: Icon(Icons.savings_outlined, size: 24),
+              ),
+              activeIcon: Padding(
+                padding: EdgeInsets.only(bottom: 4),
+                child: Icon(Icons.savings_rounded, size: 24),
+              ),
+              label: "Savings",
+            ),
+          ],
+        ),
       ),
     );
   }

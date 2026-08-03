@@ -36,7 +36,7 @@ class CustomEmptyState extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color: isDark
-                      ? Colors.grey[800]!.withOpacity(0.3)
+                      ? Colors.grey[800]!.withValues(alpha: 0.3)
                       : Colors.grey[100],
                   shape: BoxShape.circle,
                 ),

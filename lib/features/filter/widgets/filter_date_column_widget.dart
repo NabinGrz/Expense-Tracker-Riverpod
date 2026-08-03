@@ -28,7 +28,9 @@ class FilterDateColumnWidget extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         decoration: BoxDecoration(
-          color: isDark ? Colors.grey[800]!.withOpacity(0.5) : Colors.grey[50],
+          color: isDark
+              ? Colors.grey[800]!.withValues(alpha: 0.5)
+              : Colors.grey[50],
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isDark ? Colors.grey[700]! : Colors.grey[200]!,
