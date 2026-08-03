@@ -86,7 +86,7 @@ class ExpenseTile extends ConsumerWidget {
                           horizontal: 16,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.blueAccent.withOpacity(0.1),
+                          color: Colors.blueAccent.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -124,7 +124,7 @@ class ExpenseTile extends ConsumerWidget {
                           horizontal: 16,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.redAccent.withOpacity(0.1),
+                          color: Colors.redAccent.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -155,127 +155,134 @@ class ExpenseTile extends ConsumerWidget {
         );
       },
 
-      child: Ink(
+      child: Container(
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isDark ? const Color(0xff334155) : const Color(0xffF1F5F9),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
+              color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
               blurRadius: 10,
-              offset: const Offset(0, 4),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
-        padding: isHome == true
-            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
-            : const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
+            // Category Icon Avatar
             Container(
-              padding: const EdgeInsets.all(6),
+              width: 44,
+              height: 44,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    expenseData?.category.getColorByCategory.withOpacity(0.5) ??
-                        Colors.red,
-                    expenseData?.category.getColorByCategory.withOpacity(0.7) ??
-                        Colors.red,
-                    expenseData?.category.getColorByCategory.withOpacity(
-                          0.95,
-                        ) ??
-                        Colors.red,
-                  ],
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                ),
+                color: (expenseData?.category.getColorByCategory ?? Colors.teal)
+                    .withValues(alpha: isDark ? 0.25 : 0.12),
               ),
               child: Image.asset(
                 expenseData?.category.getIconPathByCategory ?? "",
                 fit: BoxFit.contain,
-                height: 32,
-                width: 32,
+                height: 24,
+                width: 24,
               ),
             ),
-            12.wGap,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.4,
-                  child: Text(
+            14.wGap,
+            // Title, Category & Date
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
                     "${expenseData?.name.capitalize()}",
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1.4,
-                      color: isDark ? Colors.white : Colors.black87,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : const Color(0xff1E293B),
                     ),
                   ),
-                ),
-                Text(
-                  "${expenseData?.category}",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: isDark ? Colors.grey[400] : const Color(0xff666666),
-                    letterSpacing: 1.1,
+                  2.hGap,
+                  Text(
+                    "${expenseData?.category.capitalize()}",
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? const Color(0xff94A3B8) : const Color(0xff64748B),
+                    ),
                   ),
-                ),
-                1.hGap,
-                if (showDate == true) ...{
-                  4.hGap,
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.date_range,
-                        size: 12,
-                        color: isDark
-                            ? Colors.grey[400]
-                            : const Color(0xff666666),
-                      ),
-                      4.wGap,
-                      Text(
-                        DateTime.parse(
-                          expenseData!.createAt,
-                        ).toFormattedDateString(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: isDark
-                              ? Colors.grey[400]
-                              : const Color(0xff666666),
+                  if (showDate == true) ...[
+                    4.hGap,
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today_rounded,
+                          size: 12,
+                          color: isDark ? const Color(0xff64748B) : const Color(0xff94A3B8),
                         ),
-                      ),
-                    ],
-                  ),
-                },
-              ],
-            ),
-            const Spacer(),
-            Text(
-              "-Rs ${expenseData?.amount.toCurrency}",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 1.1,
-                color: isDark ? Colors.white : Colors.black87,
+                        4.wGap,
+                        Text(
+                          DateTime.parse(
+                            expenseData!.createAt,
+                          ).toFormattedDateString(),
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: isDark
+                                ? const Color(0xff64748B)
+                                : const Color(0xff94A3B8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
               ),
             ),
-            3.wGap,
-            // Image.asset(
-            //   expenseData?.isCash == true
-            //       ? "assets/images/dollar.png"
-            //       : "assets/images/bank.png",
-            //   height: 12,
-            //   width. : 12,
-            // ),
-            Icon(
-              expenseData?.isCash == true
-                  ? Icons.currency_rupee_rounded
-                  : Icons.account_balance_wallet_rounded,
-              size: 12,
-              color: isDark ? Colors.grey[400] : const Color(0xff666666),
+            8.wGap,
+            // Amount & Payment Type
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  "-Rs ${expenseData?.amount.toCurrency}",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? const Color(0xffF87171) : const Color(0xffE11D48),
+                  ),
+                ),
+                4.hGap,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      expenseData?.isCash == true
+                          ? Icons.payments_outlined
+                          : Icons.account_balance_rounded,
+                      size: 12,
+                      color: isDark
+                          ? const Color(0xff94A3B8)
+                          : const Color(0xff64748B),
+                    ),
+                    4.wGap,
+                    Text(
+                      expenseData?.isCash == true ? "Cash" : "Bank",
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: isDark
+                            ? const Color(0xff94A3B8)
+                            : const Color(0xff64748B),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),

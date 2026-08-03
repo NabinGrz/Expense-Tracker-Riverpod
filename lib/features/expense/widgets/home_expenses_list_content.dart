@@ -27,19 +27,51 @@ class HomeExpensesListContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Expenses List",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          2.hGap,
-          Text(
-            "Total Spend: Rs ${homeEntity.totalAmount.toCurrency}",
-            style: const TextStyle(fontSize: 14, color: Color(0xff666666)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Expenses List",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : const Color(0xff1E293B),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xff1E293B)
+                      : const Color(0xffF1F5F9),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isDark
+                        ? const Color(0xff334155)
+                        : const Color(0xffE2E8F0),
+                  ),
+                ),
+                child: Text(
+                  "Spend: Rs ${homeEntity.totalAmount.toCurrency}",
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? const Color(0xff94A3B8) : const Color(0xff64748B),
+                  ),
+                ),
+              ),
+            ],
           ),
           16.hGap,
           SearchTextField(

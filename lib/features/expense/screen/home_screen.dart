@@ -170,9 +170,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   sortedExpenseSubject: controller.sortedExpenseSubject,
                 ),
                 const RestaurantAlertBanner(),
-                30.hGap,
+                20.hGap,
                 const DateFilterRow(),
-                16.hGap,
+                20.hGap,
                 HomeBodyContent(
                   controller: controller,
                   homeEntity: homeEntity,

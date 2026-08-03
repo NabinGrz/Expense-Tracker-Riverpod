@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/constants/firebase_constants.dart';
 import 'package:expense_tracker_flutter/extension/iterable_extension.dart';
 import 'package:expense_tracker_flutter/extension/num_extension.dart';
@@ -93,26 +92,27 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
         final isLowBalance = totalBalance <= 20000;
 
         return Container(
-          margin: const EdgeInsets.only(left: 12, right: 12, top: 20),
+          margin: const EdgeInsets.only(left: 14, right: 14, top: 16),
           width: double.infinity,
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(22),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: isLowBalance
-                  ? [const Color(0xffD32F2F), const Color(0xffEF5350)]
-                  : [AppColor.primary, AppColor.test],
+                  ? [const Color(0xffE11D48), const Color(0xffBE123C)]
+                  : [const Color(0xff0F766E), const Color(0xff115E59)],
             ),
             borderRadius: BorderRadius.circular(24),
             image: const DecorationImage(
               image: sp.Svg("assets/images/header_background.svg"),
-              opacity: 0.1, // Softer texture
+              opacity: 0.1,
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xff849D9B).withOpacity(0.4),
-                spreadRadius: -5,
+                color: (isLowBalance ? const Color(0xffBE123C) : const Color(0xff115E59))
+                    .withValues(alpha: 0.35),
+                spreadRadius: -4,
                 offset: const Offset(0, 10),
                 blurRadius: 20,
               ),
@@ -121,12 +121,19 @@ class _BalanceCardState extends ConsumerState<BalanceCard>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                isLowBalance ? "⚠️ Low Balance" : "Remaining this month",
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  isLowBalance ? "⚠️ Low Balance" : "Remaining balance",
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               10.hGap,

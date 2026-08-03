@@ -102,14 +102,14 @@ class _BannerUI extends StatelessWidget {
         : const Color(0xffD32F2F);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      margin: const EdgeInsets.only(left: 14, right: 14, top: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xffD32F2F).withOpacity(0.15),
+            color: const Color(0xffD32F2F).withValues(alpha: 0.15),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

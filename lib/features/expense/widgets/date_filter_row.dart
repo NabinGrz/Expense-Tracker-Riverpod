@@ -18,6 +18,7 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
   late AnimationController animationController;
   late Animation<Offset> animation;
   late Animation<double> opacityAnimation;
+
   @override
   void initState() {
     animationController = AnimationController(
@@ -30,7 +31,7 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
       curve: Curves.fastOutSlowIn,
     );
     animation = Tween<Offset>(
-      begin: const Offset(0, -1),
+      begin: const Offset(0, -0.5),
       end: const Offset(0, 0),
     ).animate(curvedAnimation);
     opacityAnimation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
@@ -51,34 +52,46 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
       position: animation,
       child: FadeTransition(
         opacity: opacityAnimation,
-        child: Container(
-          decoration: BoxDecoration(
-            color: isDark ? Colors.transparent : const Color(0xffF4F6F6),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              filterBox(
-                "Today",
-                selectedDateFilter: DateFilter.today,
-                isDark: isDark,
-              ),
-              filterBox(
-                "Yesterday",
-                selectedDateFilter: DateFilter.yesterday,
-                isDark: isDark,
-              ),
-              filterBox(
-                "2 Weeks",
-                selectedDateFilter: DateFilter.twoweeks,
-                isDark: isDark,
-              ),
-              filterBox(
-                "Monthly",
-                selectedDateFilter: DateFilter.monthly,
-                isDark: isDark,
-              ),
-            ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xff2A2D32) : const Color(0xffF0F3F3),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: filterBox(
+                    "Today",
+                    selectedDateFilter: DateFilter.today,
+                    isDark: isDark,
+                  ),
+                ),
+                Expanded(
+                  child: filterBox(
+                    "Yesterday",
+                    selectedDateFilter: DateFilter.yesterday,
+                    isDark: isDark,
+                  ),
+                ),
+                Expanded(
+                  child: filterBox(
+                    "2 Weeks",
+                    selectedDateFilter: DateFilter.twoweeks,
+                    isDark: isDark,
+                  ),
+                ),
+                Expanded(
+                  child: filterBox(
+                    "Monthly",
+                    selectedDateFilter: DateFilter.monthly,
+                    isDark: isDark,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -95,38 +108,53 @@ class _DateFilterRowState extends ConsumerState<DateFilterRow>
         final dateFilter = ref.watch(
           homeEntityProvider.select((value) => value.dateFilter),
         );
-        return InkWell(
-          onTap: () {
-            HapticFeedback.mediumImpact();
-            ref
-                .read(homeEntityProvider.notifier)
-                .selectDate(selectedDateFilter);
-            ref.read(homeSortByProvider.notifier).selectSortBy(SortBy.none);
-          },
-          child: Container(
-            padding: dateFilter != selectedDateFilter
-                ? const EdgeInsetsDirectional.symmetric(
-                    horizontal: 10,
-                    vertical: 14,
-                  )
-                : const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-            decoration: dateFilter != selectedDateFilter
-                ? BoxDecoration(
-                    color: isDark ? Colors.grey[800] : Colors.transparent,
-                    borderRadius: BorderRadius.circular(20),
-                  )
-                : BoxDecoration(
-                    color: AppColor.primary,
-                    borderRadius: BorderRadius.circular(20),
+        final isSelected = dateFilter == selectedDateFilter;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                ref
+                    .read(homeEntityProvider.notifier)
+                    .selectDate(selectedDateFilter);
+                ref.read(homeSortByProvider.notifier).selectSortBy(SortBy.none);
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? AppColor.primary
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: AppColor.primary.withValues(alpha: 0.25),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                    color: isSelected
+                        ? Colors.white
+                        : (isDark ? Colors.grey[400] : const Color(0xff616161)),
                   ),
-            child: Text(
-              name,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: dateFilter != selectedDateFilter
-                    ? (isDark ? Colors.grey[400] : Colors.black87)
-                    : Colors.white,
+                ),
               ),
             ),
           ),
