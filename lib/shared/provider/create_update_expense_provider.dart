@@ -30,7 +30,7 @@ class ExpenseNotifier extends ChangeNotifier {
   }
 
   void addUpdateExpense(ExpenseEntity expense, bool isUpdate,
-      {String? docId,
+      {required String docId,
       required String cashAmount,
       required String bankAmount,
       int? previousExpenseAmount,
@@ -47,12 +47,12 @@ class ExpenseNotifier extends ChangeNotifier {
         isCash: expenseEntity?.isCash ?? false);
     if (isUpdate) {
       if (isCashPreviously == expense.isCash) {
-        ExpenseQueryHelper.updateExpense(expenseData.toMap(), docId!,
-            cashAmount, bankAmount, previousExpenseAmount);
+        ExpenseQueryHelper.updateExpense(expenseData.toMap(), docId, cashAmount,
+            bankAmount, previousExpenseAmount);
       } else {
         ExpenseQueryHelper.updateExpenseAmounWhenTypeChange(
             newData: expenseData.toMap(),
-            id: docId!,
+            id: docId,
             isCash: expense.isCash ?? false,
             oldAmount: previousExpenseAmount!.toString(),
             newAmount: expense.amount!.toString(),
@@ -67,7 +67,7 @@ class ExpenseNotifier extends ChangeNotifier {
   void validateExpenseAndCreate(
     ExpenseEntity expenseData,
     bool isUpdate,
-    String? docId,
+    String docId,
     BuildContext context, {
     required String cashAmount,
     required String bankAmount,

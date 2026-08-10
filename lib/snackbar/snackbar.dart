@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-/// Everything related to teh snackbar that we are showing throughout the app
+/// Everything related to the snackbar that we are showing throughout the app
 
 enum SnackBarTypes {
+  // ignore: constant_identifier_names
   Custom,
+  // ignore: constant_identifier_names
   Error,
+  // ignore: constant_identifier_names
   Warning,
+  // ignore: constant_identifier_names
   Success,
+  // ignore: constant_identifier_names
   Info,
   //If any type added here, don't forget to add corresponding _backgroundColor
   // in showSnackBar
@@ -35,17 +40,8 @@ void showSnackBar({
                       ? Colors.blue
                       : Colors.green;
 
-  // if (type == SnackBarTypes.Error) {
-  //   clearFocus();
-  //   printLog(
-  //     "\nTitle\t - $title\nMessage\t - $message",
-  //     tag: SitedeckStrings.tagSnackbarError,
-  //   );
-  // }
-
   final finalMessage =
       "$title${title.isEmpty || message.isEmpty ? '' : ': '}$message";
-  // Maybe remove `Fluttertoast.cancel();` if it gives issues
   Fluttertoast.cancel();
   Fluttertoast.showToast(
     msg: finalMessage,

@@ -4,6 +4,9 @@ import '../constants/app_strings.dart';
 
 extension StringNullEmptyExtension on String? {
   bool get isNotNullAndEmpty => this != null && this!.isNotEmpty;
+  String capitalize() {
+    return "${this?[0].toUpperCase()}${this?.substring(1)}";
+  }
 }
 
 extension ImagePathExtension on String {
@@ -75,6 +78,9 @@ extension ImagePathExtension on String {
         return "assets/images/restaurant.webp";
       case AppString.categoryKhanepaniBill:
         return "assets/images/khanepanibill.webp";
+      case AppString.categorySaving:
+      case AppString.categorySavings:
+        return "assets/images/dollar.png";
       default:
         return "assets/images/bill.png";
     }
@@ -138,6 +144,9 @@ extension ImagePathExtension on String {
         return Colors.yellow;
       case AppString.categorySubinExpense:
         return Colors.red;
+      case AppString.categorySaving:
+      case AppString.categorySavings:
+        return Colors.teal;
       default:
         return Colors.orange;
     }

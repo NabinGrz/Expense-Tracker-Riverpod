@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 class Expense {
   final String id;
   String? docId;
