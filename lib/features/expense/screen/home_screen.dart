@@ -20,6 +20,7 @@ import '../widgets/create_expense_dialog.dart';
 import '../widgets/date_filter_row.dart';
 import '../widgets/home_body_content.dart';
 import '../widgets/sliver_home_app_bar.dart';
+import '../../remote_config/widgets/remote_config_announcement_banner.dart';
 
 final bottomNavBarProvider = StateProvider((ref) => 0);
 
@@ -165,6 +166,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 BalanceCard(
                   sortedExpenseSubject: controller.sortedExpenseSubject,
                 ),
+                const RemoteConfigAnnouncementBanner(),
                 const CategoryBudgetBanner(),
                 20.hGap,
                 const DateFilterRow(),

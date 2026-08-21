@@ -7,6 +7,8 @@ import 'package:expense_tracker_flutter/features/savings/screen/savings_screen.d
 import 'package:expense_tracker_flutter/features/settings/controller/settings_controller.dart';
 import 'package:expense_tracker_flutter/features/settings/service/app_icon_service.dart';
 import 'package:expense_tracker_flutter/shared/widgets/custom_input_dialog.dart';
+import 'package:expense_tracker_flutter/features/remote_config/controller/remote_config_controller.dart';
+import 'package:expense_tracker_flutter/snackbar/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -405,6 +407,49 @@ class SettingsScreen extends ConsumerWidget {
               ),
               onTap: () {
                 _showAddCategoryLimitDialog(context, ref, state.categoryLimits);
+              },
+            ),
+            20.hGap,
+            _buildSectionHeader(context, "System & Remote Config"),
+            Consumer(
+              builder: (context, ref, child) {
+                final rcState = ref.watch(remoteConfigControllerProvider);
+                return rcState.when(
+                  data: (config) => _buildSettingCard(
+                    context,
+                    title: "Firebase Remote Config",
+                    subtitle:
+                        'Welcome: "${config.welcomeMessage}" • Min: ${config.minAppVersion}',
+                    icon: Icons.cloud_sync_rounded,
+                    iconColor: Colors.blueAccent,
+                    trailing: IconButton(
+                      icon: const Icon(Icons.refresh_rounded),
+                      onPressed: () async {
+                        await ref
+                            .read(remoteConfigControllerProvider.notifier)
+                            .refreshConfig();
+                        showSnackBar(
+                          message: "Remote Config fetched & activated",
+                          type: SnackBarTypes.Success,
+                        );
+                      },
+                    ),
+                  ),
+                  loading: () => const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  error: (err, _) => _buildSettingCard(
+                    context,
+                    title: "Remote Config Error",
+                    subtitle: err.toString(),
+                    icon: Icons.error_outline_rounded,
+                    iconColor: Colors.redAccent,
+                    trailing: const SizedBox.shrink(),
+                  ),
+                );
               },
             ),
             40.hGap,
