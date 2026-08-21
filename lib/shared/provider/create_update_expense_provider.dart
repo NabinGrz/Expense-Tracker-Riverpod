@@ -1,4 +1,5 @@
 import 'package:expense_tracker_flutter/extension/string_extension.dart';
+import 'package:expense_tracker_flutter/features/settings/controller/settings_controller.dart';
 import 'package:expense_tracker_flutter/helper/expense_query_helper.dart';
 import 'package:expense_tracker_flutter/models/expense_entity.dart';
 import 'package:expense_tracker_flutter/models/expense_model.dart';
@@ -8,15 +9,24 @@ import 'package:rxdart/subjects.dart';
 import 'package:uuid/uuid.dart';
 
 final expenseProvider = ChangeNotifierProvider.autoDispose<ExpenseNotifier>(
-  (ref) => ExpenseNotifier(),
+  (ref) {
+    final settingsState = ref.watch(settingsControllerProvider).value;
+    final defaultIsCash = settingsState?.defaultIsCash ?? true;
+    return ExpenseNotifier(defaultIsCash: defaultIsCash);
+  },
 );
 
 class ExpenseNotifier extends ChangeNotifier {
+  final bool defaultIsCash;
   final nameError = BehaviorSubject<String?>();
   final amountError = BehaviorSubject<String?>();
   final categoryError = BehaviorSubject<String?>();
 
-  ExpenseEntity? expenseEntity = ExpenseEntity.initial();
+  late ExpenseEntity? expenseEntity;
+
+  ExpenseNotifier({this.defaultIsCash = true}) {
+    expenseEntity = ExpenseEntity.initial(defaultIsCash);
+  }
 
   void onSelectCategory(String name) {
     expenseEntity = expenseEntity?.copyWith(category: name);

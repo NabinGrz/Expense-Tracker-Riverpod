@@ -1,6 +1,7 @@
 import 'package:expense_tracker_flutter/constants/app_color.dart';
 import 'package:expense_tracker_flutter/features/expense/screen/search_screen.dart';
 import 'package:expense_tracker_flutter/features/savings/screen/savings_screen.dart';
+import 'package:expense_tracker_flutter/features/upcoming_expenses/screen/upcoming_expenses_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -24,8 +25,10 @@ class _DashboardState extends ConsumerState<Dashboard> {
       case 0:
         return const HomeScreen();
       case 1:
-        return const SearchExpenseScreen();
+        return const UpcomingExpensesScreen();
       case 2:
+        return const SearchExpenseScreen();
+      case 3:
         return const SavingsScreen();
       default:
         return const HomeScreen();
@@ -84,6 +87,17 @@ class _DashboardState extends ConsumerState<Dashboard> {
                 child: Icon(CupertinoIcons.house_fill, size: 24),
               ),
               label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: EdgeInsets.only(bottom: 4),
+                child: Icon(Icons.event_note_outlined, size: 24),
+              ),
+              activeIcon: Padding(
+                padding: EdgeInsets.only(bottom: 4),
+                child: Icon(Icons.event_note_rounded, size: 24),
+              ),
+              label: "Upcoming",
             ),
             BottomNavigationBarItem(
               icon: Padding(

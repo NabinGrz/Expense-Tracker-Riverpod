@@ -15,6 +15,7 @@ class SettingsState {
   final ThemeMode themeMode;
   final Map<String, int> categoryLimits;
   final int accentColorValue;
+  final bool defaultIsCash;
 
   SettingsState({
     required this.billingStartDay,
@@ -22,6 +23,7 @@ class SettingsState {
     required this.themeMode,
     required this.categoryLimits,
     required this.accentColorValue,
+    required this.defaultIsCash,
   });
 
   SettingsState copyWith({
@@ -30,6 +32,7 @@ class SettingsState {
     ThemeMode? themeMode,
     Map<String, int>? categoryLimits,
     int? accentColorValue,
+    bool? defaultIsCash,
   }) {
     return SettingsState(
       billingStartDay: billingStartDay ?? this.billingStartDay,
@@ -37,6 +40,7 @@ class SettingsState {
       themeMode: themeMode ?? this.themeMode,
       categoryLimits: categoryLimits ?? this.categoryLimits,
       accentColorValue: accentColorValue ?? this.accentColorValue,
+      defaultIsCash: defaultIsCash ?? this.defaultIsCash,
     );
   }
 }
@@ -52,6 +56,7 @@ class SettingsController extends AsyncNotifier<SettingsState> {
   static const String _themeModeKey = 'theme_mode';
   static const String _categoryLimitsKey = 'category_limits';
   static const String _accentColorKey = 'accent_color';
+  static const String _defaultPaymentMethodKey = 'default_payment_method';
 
   StreamSubscription? _settingsSubscription;
 
@@ -62,6 +67,7 @@ class SettingsController extends AsyncNotifier<SettingsState> {
     final restaurantLimit = prefs.getInt(_restaurantLimitKey) ?? 4000;
     final themeModeIndex = prefs.getInt(_themeModeKey) ?? 0;
     final accentColorVal = prefs.getInt(_accentColorKey) ?? 0xff428a78;
+    final defaultIsCash = prefs.getBool(_defaultPaymentMethodKey) ?? true;
 
     AppColor.primary = Color(accentColorVal);
 
@@ -83,6 +89,7 @@ class SettingsController extends AsyncNotifier<SettingsState> {
       themeMode: ThemeMode.values[themeModeIndex],
       categoryLimits: initialCategoryLimits,
       accentColorValue: accentColorVal,
+      defaultIsCash: defaultIsCash,
     );
 
     // Listen to real-time updates from Firebase Firestore
@@ -136,12 +143,17 @@ class SettingsController extends AsyncNotifier<SettingsState> {
             categoryLimits['restaurant/cafe'] = 4000;
           }
 
+          final defaultIsCash = (data['default_is_cash'] as bool?) ??
+              current?.defaultIsCash ??
+              true;
+
           final newState = SettingsState(
             billingStartDay: billingStartDay,
             restaurantLimit: categoryLimits['restaurant/cafe'] ?? 4000,
             themeMode: themeMode,
             categoryLimits: categoryLimits,
             accentColorValue: accentColorVal,
+            defaultIsCash: defaultIsCash,
           );
 
           // Update local SharedPreferences cache
@@ -149,11 +161,33 @@ class SettingsController extends AsyncNotifier<SettingsState> {
           await prefs.setInt(_billingStartDayKey, billingStartDay);
           await prefs.setInt(_themeModeKey, themeMode.index);
           await prefs.setInt(_accentColorKey, accentColorVal);
+          await prefs.setBool(_defaultPaymentMethodKey, defaultIsCash);
           await prefs.setString(_categoryLimitsKey, jsonEncode(categoryLimits));
 
           state = AsyncValue.data(newState);
         }
       });
+    }
+  }
+
+  Future<void> updateDefaultPaymentMethod(bool isCash) async {
+    try {
+      final docRef = FirebaseQueryHelper.firebaseFireStore
+          .collection(FirebaseConstants.settingsCollection)
+          .doc(FirebaseConstants.settingsDocID);
+
+      await docRef.set({'default_is_cash': isCash}, SetOptions(merge: true));
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_defaultPaymentMethodKey, isCash);
+
+      if (state.value != null) {
+        state = AsyncValue.data(
+          state.value!.copyWith(defaultIsCash: isCash),
+        );
+      }
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
     }
   }
 

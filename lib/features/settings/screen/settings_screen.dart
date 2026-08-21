@@ -322,6 +322,82 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
             20.hGap,
+            _buildSectionHeader(context, "Payment Preferences"),
+            _buildSettingCard(
+              context,
+              title: "Default Payment Method",
+              subtitle:
+                  "Pre-selects ${state.defaultIsCash ? 'Cash' : 'Bank'} when adding new expenses",
+              icon: Icons.account_balance_wallet_rounded,
+              iconColor: state.defaultIsCash ? Colors.green : Colors.blue,
+              trailing: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.grey[800] : Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                  ),
+                ),
+                child: DropdownButton<bool>(
+                  value: state.defaultIsCash,
+                  underline: const SizedBox(),
+                  isDense: true,
+                  dropdownColor: theme.cardColor,
+                  icon: Icon(
+                    Icons.arrow_drop_down_rounded,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                  items: [
+                    DropdownMenuItem(
+                      value: true,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            'assets/images/dollar.png',
+                            height: 16,
+                            width: 16,
+                          ),
+                          8.wGap,
+                          const Text("Cash"),
+                        ],
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: false,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.account_balance_rounded,
+                            size: 16,
+                            color: Colors.blue,
+                          ),
+                          8.wGap,
+                          const Text("Bank"),
+                        ],
+                      ),
+                    ),
+                  ],
+                  onChanged: (isCash) {
+                    if (isCash != null) {
+                      ref
+                          .read(settingsControllerProvider.notifier)
+                          .updateDefaultPaymentMethod(isCash);
+                    }
+                  },
+                ),
+              ),
+            ),
+            20.hGap,
             _buildSectionHeader(context, "Savings & Goals"),
             _buildSettingCard(
               context,

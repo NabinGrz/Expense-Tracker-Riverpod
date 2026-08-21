@@ -24,12 +24,12 @@ class ExpenseEntity {
     );
   }
 
-  static ExpenseEntity initial() {
+  static ExpenseEntity initial([bool isCash = true]) {
     return ExpenseEntity(
       name: null,
       amount: null,
       category: null,
-      isCash: true,
+      isCash: isCash,
     );
   }
 
