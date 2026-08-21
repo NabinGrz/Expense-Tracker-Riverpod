@@ -3,8 +3,13 @@
   "1": "settings_screen.dart",
   "2": "remote_config_service.dart",
   "3": "remote_config_controller.dart",
-  "4": "remote_config_announcement_banner.dart",
-  "5": "remote_config_state.dart",
+  "4": "dashboard.dart",
+  "5": "create_update_expense_provider.dart",
   "6": "GeneratedPluginRegistrant.swift",
-  "7": "_HomeScreenState"
+  "7": "expense_entity.dart",
+  "8": "settings_controller.dart",
+  "9": "add_edit_upcoming_dialog.dart",
+  "10": "firebase_constants.dart",
+  "11": "settingsControllerProvider",
+  "12": "settingsControllerProvider"
 }
